@@ -7,6 +7,8 @@ namespace NGen {
 
     public static class DataGetter {
 
+        private static List<ProxyGen> proxyGens = new List<ProxyGen>();
+
         public static NGen ParseTxtFile( string path ) {
 
             //Get the file as an array of lines
@@ -17,14 +19,14 @@ namespace NGen {
             //add them to a dictionary
 
             //TODO - deal with multiline names
+            //TODO - check for duplicate names
+            //TODO - get ProxyGens working
 
             Dictionary<string, Gen> gens = new Dictionary<string, Gen>();
 
             foreach( string l in strippedLines ) {
 
-                if( l.Length > 0 &&
-                    l.Contains( "[" ) &&
-                    l.Contains( "]" ) ) {
+                if( l.Length > 0 ) {
 
                     string n;
                     string c;
@@ -35,7 +37,27 @@ namespace NGen {
                 }
             }
 
+            //Check all ProxyGens to see if their genNames are in the dictionary
+            //if they are, pass them their gens
+            if( proxyGens.Count > 0 ) {
+                for( int i = 0; i < proxyGens.Count; i++ ) {
+                    string name = proxyGens[i].GetName();
+
+                    if( gens.ContainsKey( name ) ) {
+
+                        proxyGens[i].SetGen( gens[name] );
+
+                    } else {
+                        Console.WriteLine( $"Error: ProxyGen name \"{name}\" has not been created" );
+                    }
+                }
+            }
+
+            proxyGens = new List<ProxyGen>();
+
+
             NGen nGen = new NGen( gens );
+
 
             return nGen;
 
@@ -49,57 +71,66 @@ namespace NGen {
 
         }
 
-        /*
-         *  I'm having a lot of trouble thinking about how to parse these strings
-         *  So I'm going to try and go through it here to get it clear what I'm doing
-         *  
-         *  given a string like this:
-         *      pre [ something1, something2, [nested1, nested2, nested3] ] [again1, again2] post
-         *      
-         *  OR:
-         *      pre, [ something1, something2], [again1, again2]
-         *  
-         *  NO - actually let's enforce the rule that ALL lists must be in brackets ([])
-         *  
-         *  We're going to create an empty sentence
-         *  
-         *  We step through it character by character 
-         *  adding the characters to a string
-         *  until we get to an '['
-         *  everything we've already got we know is a Wrd in a Sentence.
-         *  so we make a word out of it and add it to an array/list for later
-         *  
-         *  things which come after the bracket are going to be a list, so we need to get all the
-         *  contents of these brackets with the GetBracktetsContents() method
-         *  
-         *  GetBracketsContents() will give us back a string with the contents of the brackets,
-         *  We send that to the List processor which will return a List
-         *  
-         *  We add that list to our array for later
-         *  GetBracketsContents() also returns the text AFTER the brackets
-         *  We start going through that character by character as before, now treating it as a new Wrd
-         *  in a Sentence, until we get to some brackets again
-         *  And repeat
-         *  
-         *  The List processor will separate everything by comma (,)
-         *  And then it will check every element to see if it contains any brackets. 
-         *  If it doesn't then it's a Wrd, and if it does then it's a list
-         *  Or at least partly a list 
-         *      - it'll separate anything out before and after the brackets
-         *      and, if there are things before and after - create a sentence of three elements
-         *          - before, list, after
-         *      if there aren't then it'll just take the output of the list
-         *      
-         *  on second thoughts, maybe we do the checking for if there are brackets
-         *  in the sentence processor BEFORE it gets to the list
-         *  
-         */
+        private static Gen[] MultiWrdProcessor( string[] s ) {
+            /*
+             *  Processes an array of potential Wrds
+             *  Checking for ProxyGens
+             */
+
+            Gen[] gens = new Gen[s.Length];
+
+            for( int i = 0; i < s.Length; i++ ) {
+                gens[i] = WrdProcessor( s[i] );
+            }
+
+            return gens;
+        }
+
+        private static Gen WrdProcessor( string s ) {
+            /*
+             *  Takes any string which would normally be treated as a Wrd
+             *      ie - it doesn't have any complicated construction - like lists - in it
+             *  and checks to see if it has any ProxyGens in it,
+             *  it then either returns a Wrd or a SenGen accordingly
+             */
+
+            if( s.Contains( '$' ) ) {
+                //split the string based on spaces
+                char[] separators = { ' ' };
+                string[] words = s.Split( separators, StringSplitOptions.RemoveEmptyEntries );
+
+                List<Gen> gens = new List<Gen>();
+
+                foreach( string w in words ) {
+                    if( w.Contains('$') ) {
+
+                        int dollarIndex = w.IndexOf( '$' );
+                        string name = w.Substring( dollarIndex + 1, w.Length - dollarIndex - 1 );
+                        ProxyGen pg = new ProxyGen( name.Trim() );
+                        //add to the ProxyGen list for connecting up later
+                        proxyGens.Add( pg );
+                        gens.Add( pg );
+
+                    } else {
+                        Wrd wrd = new Wrd( w );
+                        gens.Add( wrd );
+                    }
+                }
+
+                SenGen sg = new SenGen( gens.ToArray() );
+                return sg;
+
+            } else {
+                return new Wrd( s );
+            }
+
+        }
 
         private static Gen SenGenProcessor( string s ) {
             /*
-             * This will take a string and turn it into a Sentence,
-             * although potentially a sentence with only one element
-             * 
+             * This will take a string and turn it into a SenGen,
+             * although, if it is a simple sentence it may return
+             * either a ListGen or a Wrd instead
              */
 
             //Create a list to contain gens, this will eventually be turned into the SenGen
@@ -114,8 +145,8 @@ namespace NGen {
                 //If there is any text in the preBrackets string
                 //we can treat it as just a Wrd, because we know it can't contain a list
                 if( preBracketStart.Trim().Length > 0 ) {
-                    Wrd w = new Wrd( preBracketStart.Trim() );
-                    gens.Add( w );
+                    Gen g = WrdProcessor(preBracketStart.Trim() );
+                    gens.Add( g );
                 }
 
                 string postBrackets;
@@ -138,16 +169,18 @@ namespace NGen {
 
                         //if there's no list there, treat it as a Wrd
                         //and add it to the list
-                        Wrd w = new Wrd( postBrackets.Trim() );
-                        gens.Add( w );
+                        Gen g = WrdProcessor( postBrackets.Trim() );
+                        gens.Add( g );
                     }
                 }
 
             } else {
 
                 //If there are no WrdLists, then dump the whole string into a Wrd
-                Wrd w = new Wrd( s.Trim() );
-                gens.Add( w );
+                //DEBUG
+                //Console.WriteLine( $"string had no lists: \"{s}\"" );
+                Gen g = WrdProcessor( s.Trim() );
+                gens.Add( g );
 
             }
 
@@ -192,8 +225,8 @@ namespace NGen {
                         gens.Add( g );
 
                     } else {
-                        Wrd w = new Wrd( s );
-                        gens.Add( w );
+                        Gen g = WrdProcessor( s );
+                        gens.Add( g );
                     }
                 }
 
@@ -202,18 +235,27 @@ namespace NGen {
             } else {
 
                 //if there are no nested lists, create a simple ListGen out of the strings
-                wg = new ListGen( sArr );
+                Gen[] gens = MultiWrdProcessor( sArr );
+                wg = new ListGen( gens );
 
             }
+
             return wg;
         }
 
         private static bool StringContinsList( string s ) {
+            //DEBUG
+            //bool sC = s.Contains( '[' );
+            //Console.WriteLine( $"string \"{s}\" contains lists? {sC}" );
+
             return s.Contains( '[' );
         }
 
         private static string GetBracketsStart( string s, out string preBrackets ) {
-
+            /*
+             * finds the starting point of the brackets and returns the input string
+             * minus anything before the start, also outputs to prefix separately
+             */
             preBrackets = "";
             string contents = "";
             bool started = false;
@@ -331,24 +373,6 @@ namespace NGen {
             return contents.ToArray();
 
 
-        }
-
-        private static string[] StringListToArray( string s ) {
-
-            /*
-             *  Splits the elements of a comma-separated list into an array
-             *  removes empty elements
-             *  trims each element
-             */
-
-            char[] separators = { ',' };
-            string[] wrds = s.Split( separators, StringSplitOptions.RemoveEmptyEntries );
-
-            for( int i = 0; i < wrds.Length; i++ ) {
-                wrds[i] = wrds[i].Trim();
-            }
-
-            return wrds;
         }
 
         private static string[] StripComments( string[] ls ) {

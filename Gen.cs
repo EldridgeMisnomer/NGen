@@ -39,12 +39,19 @@
         public override string GetTxt() {
 
             if( gen == null ) {
-                //get the gen, store it, then return it
-                return "";
+                return $"**{genName}**";
             } else {
                 return gen.GetTxt();
             }
 
+        }
+
+        public void SetGen( Gen g ) {
+            gen = g;
+        }
+
+        public string GetName() {
+            return genName;
         }
 
 
