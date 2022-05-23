@@ -73,7 +73,7 @@
             //convert strings into Wrds and but them into their array
             wrds = new Gen[words.Length];
             for( int i = 0; i < wrds.Length; i++ ) {
-                wrds[i] = new Wrd( words[i] );
+                wrds[i] = new Wrd( words[i].Trim() );
             }
 
             allowReps = allowRepeats;
