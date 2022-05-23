@@ -4,9 +4,10 @@ using System.IO;
 using System.Linq;
 
 namespace NGen {
+
     public static class DataGetter {
 
-        public static void ParseTxtFile( string path ) {
+        public static NGen ParseTxtFile( string path ) {
 
             //Get the file as an array of lines
             string[] lines = GetDataFromTxt( path );
@@ -14,6 +15,8 @@ namespace NGen {
             string[] strippedLines = StripComments( lines );
             //convert into pairs of strings - names and ? sentences
             //add them to a dictionary
+
+            //TODO - deal with multiline names
 
             Dictionary<string, Gen> gens = new Dictionary<string, Gen>();
 
@@ -32,18 +35,11 @@ namespace NGen {
                 }
             }
 
+            NGen nGen = new NGen( gens );
 
-            //Test Code
-            int numTestToRunPerName = 5;
-            foreach( KeyValuePair<string, Gen> g in gens ) {
-                Console.WriteLine( g.Key + ":" );
-                for( int i = 0; i < numTestToRunPerName; i++ ) {
-                    Console.WriteLine( "\t" + g.Value.GetTxt() );
-                }
-            }
+            return nGen;
 
         }
-
         
         private static void StringToStringPair( string s, out string name, out string contents ) {
 
@@ -281,9 +277,9 @@ namespace NGen {
             bool complete = false;
 
             //DEBUG
-            Console.WriteLine( "getting contents of brackets:" );
-            Console.WriteLine( "\tinput string is:" );
-            Console.WriteLine( $"\t\t\"{s}\"" );
+            //Console.WriteLine( "getting contents of brackets:" );
+            //Console.WriteLine( "\tinput string is:" );
+            //Console.WriteLine( $"\t\t\"{s}\"" );
 
             //go through the string one character at a time
             foreach( char c in s ) {
@@ -327,10 +323,10 @@ namespace NGen {
             }
 
             //DEBUG
-            Console.WriteLine( "\toutput string is:" );
-            for( int i = 0; i < contents.Count; i++ ) {
-                Console.WriteLine( $"\t\t {i}: {contents[i]}" );
-            }
+            //Console.WriteLine( "\toutput string is:" );
+            //for( int i = 0; i < contents.Count; i++ ) {
+            //    Console.WriteLine( $"\t\t {i}: {contents[i]}" );
+            //}
 
             return contents.ToArray();
 
@@ -394,7 +390,7 @@ namespace NGen {
 
             } else {
 
-                System.Console.WriteLine( $"Get Data From Text File Failed: path ({path}) is invalid" );
+                Console.WriteLine( $"Get Data From Text File Failed: path ({path}) is invalid" );
                 return null;
 
             }

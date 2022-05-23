@@ -1,34 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-
 
 namespace NGen {
     class Program {
         static void Main( string[] args ) {
 
-            //string[] w1 = { "Yelo", "Pick", "Vicious", "Silk" };
-            //string[] w2 = { "Wip", "Vintage", "Master", "Lep" };
+            NGen nGen = DataGetter.ParseTxtFile( "data/names_01.txt" );
 
-            //ListGen wc1 = new ListGen( w1 );
-            //ListGen wc2 = new ListGen( w2 );
+            string[] genNames = nGen.GetGenNames();
 
-            //ListGen[] wca = { wc1, wc2 };
-
-            //SenGen s = new SenGen( wca );
-
-
-            //for( int i = 0; i < 100; i++ ) {
-            //    string ws = s.GetTxt();
-            //    Console.WriteLine( ws );
-            //}
-
-            DataGetter.ParseTxtFile( "data/names_01.txt" );
+            //Test Code
+            int numTestToRunPerName = 5;
+            foreach( string s in genNames ) {
+                Console.WriteLine( $"{s}:" );
+                for( int i = 0; i < numTestToRunPerName; i++ ) {
+                    Console.WriteLine( "\t" + nGen.GenTxt(s) );
+                }
+            }
 
 
             //Stop the program from exiting
             string cont = Console.ReadLine().Trim().ToLower();
             Console.WriteLine( cont );
             Environment.Exit( 0 );
+
+
         }
     }
 
