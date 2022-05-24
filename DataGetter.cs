@@ -20,7 +20,11 @@ namespace NGen {
 
             //TODO - deal with multiline names
             //TODO - check for duplicate names
-            //TODO - get ProxyGens working
+            //TODO - escaping characters
+            //TODO - repeats
+            //TODO - variable %
+            //TODO - header
+            //TODO - set allow repeat elements from lists
 
             Dictionary<string, Gen> gens = new Dictionary<string, Gen>();
 
@@ -94,7 +98,7 @@ namespace NGen {
              *  it then either returns a Wrd or a SenGen accordingly
              */
 
-            if( s.Contains( '$' ) ) {
+            if( StringContainsRef( s ) ) {
                 //split the string based on spaces
                 char[] separators = { ' ' };
                 string[] words = s.Split( separators, StringSplitOptions.RemoveEmptyEntries );
@@ -102,10 +106,10 @@ namespace NGen {
                 List<Gen> gens = new List<Gen>();
 
                 foreach( string w in words ) {
-                    if( w.Contains('$') ) {
+                    if( StringContainsRef( w ) ) {
 
-                        int dollarIndex = w.IndexOf( '$' );
-                        string name = w.Substring( dollarIndex + 1, w.Length - dollarIndex - 1 );
+                        int refIndex = w.IndexOf( CharacterMap( CharType.reference ) );
+                        string name = w.Substring( refIndex + 1, w.Length - refIndex - 1 );
                         ProxyGen pg = new ProxyGen( name.Trim() );
                         //add to the ProxyGen list for connecting up later
                         proxyGens.Add( pg );
@@ -125,6 +129,8 @@ namespace NGen {
             }
 
         }
+
+
 
         private static Gen SenGenProcessor( string s ) {
             /*
@@ -248,7 +254,11 @@ namespace NGen {
             //bool sC = s.Contains( '[' );
             //Console.WriteLine( $"string \"{s}\" contains lists? {sC}" );
 
-            return s.Contains( '[' );
+            return s.Contains( CharacterMap( CharType.openList ) );
+        }
+
+        private static bool StringContainsRef( string s ) {
+            return s.Contains( CharacterMap( CharType.reference ) );
         }
 
         private static string GetBracketsStart( string s, out string preBrackets ) {
@@ -265,7 +275,7 @@ namespace NGen {
                     contents += c;
                 } else {
 
-                    if( c == '[' ) {
+                    if( c == CharacterMap( CharType.openList ) ) {
 
                         started = true;
 
@@ -333,9 +343,9 @@ namespace NGen {
                 } else {
 
                     //increment the counters
-                    if( c == ']' ) {
+                    if( c == CharacterMap( CharType.closeList ) ) {
                         closeCount++;
-                    } else if( c == '[' ) {
+                    } else if( c == CharacterMap( CharType.openList ) ) {
                         openCount++;
                     }
 
@@ -348,7 +358,7 @@ namespace NGen {
                     } else {
 
                         //separate by commas, unless we are above level 1 in the nesting
-                        if( c == ',' &&
+                        if( c == CharacterMap( CharType.listSeparator ) &&
                             openCount - 1 == closeCount ) {
 
                                 contents.Add( tempContents );
@@ -391,7 +401,7 @@ namespace NGen {
 
                 if( l.Trim().Length > 0 ) {
 
-                    if( l[0] != '#' ) {
+                    if( l[0] != CharacterMap( CharType.comment ) ) {
                         strippedL.Add( l );
                     }
                 }
@@ -399,6 +409,29 @@ namespace NGen {
 
 
             return strippedL.ToArray();
+
+        }
+
+        private enum CharType { comment, openList, closeList, listSeparator, reference };
+
+        private static char CharacterMap( CharType type ) {
+
+            Dictionary<CharType, char> characters = new Dictionary<CharType, char> {
+                { CharType.comment , '#' },
+                { CharType.openList, '[' },
+                { CharType.closeList, ']' },
+                { CharType.listSeparator, ',' },
+                { CharType.reference, '$' }
+            };
+
+            if( characters.ContainsKey(type) ) {
+                return characters[type];
+            } else {
+                Console.WriteLine( $"Error: CharacterMap does not contain a character for type: '{type}' " );
+                return ' ';
+            }
+
+
 
         }
 
