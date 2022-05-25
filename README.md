@@ -7,21 +7,19 @@ Text generators are written in simple text files. At their simplest they consist
 
 The minimum that is necessary for a generator is a name, followed by an `=` sign, followed by some text which will be returned when that generator is run. In the above example, every time the hi generator is run it will return the same text: "Hello World".
 
-At the moment, generators must be written on a single line. This will change at some point.
-
 ---
 
 The following are the currently available features:
 
-### Randomly accessed lists of words
+## Word Lists
 
-Lists are the basic unit of construction for most name generators. They are contained within square brackets `[]` and elements within them are separated by commas `,`:
+Word Lists are the basic unit of construction for most name generators. They are contained within square brackets `[]` and elements within them are separated by commas `,`:
 
 `name = [Rupert, Marjory, Caleb, Alba]`
 
 This will output a single name from the list each time.
 
-### Nested lists
+### Nested Lists
 
 Lists can be nested, eg:
 
@@ -37,7 +35,7 @@ Not all text need be inside a list. Text outside of lists will always be reprodu
 
 This will output a single random name each time, but always starting with "Mr"
 
-### Referencing generators
+## Referencing generators
 Writing complicated generators in one go can be difficult, so instead the task can be split into multiple generators.
 One generator can reference the output of another generator by using its name preceeded by a `$` symbol, like so:
 
@@ -48,5 +46,30 @@ surname = [Clancey, Dumblethorn, Addlington, Cranch, Asperly]
 name = $honorific $surname
 ```
 
-when the "name" generator is run, it will access the "honorific" and "surname" generators to provide an output (the "honorific" and "surname" generators could also still be run separately).
+When the "name" generator is run, it will access the "honorific" and "surname" generators to provide an output (the "honorific" and "surname" generators can also still be run separately).
 These generator references can be included in lists and nested.
+
+## Comments
+
+Coments can be written along with generators, by starting lines with a `#` symbol:
+
+```
+# This is a comment and will be ignored
+
+gen = this is not a comment and will create a generator
+```
+Every commented line must have a `#` as its first character.
+
+## Multiline generators
+
+Complicated generators take space to construct and doing so on a single line can be tricky and hard to read, so longer definitions can be written on multiple lines
+
+```
+multilineVeg = [
+	artichoke, beetroot, carrot, cauliflower, celery, 
+	endive, kale, leek, marrow, pea, 
+	potato, pumpkin, spinach, squash, yarrow
+]
+```
+
+In general, whitespace such as tabs, linebreaks and spaces, are ignored. There are some exceptions to this, such as every commented line having to have a `#` character at the beginning of it.

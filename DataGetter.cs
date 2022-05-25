@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 
 using PU = NGen.ParserUtils;
 
@@ -13,11 +12,11 @@ namespace NGen {
         public static NGen ParseTxtFile( string path ) {
 
             //Get the file as an array of lines
-            string[] lines = GetDataFromTxt( path );
+            string[] lines = PU.GetDataFromTxt( path );
             //Remove the comments
             string[] strippedLines = PU.StripComments( lines );
-            //convert into pairs of strings - names and ? sentences
-            //add them to a dictionary
+            //process the lines into Gens with names
+            Dictionary<string, Gen> gens = LineProcessor( strippedLines );
 
             //TODO - deal with multiline names
             //TODO - check for duplicate names
@@ -27,20 +26,6 @@ namespace NGen {
             //TODO - header
             //TODO - set allow repeat elements from lists
 
-            Dictionary<string, Gen> gens = new Dictionary<string, Gen>();
-
-            foreach( string l in strippedLines ) {
-
-                if( l.Length > 0 ) {
-
-                    string n;
-                    string c;
-                    PU.StringToStringPair( l, out n, out c );
-
-                    Gen g = SenGenProcessor( c );
-                    gens.Add( n, g );
-                }
-            }
 
             //Check all ProxyGens to see if their genNames are in the dictionary
             //if they are, pass them their gens
@@ -60,12 +45,73 @@ namespace NGen {
 
             proxyGens = new List<ProxyGen>();
 
-
             NGen nGen = new NGen( gens );
-
 
             return nGen;
 
+        }
+
+        private static Dictionary<string, Gen> LineProcessor( string[] lines ) {
+            /*
+             *  receives the comment-stripped lines from the text file
+             *  and process them into generator declarations,
+             *  deals with multi-line declarations
+             *  
+             *  will eventually handle headers
+             */
+
+            List<string> names = new List<string>();
+            List<string> declarations = new List<string>();
+
+            string currentDeclaration = "";
+
+            for( int i = 0; i < lines.Length; i++ ) {
+
+                if( lines[i].Length > 0 ) {
+
+                    //If a new declaration is started on this line
+                    if( PU.StringContainsDeclaration( lines[i] ) ) {
+
+                        //if there's already a declaration on the go - add it to the list
+                        if( currentDeclaration.Length > 0 ) {
+                            declarations.Add( currentDeclaration );
+                        }
+
+                        //split the line into the name and (potentially only the start of) the declaration
+                        string name;
+                        string contents;
+                        PU.StringToStringPair( lines[i], out name, out contents );
+
+                        //store the name and declaration
+                        names.Add( name.Trim() );
+                        currentDeclaration = contents.Trim();
+
+                    } else {
+                        //if a new declaration wasn't started this line,
+                        //then it's a continuation of the previous one,
+                        //add it to the string.
+                        currentDeclaration += ' ';
+                        currentDeclaration += lines[i].Trim();
+                    }
+                }
+            }
+
+            //get the last declaration
+            if( currentDeclaration.Length > 0 ) {
+                declarations.Add( currentDeclaration );
+            }
+
+            if( names.Count != declarations.Count ) {
+                Console.WriteLine( $"Line Processor Error: the number of names ({names.Count}) did not match the number of gernator declarations ({declarations.Count})" );
+            }
+
+            //create a dictionary and return it
+            Dictionary<string, Gen> namedDeclarations = new Dictionary<string, Gen>();
+            for( int i = 0; i < names.Count; i++ ) {
+                Gen g = SenGenProcessor( declarations[i] );
+                namedDeclarations.Add( names[i], g );
+            }
+            return namedDeclarations;
         }
 
         private static Gen[] MultiWrdProcessor( string[] s ) {
@@ -88,10 +134,15 @@ namespace NGen {
              *  Takes any string which would normally be treated as a Wrd
              *      ie - it doesn't have any complicated construction - like lists - in it
              *  and checks to see if it has any ProxyGens in it,
-             *  it then either returns a Wrd or a SenGen accordingly
+             *  it then returns either a Wrd or a SenGen accordingly
+             *  
+             *  TODO I think this could be optimised better
+             *  instead of creating a Wrd for every Wrd is should
+             *  instead group words between ProxyGens and shove them all together
+             *  into one Wrd
              */
 
-            if(PU.StringContainsRef( s ) ) {
+            if( PU.StringContainsRef( s ) ) {
                 //split the string based on spaces
                 char[] separators = { ' ' };
                 string[] words = s.Split( separators, StringSplitOptions.RemoveEmptyEntries );
@@ -101,7 +152,7 @@ namespace NGen {
                 foreach( string w in words ) {
                     if( PU.StringContainsRef( w ) ) {
 
-                        int refIndex = w.IndexOf( PU.CharacterMap( CharType.reference ) );
+                        int refIndex = w.IndexOf( PU.CharMap( CharType.reference ) );
                         string name = w.Substring( refIndex + 1, w.Length - refIndex - 1 );
                         ProxyGen pg = new ProxyGen( name.Trim() );
                         //add to the ProxyGen list for connecting up later
@@ -122,8 +173,6 @@ namespace NGen {
             }
 
         }
-
-
 
         private static Gen SenGenProcessor( string s ) {
             /*
@@ -185,7 +234,6 @@ namespace NGen {
 
             //if only one gen has been created, return it,
             //otherwise create a SenGen and return that
-
             if( gens.Count == 1 ) {
 
                 return gens[0];
@@ -194,6 +242,7 @@ namespace NGen {
 
                 SenGen sg = new SenGen( gens.ToArray() );
                 return sg;
+
             }
         }
 
@@ -245,18 +294,22 @@ namespace NGen {
         private static string GetBracketsStart( string s, out string preBrackets ) {
             /*
              * finds the starting point of the brackets and returns the input string
-             * minus anything before the start, also outputs to prefix separately
+             * minus anything before the start, also outputs a prefix separately
              */
+
             preBrackets = "";
             string contents = "";
             bool started = false;
 
             foreach( char c in s ) {
+
                 if( started ) {
+
                     contents += c;
+
                 } else {
 
-                    if( c == PU.CharacterMap( CharType.openList ) ) {
+                    if( c == PU.CharMap( CharType.openList ) ) {
 
                         started = true;
 
@@ -265,7 +318,6 @@ namespace NGen {
                         preBrackets += c;
 
                     }
-
                 }
             }
 
@@ -316,17 +368,20 @@ namespace NGen {
 
             //go through the string one character at a time
             foreach( char c in s ) {
+
                 //Console.WriteLine( $"char is '{c}'" );
                 //if the brackets have already been completed, add the character
                 //to the postBrackets string
                 if( complete ) {
+
                     postBrackets += c;
+
                 } else {
 
                     //increment the counters
-                    if( c == PU.CharacterMap( CharType.closeList ) ) {
+                    if( c == PU.CharMap( CharType.closeList ) ) {
                         closeCount++;
-                    } else if( c == PU.CharacterMap( CharType.openList ) ) {
+                    } else if( c == PU.CharMap( CharType.openList ) ) {
                         openCount++;
                     }
 
@@ -339,7 +394,7 @@ namespace NGen {
                     } else {
 
                         //separate by commas, unless we are above level 1 in the nesting
-                        if( c == PU.CharacterMap( CharType.listSeparator ) &&
+                        if( c == PU.CharMap( CharType.listSeparator ) &&
                             openCount - 1 == closeCount ) {
 
                                 contents.Add( tempContents );
@@ -368,23 +423,6 @@ namespace NGen {
 
 
 
-        public static string[] GetDataFromTxt( string path ) {
 
-            /*
-             *  Retrieves a text file and returns it as a string array
-             */
-
-            if( File.Exists( path ) ) {
-
-                return File.ReadAllLines( path );
-
-            } else {
-
-                Console.WriteLine( $"Get Data From Text File Failed: path ({path}) is invalid" );
-                return null;
-
-            }
-
-        }
     }
 }

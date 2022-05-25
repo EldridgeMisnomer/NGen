@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace NGen {
 
-    public enum CharType { comment, openList, closeList, listSeparator, reference };
+    public enum CharType { comment, declare, openList, closeList, listSeparator, reference };
 
     public static class ParserUtils {
 
 
         private static Dictionary<CharType, char> characters = new Dictionary<CharType, char> {
                     { CharType.comment , '#' },
+                    { CharType.declare, '=' },
                     { CharType.openList, '[' },
                     { CharType.closeList, ']' },
                     { CharType.listSeparator, ',' },
@@ -19,16 +21,20 @@ namespace NGen {
 
 
         public static bool StringContinsList( string s ) {
-            return s.Contains( CharacterMap( CharType.openList ) );
+            return s.Contains( CharMap( CharType.openList ) );
         }
 
         public  static bool StringContainsRef( string s ) {
-            return s.Contains( CharacterMap( CharType.reference ) );
+            return s.Contains( CharMap( CharType.reference ) );
+        }
+
+        public static bool StringContainsDeclaration( string s ) {
+            return s.Contains( CharMap( CharType.declare ) );
         }
 
         public static void StringToStringPair( string s, out string name, out string contents ) {
 
-            int divide = s.IndexOf( '=' );
+            int divide = s.IndexOf( CharMap( CharType.declare ) );
             name = s.Substring( 0, divide ).Trim();
             contents = s.Substring( divide + 1, s.Length - divide - 1 );
 
@@ -49,7 +55,7 @@ namespace NGen {
 
                 if( l.Trim().Length > 0 ) {
 
-                    if( l[0] != CharacterMap( CharType.comment ) ) {
+                    if( l.Trim()[0] != CharMap( CharType.comment ) ) {
                         strippedL.Add( l );
                     }
                 }
@@ -60,13 +66,32 @@ namespace NGen {
 
         }
 
-        public static char CharacterMap( CharType type ) {
+        public static char CharMap( CharType type ) {
 
             if( characters.ContainsKey( type ) ) {
                 return characters[type];
             } else {
                 Console.WriteLine( $"Error: CharacterMap does not contain a character for type: '{type}' " );
                 return ' ';
+            }
+
+        }
+
+        public static string[] GetDataFromTxt( string path ) {
+
+            /*
+             *  Retrieves a text file and returns it as a string array
+             */
+
+            if( File.Exists( path ) ) {
+
+                return File.ReadAllLines( path );
+
+            } else {
+
+                Console.WriteLine( $"Get Data From Text File Failed: path ({path}) is invalid" );
+                return null;
+
             }
 
         }
