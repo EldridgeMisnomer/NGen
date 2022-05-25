@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+
+using PU = NGen.ParserUtils;
 
 namespace NGen {
 
@@ -14,7 +15,7 @@ namespace NGen {
             //Get the file as an array of lines
             string[] lines = GetDataFromTxt( path );
             //Remove the comments
-            string[] strippedLines = StripComments( lines );
+            string[] strippedLines = PU.StripComments( lines );
             //convert into pairs of strings - names and ? sentences
             //add them to a dictionary
 
@@ -34,7 +35,7 @@ namespace NGen {
 
                     string n;
                     string c;
-                    StringToStringPair( l, out n, out c );
+                    PU.StringToStringPair( l, out n, out c );
 
                     Gen g = SenGenProcessor( c );
                     gens.Add( n, g );
@@ -66,14 +67,6 @@ namespace NGen {
             return nGen;
 
         }
-        
-        private static void StringToStringPair( string s, out string name, out string contents ) {
-
-            int divide = s.IndexOf( '=' );
-            name = s.Substring( 0, divide ).Trim();
-            contents = s.Substring( divide + 1, s.Length - divide - 1);
-
-        }
 
         private static Gen[] MultiWrdProcessor( string[] s ) {
             /*
@@ -98,7 +91,7 @@ namespace NGen {
              *  it then either returns a Wrd or a SenGen accordingly
              */
 
-            if( StringContainsRef( s ) ) {
+            if(PU.StringContainsRef( s ) ) {
                 //split the string based on spaces
                 char[] separators = { ' ' };
                 string[] words = s.Split( separators, StringSplitOptions.RemoveEmptyEntries );
@@ -106,9 +99,9 @@ namespace NGen {
                 List<Gen> gens = new List<Gen>();
 
                 foreach( string w in words ) {
-                    if( StringContainsRef( w ) ) {
+                    if( PU.StringContainsRef( w ) ) {
 
-                        int refIndex = w.IndexOf( CharacterMap( CharType.reference ) );
+                        int refIndex = w.IndexOf( PU.CharacterMap( CharType.reference ) );
                         string name = w.Substring( refIndex + 1, w.Length - refIndex - 1 );
                         ProxyGen pg = new ProxyGen( name.Trim() );
                         //add to the ProxyGen list for connecting up later
@@ -143,7 +136,7 @@ namespace NGen {
             List<Gen> gens = new List<Gen>();
 
             //Check to see if we have any WrdGens
-            if( StringContinsList(s) ) {
+            if( PU.StringContinsList(s) ) {
 
                 string preBracketStart;
                 string postBracketStart = GetBracketsStart( s, out preBracketStart );
@@ -166,7 +159,7 @@ namespace NGen {
                 //If there is a list in here, we send it back into the SenGenProcessor
                 if( postBrackets.Trim().Length > 0 ) {
 
-                    if( StringContinsList( postBrackets ) ) {
+                    if( PU.StringContinsList( postBrackets ) ) {
 
                         Gen pbg = SenGenProcessor( postBrackets );
                         gens.Add( pbg );
@@ -212,7 +205,7 @@ namespace NGen {
             //check to see if there are nested lists
             bool containsLists = false;
             foreach( string s in sArr ) {
-                containsLists = StringContinsList( s );
+                containsLists = PU.StringContinsList( s );
                 if( containsLists ) {
                     break;
                 }
@@ -225,7 +218,7 @@ namespace NGen {
                 List<Gen> gens = new List<Gen>();
 
                 foreach( string s in sArr ) {
-                    if( StringContinsList( s ) ) {
+                    if( PU.StringContinsList( s ) ) {
 
                         Gen g = SenGenProcessor( s );
                         gens.Add( g );
@@ -249,18 +242,6 @@ namespace NGen {
             return wg;
         }
 
-        private static bool StringContinsList( string s ) {
-            //DEBUG
-            //bool sC = s.Contains( '[' );
-            //Console.WriteLine( $"string \"{s}\" contains lists? {sC}" );
-
-            return s.Contains( CharacterMap( CharType.openList ) );
-        }
-
-        private static bool StringContainsRef( string s ) {
-            return s.Contains( CharacterMap( CharType.reference ) );
-        }
-
         private static string GetBracketsStart( string s, out string preBrackets ) {
             /*
              * finds the starting point of the brackets and returns the input string
@@ -275,7 +256,7 @@ namespace NGen {
                     contents += c;
                 } else {
 
-                    if( c == CharacterMap( CharType.openList ) ) {
+                    if( c == PU.CharacterMap( CharType.openList ) ) {
 
                         started = true;
 
@@ -343,9 +324,9 @@ namespace NGen {
                 } else {
 
                     //increment the counters
-                    if( c == CharacterMap( CharType.closeList ) ) {
+                    if( c == PU.CharacterMap( CharType.closeList ) ) {
                         closeCount++;
-                    } else if( c == CharacterMap( CharType.openList ) ) {
+                    } else if( c == PU.CharacterMap( CharType.openList ) ) {
                         openCount++;
                     }
 
@@ -358,7 +339,7 @@ namespace NGen {
                     } else {
 
                         //separate by commas, unless we are above level 1 in the nesting
-                        if( c == CharacterMap( CharType.listSeparator ) &&
+                        if( c == PU.CharacterMap( CharType.listSeparator ) &&
                             openCount - 1 == closeCount ) {
 
                                 contents.Add( tempContents );
@@ -385,55 +366,7 @@ namespace NGen {
 
         }
 
-        private static string[] StripComments( string[] ls ) {
 
-            /*
-             *  Receives an array of strings
-             *  and returns an array including only those strings
-             *  which do not begin with a # symbol
-             *  
-             *  also removes empty lines
-             */
-
-            List<string> strippedL = new List<string>();
-
-            foreach( string l in ls ) {
-
-                if( l.Trim().Length > 0 ) {
-
-                    if( l[0] != CharacterMap( CharType.comment ) ) {
-                        strippedL.Add( l );
-                    }
-                }
-            }
-
-
-            return strippedL.ToArray();
-
-        }
-
-        private enum CharType { comment, openList, closeList, listSeparator, reference };
-
-        private static char CharacterMap( CharType type ) {
-
-            Dictionary<CharType, char> characters = new Dictionary<CharType, char> {
-                { CharType.comment , '#' },
-                { CharType.openList, '[' },
-                { CharType.closeList, ']' },
-                { CharType.listSeparator, ',' },
-                { CharType.reference, '$' }
-            };
-
-            if( characters.ContainsKey(type) ) {
-                return characters[type];
-            } else {
-                Console.WriteLine( $"Error: CharacterMap does not contain a character for type: '{type}' " );
-                return ' ';
-            }
-
-
-
-        }
 
         public static string[] GetDataFromTxt( string path ) {
 
