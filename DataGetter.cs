@@ -18,13 +18,15 @@ namespace NGen {
             //process the lines into Gens with names
             Dictionary<string, Gen> gens = HeaderProcessor( strippedLines );
 
-            //TODO - deal with multiline names
             //TODO - check for duplicate names
-            //TODO - escaping characters
             //TODO - repeats
             //TODO - variable %
-            //TODO - header
             //TODO - set allow repeat elements from lists
+            //TODO - remap special characters
+            //TODO - header reset defaults
+            //TODO - shuffle
+            //TODO - sequence
+            //TODO - weighted randoms
 
 
             //Check all ProxyGens to see if their genNames are in the dictionary

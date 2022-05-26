@@ -8,6 +8,8 @@ namespace NGen {
 
     public enum CharType { comment, declare, openList, closeList, listSeparator, reference, header };
 
+    public enum PickType { random, noRepRandom, shuffle, noRepShuffle, cycle, weighted };
+
     public static class ParserUtils {
 
         /*

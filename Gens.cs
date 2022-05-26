@@ -72,12 +72,13 @@ namespace NGen {
         private readonly Gen[] wrds;
 
         //settings
-        private readonly bool allowReps;
+        private readonly PickType pickType;
 
         //state
         private int lastWrd = 0;
+        private int nextWrd = -1;
 
-        public ListGen( string[] words, bool allowRepeats = false ) {
+        public ListGen( string[] words, PickType type = PickType.random ) {
 
             //convert strings into Wrds and but them into their array
             wrds = new Gen[words.Length];
@@ -85,14 +86,33 @@ namespace NGen {
                 wrds[i] = new Wrd( PU.StripEscapes( words[i].Trim() ) );
             }
 
-            allowReps = allowRepeats;
+            pickType = type;
+            Setup();
         }
 
-        public ListGen( Gen[] words, bool allowRepeats = false ) {
+        public ListGen( Gen[] words, PickType type = PickType.random ) {
 
             wrds = words;
 
-            allowReps = allowRepeats;
+            pickType = type;
+            Setup();
+        }
+
+        private void Setup() {
+            if( pickType == PickType.cycle ||
+                pickType == PickType.shuffle ||
+                pickType == PickType.noRepShuffle ) {
+
+                nextWrd = 0;
+            }
+
+            if( pickType == PickType.shuffle ) {
+                wrds.Shuffle();
+            }
+
+            if( pickType == PickType.noRepShuffle ) {
+                wrds.NonRepeatingShuffle();
+            }
         }
 
         public override string GetTxt() {
@@ -101,11 +121,43 @@ namespace NGen {
                 return wrds[0].GetTxt();
             } else {
 
-                if( allowReps ) {
-                    return Utils.RandFromArray( wrds ).GetTxt();
-                } else {
-                    return Utils.NonRepeatingRandFromArray( wrds, ref lastWrd ).GetTxt();
+                switch(pickType) {
+
+                    case PickType.random:
+                        return Utils.RandFromArray( wrds ).GetTxt();
+                    case PickType.noRepRandom:
+                        return Utils.NonRepeatingRandFromArray( wrds, ref lastWrd ).GetTxt();
+                    case PickType.shuffle:
+                        string output = wrds[nextWrd].GetTxt();
+
+                        nextWrd++;
+                        if( nextWrd >= wrds.Length ) {
+                            wrds.Shuffle();
+                            nextWrd = 0;
+                        }
+
+                        return output;
+                    case PickType.noRepShuffle:
+                        output = wrds[nextWrd].GetTxt();
+
+                        nextWrd++;
+                        if( nextWrd >= wrds.Length ) {
+                            wrds.NonRepeatingShuffle();
+                            nextWrd = 0;
+                        }
+
+                        return output;
+                    case PickType.cycle:
+                        output = wrds[nextWrd].GetTxt();
+
+                        nextWrd = ( nextWrd + 1 ) % wrds.Length;
+                        return output;
+                    default:
+                        return Utils.RandFromArray( wrds ).GetTxt();
+
+
                 }
+
             }
         }
     }
