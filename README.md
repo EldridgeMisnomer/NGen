@@ -49,6 +49,39 @@ name = $honorific $surname
 When the "name" generator is run, it will access the "honorific" and "surname" generators to provide an output (the "honorific" and "surname" generators can also still be run separately).
 These generator references can be included in lists and nested.
 
+## Headers
+
+In order to set up some perameters and behaviours globally, an NGen file can include a header, which is surrounded by `^` characters.
+
+```
+^
+	This is a header
+^
+
+gen = This is a generator, it has to come after the header for the header to affect it.
+```
+
+A header affects all the generator definitions which follow it, although the behaviours it specifies can be overridden at the generator or at the list level.
+
+### Multiple Headers
+
+An Ngen file can have multiple headers, each one affecting the generator(s) following it. eg:
+
+```
+^
+	This header affects gen1 and gen2
+^
+gen1 = [collapsible, pneumatic] [shoulder, parrot]
+gen2 = I [came back from, went to] [Tipperary, Anglesey, the pub] 
+		with a [chip on my shoulder, small sack of oatmeal]
+^
+	And this header affects gen3
+^
+gem3 = [umple, bumple, jigget, splinch]
+```
+
+At the present moment, headers don't actually do anything at all, but you can still include them, and one day they will.
+
 ## Comments
 
 Coments can be written along with generators, by starting lines with a `#` symbol:
@@ -87,7 +120,7 @@ Sometimes you want to use these characters in your text, to do so they need to b
 #generators which probably don't exist
 money = [$100, $200]
 
-#the dollar signs should be escaped like this:
+#the dollar-signs should be escaped like this:
 money2 = [\$100, \$200]
 
 ```

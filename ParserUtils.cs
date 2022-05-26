@@ -6,10 +6,30 @@ using System.Text.RegularExpressions;
 
 namespace NGen {
 
-    public enum CharType { comment, declare, openList, closeList, listSeparator, reference };
+    public enum CharType { comment, declare, openList, closeList, listSeparator, reference, header };
 
     public static class ParserUtils {
 
+        /*
+         *  NOTE:
+         *  remapping special characters isn't implemented yet, but when it is we need
+         *  to make sure that some of them can't be remapped.
+         *  eg.
+         *  ^ - header - has no need to be remapped 
+         *              because it only  ever appears on a line on its own without any definition
+         *  # - comment - doesn't need to be remapped
+         *              because it only ever matters at the beginning of a line
+         *              ((NOTE - I'm not sure that this is true - need to check
+         *              maybe - this example would trigger a comment
+         *              name = [
+         *                      #something, something
+         *                      ]
+         *              if so comments do need remapping))
+         *              NOTE - at the moments comments do NOT check for escaping
+         *  = - declare - might not need remapping
+         *              because I think only the first instance is important
+         *              definitly not sure about this - probably does need it
+         */
 
         private static Dictionary<CharType, char> chars = new Dictionary<CharType, char> {
                     { CharType.comment , '#' },
@@ -17,7 +37,8 @@ namespace NGen {
                     { CharType.openList, '[' },
                     { CharType.closeList, ']' },
                     { CharType.listSeparator, ',' },
-                    { CharType.reference, '$' }
+                    { CharType.reference, '$' },
+                    { CharType.header, '^' }
                 };
 
 
@@ -30,7 +51,11 @@ namespace NGen {
         }
 
         public static bool StringContainsDeclaration( string s ) {
-            return NonEscapedCharCheck( s, CharMap(CharType.declare) );
+            return NonEscapedCharCheck( s, CharMap( CharType.declare ) );
+        }
+
+        internal static bool StringContainsHeader( string s ) {
+            return NonEscapedCharCheck( s, CharMap( CharType.header ) );
         }
 
         private static bool NonEscapedCharCheck( string s, char c ) {

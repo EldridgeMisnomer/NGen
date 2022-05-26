@@ -16,7 +16,7 @@ namespace NGen {
             //Remove the comments
             string[] strippedLines = PU.StripComments( lines );
             //process the lines into Gens with names
-            Dictionary<string, Gen> gens = LineProcessor( strippedLines );
+            Dictionary<string, Gen> gens = HeaderProcessor( strippedLines );
 
             //TODO - deal with multiline names
             //TODO - check for duplicate names
@@ -51,7 +51,83 @@ namespace NGen {
 
         }
 
-        private static Dictionary<string, Gen> LineProcessor( string[] lines ) {
+        private static Dictionary<string, Gen> HeaderProcessor( string[] lines ) {
+            /*
+             *  receives the comment-stripped lines from the text file
+             *  and divides them up into sections - headers and declarations,
+             *  sending declarations along with their matching headers on to the LineProcessor
+             */
+
+            List<string> headerLines = new List<string>();
+            List<string> declareLines = new List<string>();
+            bool inHeader = false;
+
+            //dictionary to store gens in
+            Dictionary<string, Gen> gens = new Dictionary<string, Gen>();
+
+            //loop through all lines slotting them into the correct list
+            //once we have a header and a set of declarations, process them
+            for( int i = 0; i < lines.Length; i++ ) {
+
+                //check line is long enough
+                if( lines[i].Trim().Length > 0 ) {
+
+                    //if we see the header symbol switch in or out of header mode
+                    //according to current state
+                    if( PU.StringContainsHeader( lines[i] ) ) {
+                        if( inHeader ) {
+                            inHeader = false;
+                        } else {
+                            inHeader = true;
+
+                            //if this is not the first header to be started
+                            //process the current headerLines and declareLines
+                            //before moving on
+                            if( declareLines.Count > 0 ) {
+                                Dictionary<string, Gen> tempGens = LineProcessor( headerLines.ToArray(), declareLines.ToArray() );
+
+                                foreach( KeyValuePair<string, Gen> g in tempGens ) {
+                                    gens.Add( g.Key, g.Value );
+                                }
+
+                                headerLines = new List<string>();
+                                declareLines = new List<string>();
+
+                            }
+                        }
+
+                        //if there is more string after the header symbol
+                        //add it to headerLines
+                        if( lines[i].Trim().Length > lines[i].IndexOf( PU.CharMap( CharType.header ) ) + 1 ) {
+                            headerLines.Add( lines[i] );
+                        }
+                    } else {
+
+                        //add lines to the correct list depending on mode
+                        if( inHeader ) {
+                            headerLines.Add( lines[i] );
+                        } else {
+                            declareLines.Add( lines[i] );
+                        }
+
+                    }
+                }
+            }
+
+            //add the final declarations to the dictionary
+            if( declareLines.Count > 0 ) {
+                Dictionary<string, Gen> tempGens = LineProcessor( headerLines.ToArray(), declareLines.ToArray() );
+
+                foreach( KeyValuePair<string, Gen> g in tempGens ) {
+                    gens.Add( g.Key, g.Value );
+                }
+            }
+
+            return gens;
+
+        }
+
+        private static Dictionary<string, Gen> LineProcessor( string[] header, string[] lines ) {
             /*
              *  receives the comment-stripped lines from the text file
              *  and process them into generator declarations,
