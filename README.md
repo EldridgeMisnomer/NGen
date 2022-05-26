@@ -73,3 +73,21 @@ multilineVeg = [
 ```
 
 In general, whitespace such as tabs, linebreaks and spaces, are ignored. There are some exceptions to this, such as every commented line having to have a `#` character at the beginning of it.
+
+## Escaping Characters
+
+As we have seen, NGen uses special characters like `[` and `$` to define things like Lists and References, the complete list of these special characters is:
+
+`# = [ ] , $`
+
+Sometimes you want to use these characters in your text, to do so they need to be escaped by putting a `\` character before them, otherwise they will be read as part of your generator structure, and not part of its content. eg:
+
+```
+#these dollar-signs will be read as references to generators named '100' and '200',
+#generators which probably don't exist
+money = [$100, $200]
+
+#the dollar signs should be escaped like this:
+money2 = [\$100, \$200]
+
+```

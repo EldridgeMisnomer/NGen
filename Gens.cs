@@ -1,4 +1,6 @@
-﻿namespace NGen {
+﻿using PU = NGen.ParserUtils;
+
+namespace NGen {
 
     public abstract class Gen {
 
@@ -15,7 +17,7 @@
         private readonly string wrd;
 
         public Wrd( string str ) {
-            wrd = str;
+            wrd = PU.StripEscapes(str);
         }
 
         public override string GetTxt() {
@@ -80,7 +82,7 @@
             //convert strings into Wrds and but them into their array
             wrds = new Gen[words.Length];
             for( int i = 0; i < wrds.Length; i++ ) {
-                wrds[i] = new Wrd( words[i].Trim() );
+                wrds[i] = new Wrd( PU.StripEscapes( words[i].Trim() ) );
             }
 
             allowReps = allowRepeats;
@@ -120,10 +122,6 @@
 
         public SenGen( Gen[] gens) {
             wrds = gens;
-        }
-
-        public SenGen() {
-            //DEBUG - This is a placeholder, remove later
         }
 
         public override string GetTxt() {

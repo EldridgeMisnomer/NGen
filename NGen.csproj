@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataGetter.cs" />
-    <Compile Include="Gen.cs" />
+    <Compile Include="Gens.cs" />
     <Compile Include="NGen.cs" />
     <Compile Include="ParserUtils.cs" />
     <Compile Include="Program.cs" />

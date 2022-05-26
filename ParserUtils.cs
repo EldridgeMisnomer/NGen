@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace NGen {
 
@@ -10,7 +11,7 @@ namespace NGen {
     public static class ParserUtils {
 
 
-        private static Dictionary<CharType, char> characters = new Dictionary<CharType, char> {
+        private static Dictionary<CharType, char> chars = new Dictionary<CharType, char> {
                     { CharType.comment , '#' },
                     { CharType.declare, '=' },
                     { CharType.openList, '[' },
@@ -21,15 +22,52 @@ namespace NGen {
 
 
         public static bool StringContinsList( string s ) {
-            return s.Contains( CharMap( CharType.openList ) );
+            return NonEscapedCharCheck( s, CharMap( CharType.openList ) );
         }
 
         public  static bool StringContainsRef( string s ) {
-            return s.Contains( CharMap( CharType.reference ) );
+            return NonEscapedCharCheck( s,  CharMap( CharType.reference ) );
         }
 
         public static bool StringContainsDeclaration( string s ) {
-            return s.Contains( CharMap( CharType.declare ) );
+            return NonEscapedCharCheck( s, CharMap(CharType.declare) );
+        }
+
+        private static bool NonEscapedCharCheck( string s, char c ) {
+            /*
+             *  Will check whether or not a string contains a given character
+             *  Returns true if the character is present, unless it has been escaped
+             */
+
+            bool contains = s.Contains( c );
+            if( contains ) {
+
+                //collect all the indexes of the given character in the string
+                int[] charIndexes = GetAllCharacterIndexes( s, c );
+
+                //go through all of the indexes, and check if the previous character was NOT an escape character
+                //if it wasn't, return true
+                //if they were ALL escape characters, return false
+                for( int i = 0; i < charIndexes.Length; i++ ) {
+                    int prevIndex = charIndexes[i] - 1;
+                    if( prevIndex < 0 || s[prevIndex] != '\\' ) {
+                        return true;
+                    }
+                }
+                return false;
+
+            } else {
+                return false;
+            }
+        }
+
+
+        private static int[] GetAllCharacterIndexes( string s, char c ) {
+            List<int> charIndexes = new List<int>();
+            for( int i = s.IndexOf( c ); i > -1; i = s.IndexOf( c, i + 1 ) ) {
+                charIndexes.Add( i );
+            }
+            return charIndexes.ToArray();
         }
 
         public static void StringToStringPair( string s, out string name, out string contents ) {
@@ -66,10 +104,32 @@ namespace NGen {
 
         }
 
+        public static string StripEscapes( string s ) {
+            /*
+             * Removes all escape characters from a string, unless it is preceeded by an escape
+             * 
+             * Note To Self:
+             *      This uses RegEx, you do not understand it, don't pretend you do
+             *      You used this website to generate this:
+             *      https://regex101.com/r/HQm24o/1
+             */
+
+            if( s.Contains( '\\' ) ) {
+
+                string pattern = @"(?<!\\)\\";
+                RegexOptions options = RegexOptions.Multiline;
+                Regex regex = new Regex( pattern, options );
+                return regex.Replace( s, "" );
+
+            } else {
+                return s;
+            }
+        }
+
         public static char CharMap( CharType type ) {
 
-            if( characters.ContainsKey( type ) ) {
-                return characters[type];
+            if( chars.ContainsKey( type ) ) {
+                return chars[type];
             } else {
                 Console.WriteLine( $"Error: CharacterMap does not contain a character for type: '{type}' " );
                 return ' ';
