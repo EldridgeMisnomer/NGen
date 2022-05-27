@@ -178,5 +178,135 @@ namespace NGen {
             }
 
         }
+
+        public static string GetBracketsStart( string s, out string preBrackets ) {
+            /*
+             * finds the starting point of the brackets and returns the input string
+             * minus anything before the start, also outputs a prefix separately
+             */
+
+            preBrackets = "";
+            string contents = "";
+            bool started = false;
+
+            foreach( char c in s ) {
+
+                if( started ) {
+
+                    contents += c;
+
+                } else {
+
+                    if( c == CharMap( CharType.openList ) ) {
+
+                        started = true;
+
+                    } else {
+
+                        preBrackets += c;
+
+                    }
+                }
+            }
+
+            return contents;
+        }
+
+
+        public static string[] GetBracketsContents( string s, out string postBrackets ) {
+            /*
+             *  This method is given a string which starts at the beginning of a set of brackets
+             *  but it doesn't know where the brackets end
+             *  so
+             *  it goes through the string character by character
+             *  and counts opening and closing brackets as it goes
+             *  when the number of opening and closing brackets are equal
+             *  it knows it has reached the end of the brackets,
+             *  no matter how many nested brackets there are,
+             *  and so it can separate out the contents of the brackets
+             *  from whatever comes after it
+             *  
+             *  while the number of opening brackets is 1 greater than the number of closing brackets
+             *  it knows that it is on the first level (ie no nesting has occured)
+             *  and so it can split the string using commas (',')
+             *  into its different elements, putting them into an array
+             *  when the number is higher than 1
+             *  it can sefely ignore commas
+             */
+
+            //count the number of opening and closing brackets,
+            //openCount starts at 1 because the first opening bracket
+            //is not passed in
+            int openCount = 1;
+            int closeCount = 0;
+
+            //a list to contain the comma-separated elements
+            List<string> contents = new List<string>();
+            //temp string to contain the current element
+            string tempContents = "";
+            //string to place everything following the brackets
+            postBrackets = "";
+            //flag to let us know once the brackets are comlete
+            bool complete = false;
+
+            //DEBUG
+            //Console.WriteLine( "getting contents of brackets:" );
+            //Console.WriteLine( "\tinput string is:" );
+            //Console.WriteLine( $"\t\t\"{s}\"" );
+
+            //go through the string one character at a time
+            foreach( char c in s ) {
+
+                //Console.WriteLine( $"char is '{c}'" );
+                //if the brackets have already been completed, add the character
+                //to the postBrackets string
+                if( complete ) {
+
+                    postBrackets += c;
+
+                } else {
+
+                    //increment the counters
+                    if( c == CharMap( CharType.closeList ) ) {
+                        closeCount++;
+                    } else if( c == CharMap( CharType.openList ) ) {
+                        openCount++;
+                    }
+
+                    //check to see if the brackets have been closed
+                    if( openCount == closeCount ) {
+
+                        contents.Add( tempContents );
+                        complete = true;
+
+                    } else {
+
+                        //separate by commas, unless we are above level 1 in the nesting
+                        if( c == CharMap( CharType.listSeparator ) &&
+                            openCount - 1 == closeCount ) {
+
+                            contents.Add( tempContents );
+                            tempContents = "";
+
+                        } else {
+
+                            tempContents += c;
+
+                        }
+
+                    }
+                }
+            }
+
+            //DEBUG
+            //Console.WriteLine( "\toutput string is:" );
+            //for( int i = 0; i < contents.Count; i++ ) {
+            //    Console.WriteLine( $"\t\t {i}: {contents[i]}" );
+            //}
+
+            return contents.ToArray();
+
+
+        }
     }
 }

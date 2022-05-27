@@ -51,7 +51,7 @@ generator %s = [[Banquo, Rosaline , Bardolph], [Polonius, Oberon, Benvolio], [De
 ```
 The above generator contains multiple, nested lists, all of which will have the shuffle Pick Type, rather than the default Pick Type of random.
 
-__Note:__ The space between the generator name and the Pick Type one of the few times where whitespace is important in NGen; without the space, the `%s` will be included in the generator name.
+__Note:__ The space between the generator name and the Pick Type is one of the few times where whitespace is important in NGen; without the space, the `%s` will be included in the generator name.
 
 Pick Types can also be [set in the header](#setting-pick-type-in-the-header), but setting the pick type at the generator level will override the header's Pick Type.
 

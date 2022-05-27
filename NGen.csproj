@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="DataGetter.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="GenProcessors.cs" />
     <Compile Include="GenSettings.cs" />
     <Compile Include="Gens.cs" />
     <Compile Include="NGen.cs" />
