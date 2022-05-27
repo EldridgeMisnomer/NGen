@@ -9,12 +9,14 @@ namespace NGen {
             string[] genNames = nGen.GetGenNames();
 
             //Test Code
-            int numTestToRunPerName = 15;
+            int numTestToRunPerName = 12;
+
             foreach( string s in genNames ) {
                 Console.WriteLine( $"{s}:" );
                 for( int i = 0; i < numTestToRunPerName; i++ ) {
                     Console.WriteLine( "\t" + nGen.GenTxt(s) );
                 }
+                Console.WriteLine( "" );
             }
 
 

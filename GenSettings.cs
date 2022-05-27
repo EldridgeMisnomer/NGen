@@ -7,6 +7,10 @@
             reset();
         }
 
+        public GenSettings( GenSettings gs ) {
+            pickType = gs.pickType;
+        }
+
         public void reset() {
             pickType = PickType.random;
         }

@@ -1,15 +1,84 @@
 # NGen
 A procedural text generator orientated towards generating short texts - like names.
 
-Text generators are written in simple text files. At their simplest they consist of a named generator, for example:
+Text generators are written in simple text files. At their simplest they consist of a single named generator, for example:
 
 `hi = Hello World`
 
-The minimum that is necessary for a generator is a name, followed by an `=` sign, followed by some text which will be returned when that generator is run. In the above example, every time the hi generator is run it will return the same text: "Hello World".
+An NGen file can contain multiple generators with complex constructions for returning text.
+
+<details><summary>Table of Contents</summary>
+<p>
+* [Generators](#generators)
+* [Word Lists](#word-lists)
+* [Text outside Lists](#text-outside-lists)
+* [Referencing generators](#referencing-generators)
+* [Headers](#headers)
+* [Comments](#comments)
+* [Escaping characters](#escaping-characters)
+</p>
+</details>
+
 
 ---
 
 The following are the currently available features:
+
+## Generators
+
+A generator is a name, followed by an `=` sign, followed by some text which will be returned when that generator is run. 
+
+```
+	generator = some text
+```
+
+In the above example, every time the generator is run it will return the same text: "some text".
+This is an extremely simple generator, but much more complex ones can be constructed. The most important component of most generators is the [List](#word-lists)
+
+### Generator names
+
+A generator name must be unique - no two generators can have the same name; they can have any characters in them except spaces or other whitespace; and they are case insensitive.
+
+### Setting pick type in generators
+
+The way that words are picked from lists can be set for all lists in a generator (see [Pick Types](#pick-types) for more information on how words are picked from lists).
+
+There are three Pick Types: `random`, `shuffle`, and `cycle`. By writing the Pick Type symbol (`%`) followed by the first letter of the Type you want after the generator name (so `%r`, `%s`, or `%c`), you set the Pick Type for all Lists in that Generator. eg:
+
+```
+#this generator will shuffle all its Lists
+generator %s = [[Banquo, Rosaline , Bardolph], [Polonius, Oberon, Benvolio], [Demetrius, Fortinbras, Stephano]]
+```
+The above generator contains multiple, nested lists, all of which will have the shuffle Pick Type, rather than the default Pick Type of random.
+
+__Note:__ The space between the generator name and the Pick Type one of the few times where whitespace is important in NGen; without the space, the `%s` will be included in the generator name.
+
+Pick Types can also be [set in the header](#setting-pick-type-in-the-header), but setting the pick type at the generator level will override the header's Pick Type.
+
+```
+^
+	#this pick setting in the header doesn't do anything, 
+	#because the generator below has a pick type which will override it.
+	pick = shuffle
+^
+gen1 %c = [a, b, c, d, e, f, g]
+```
+
+
+### Multiline generators
+
+Complicated generators take space to construct and doing so on a single line can be tricky and hard to read, so longer definitions can be written on multiple lines
+
+```
+multilineVeg = [
+	artichoke, beetroot, carrot, cauliflower, celery, 
+	endive, kale, leek, marrow, pea, 
+	potato, pumpkin, spinach, squash, yarrow
+]
+```
+
+In general, whitespace such as tabs, linebreaks and spaces, are ignored. There are some exceptions to this, such as every [commented](#comments) line having to have a `#` character at the beginning of it.
+
 
 ## Word Lists
 
@@ -30,7 +99,7 @@ This will still output a single name each time, from one or other of the nested 
 ### Pick Types
 
 The word which is selected for output from a list can be picked in one of three basic ways: random, shuffle, and cycle.
-At the moment, the Pick Type can only be set in the Header (see [Setting Pick Type in the Header](#setting-pick-type-in-the-header)) for more information), this will change soon.
+At the moment, the Pick Type can only be set in the Header (see [Setting Pick Type in the Header](#setting-pick-type-in-the-header)) for more information), and in the generator (see [Setting pick type in generators](#setting-pick-type-in-generators) for more), this will change soon.
 
 #### Random pick type
 
@@ -169,14 +238,14 @@ gen1 = [Greg, Nancy, Albert, Mario]
 gen2 = [Watermelon, Catapult, Saddle, Joshua]
 ```
 
-However, for the sake of clarity, it is not recommended to use this format in the header, rather it is intended to be used in other places (as yet not implemented!)
+However, for the sake of clarity, it is not recommended to use this format in the header, rather it is intended to be [used at the generator level](#setting-pick-type-in-generators).
 
 see [Pick Types](#pick-types) for more information.
 
 
 ## Comments
 
-Coments can be written along with generators, by starting lines with a `#` symbol:
+Comments can be written along with generators, by starting lines with a `#` symbol:
 
 ```
 # This is a comment and will be ignored
@@ -185,19 +254,6 @@ gen = this is not a comment and will create a generator
 ```
 Every commented line must have a `#` as its first character.
 
-## Multiline generators
-
-Complicated generators take space to construct and doing so on a single line can be tricky and hard to read, so longer definitions can be written on multiple lines
-
-```
-multilineVeg = [
-	artichoke, beetroot, carrot, cauliflower, celery, 
-	endive, kale, leek, marrow, pea, 
-	potato, pumpkin, spinach, squash, yarrow
-]
-```
-
-In general, whitespace such as tabs, linebreaks and spaces, are ignored. There are some exceptions to this, such as every commented line having to have a `#` character at the beginning of it.
 
 ## Escaping Characters
 

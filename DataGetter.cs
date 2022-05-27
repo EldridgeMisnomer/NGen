@@ -12,8 +12,8 @@ namespace NGen {
         public static NGen ParseTxtFile( string path ) {
 
             //settings for new ListGens
-            GenSettings defaultSettings = new GenSettings();
-            GenSettings currentSettings;
+            //GenSettings defaultSettings = new GenSettings();
+            //GenSettings currentSettings;
 
             //Get the file as an array of lines
             string[] lines = PU.GetDataFromTxt( path );
@@ -65,6 +65,8 @@ namespace NGen {
             string headerString = "";
             List<string> declareLines = new List<string>();
             bool inHeader = false;
+            List<GenSettings> genSettings = new List<GenSettings>();
+            genSettings.Add( new GenSettings() );
 
             //dictionary to store gens in
             Dictionary<string, Gen> gens = new Dictionary<string, Gen>();
@@ -88,7 +90,17 @@ namespace NGen {
                             //process the current headerLines and declareLines
                             //before moving on
                             if( declareLines.Count > 0 ) {
-                                Dictionary<string, Gen> tempGens = LineProcessor( headerString, declareLines.ToArray() );
+
+                                //TODO - check what happens if there is NO header
+                                //TODO - check what happens if there is NO header for the first gens,
+                                //          and then there IS a header
+
+                                //Create a new GensSettings from the header, using the previous genSettings as a basis
+                                GenSettings gs = ParseHeader( headerString, genSettings[ genSettings.Count - 1 ] );
+                                //store the new GenSettings
+                                genSettings.Add( gs );
+
+                                Dictionary<string, Gen> tempGens = LineProcessor( gs, declareLines.ToArray() );
 
                                 foreach( KeyValuePair<string, Gen> g in tempGens ) {
                                     gens.Add( g.Key, g.Value );
@@ -126,7 +138,12 @@ namespace NGen {
 
             //add the final declarations to the dictionary
             if( declareLines.Count > 0 ) {
-                Dictionary<string, Gen> tempGens = LineProcessor( headerString, declareLines.ToArray() );
+
+                //Create a new GensSettings from the header, using the previous genSettings as a basis
+                //we don't need to store this one as it's the last
+                GenSettings gs = ParseHeader( headerString, genSettings[genSettings.Count - 1] );
+
+                Dictionary<string, Gen> tempGens = LineProcessor( gs, declareLines.ToArray() );
 
                 foreach( KeyValuePair<string, Gen> g in tempGens ) {
                     gens.Add( g.Key, g.Value );
@@ -137,7 +154,7 @@ namespace NGen {
 
         }
 
-        private static GenSettings ParseHeader ( string h ) {
+        private static GenSettings ParseHeader( string h, GenSettings oldSettings ) {
 
             /*
              *  This receives a string that may have come from a header, 
@@ -147,9 +164,16 @@ namespace NGen {
              */
 
             //Create a new GenSettings to store all the info we find.
-            //Maybe, in the future we might be overwritting and already-existing one
+            //Maybe, in the future we might be overwritting an already-existing one
             //think about this
-            GenSettings gs = new GenSettings();
+
+            GenSettings gs;
+
+            if( h.Contains( "reset" ) ) {
+                gs = new GenSettings();
+            } else {
+                gs = new GenSettings (oldSettings);
+            }
 
             //check there's anything here to parse...
             //i think this should already have been done elsewhere,
@@ -171,6 +195,9 @@ namespace NGen {
                 int startIndex = h.IndexOf( '%' );
                 if( startIndex >= 0 && h.Length > startIndex + 1 ) {
 
+                    //DEBUG
+                    //Console.WriteLine( "Shorthand pick type detected" );
+
                     //index of the character indicating the picktype
                     int nextIndex = startIndex + 1;
                     //possible characters
@@ -180,6 +207,10 @@ namespace NGen {
 
                         if( h[nextIndex] == possibleTypes[i] ) {
                             pt = (PickType)i;
+
+                            //DEBUG
+                            //Console.WriteLine( $"Pick type is: {pt}" );
+
                             break;
                         }
 
@@ -220,19 +251,18 @@ namespace NGen {
             return gs;
         }
 
-        private static Dictionary<string, Gen> LineProcessor( string header, string[] lines ) {
+        private static Dictionary<string, Gen> LineProcessor( GenSettings gs, string[] lines ) {
             /*
              *  receives the comment-stripped lines from the text file
              *  and process them into generator declarations,
              *  deals with multi-line declarations
              *  
-             *  will eventually handle headers
+             *  also receives the header applying to those
              */
-
-            GenSettings gs = ParseHeader( header );
 
             List<string> names = new List<string>();
             List<string> declarations = new List<string>();
+            List<GenSettings> settings = new List<GenSettings>(); 
 
             string currentDeclaration = "";
 
@@ -252,6 +282,31 @@ namespace NGen {
                         string name;
                         string contents;
                         PU.StringToStringPair( lines[i], out name, out contents );
+
+                        //test the name to see if it has a header of its own
+                        //if it does - parse it and store the GenSettings
+                        //if it doesn't - store the header-based GenSettings
+                        char[] separators = { ' ' };
+                        string[] nameSplit = name.Split( separators, StringSplitOptions.RemoveEmptyEntries );
+                        name = nameSplit[0];
+
+                        //settings.Add( gs );
+
+                        if( nameSplit.Length > 1 ) {
+                            GenSettings genGS = ParseHeader( nameSplit[1], gs );
+                            settings.Add( genGS );
+                        } else {
+                            settings.Add( gs );
+                        }
+
+                        //DEBUG
+                        /*Console.WriteLine( $"LP. name: '{name}', nameSplitLength: '{nameSplit.Length}', nameSplitContents:" );
+                        foreach( string ns in nameSplit ) {
+                            Console.WriteLine( ns );
+                        }
+                        Console.WriteLine( "" );*/
+
+                                
 
                         //store the name and declaration
                         names.Add( name.Trim() );
@@ -279,7 +334,7 @@ namespace NGen {
             //create a dictionary and return it
             Dictionary<string, Gen> namedDeclarations = new Dictionary<string, Gen>();
             for( int i = 0; i < names.Count; i++ ) {
-                Gen g = SenGenProcessor( declarations[i], gs );
+                Gen g = SenGenProcessor( declarations[i], settings[i] );
                 namedDeclarations.Add( names[i], g );
             }
             return namedDeclarations;

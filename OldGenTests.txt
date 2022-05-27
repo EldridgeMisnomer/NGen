@@ -1,0 +1,53 @@
+﻿#This is a comment
+#for the moment names must be on one line - we'll fix this later
+
+#tname = [[\$Arppic, \$Thloat], [Flobber, Bib, [Zinger, Flinger]], [Bob, Shmob], Scrabber, Nib]x
+
+^
+#%c
+pick = shuffle
+^
+#pick codes -- %r, %nr, %s, %ns, %c
+#NO
+#pick codes == %r, %s, %c
+#use something else for:
+#				no-repeats (random & shuffle)
+#				skip-number (cycle)
+#				shuffle-frequency (shuffle)
+
+
+testm = [ a, b, c, d, e, f, g, h, i, j, k, l, m, n ]
+
+cyclename %c = [ one, two, three, four, five, six, seven, eight, nine, ten ]
+
+#difpicktypes = [ %r[ words, picked randomly ], %ns[ words, picked, with, non-repeating, shuffle ] ]
+
+multilineVeg =  [
+				artichoke, beetroot, carrot, cauliflower, celery, 
+				endive, kale, leek, marrow, pea, 
+				potato, pumpkin, spinach, squash, yarrow
+			    ]
+
+^
+#This is a different header
+#pick = shuffle
+%s
+^
+
+honorific = [Mr, Ms, Mrs, Miss, Master, Sir, Madam]
+surname = [Clancey, Dumblethorn, Addlington, Cranch, Asperly]
+name = $honorific $surname
+
+#adj = [blue, speedy, luxurious, seedy, small]
+#vehicle = [car, motorbike, truck, SUV]
+#way = [ motorway, road, freeway, autobahn]
+
+#sen = The $adj $vehicle sped [down, up, along] the $way
+
+
+
+#DEBUG
+#test1 = pre [blah1, blah2, blah3] post
+#test2 = pre1 [a, b, c, d] mid1 [x, y, z ] post
+#test3 = [[one, three, five], [two, four, six]] and then what[nice, lovely, delicious] [[toes, fingers, feet], [eyelids, whiskers, earlobes], [antlers, tusks, quills]] you have
+#test4 = [ 1, [a,b,c], [x,y,z] ]
