@@ -30,7 +30,7 @@ This will still output a single name each time, from one or other of the nested 
 ### Pick Types
 
 The word which is selected for output from a list can be picked in one of three basic ways: random, shuffle, and cycle.
-At the moment, the Pick Type can only be set in the Header (see Setting Pick Type in Header for more information), this will change soon.
+At the moment, the Pick Type can only be set in the Header (see [Setting Pick Type in the Header](#setting-pick-type-in-the-header)) for more information), this will change soon.
 
 #### Random pick type
 
@@ -148,7 +148,7 @@ gen2 = [one, two, three, four, five]
 gen3 = [ 1 of Hearts, 2 of Clubs, 4 of Diamonds, 3 of Spades, Queen of Hearts, etc ]
 ```
 
-see Pick Types for more information.
+see [Pick Types](#pick-types) for more information.
 
 
 ## Comments
