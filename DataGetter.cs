@@ -28,8 +28,6 @@ namespace NGen {
             //TODO - set allow repeat elements from lists
             //TODO - remap special characters
             //TODO - header reset defaults
-            //TODO - shuffle
-            //TODO - sequence
             //TODO - weighted randoms
 
 
@@ -141,37 +139,78 @@ namespace NGen {
 
         private static GenSettings ParseHeader ( string h ) {
 
+            /*
+             *  This receives a string that may have come from a header, 
+             *  or, in fact, the codes following a generator name
+             *  (need to come up with a word for this),
+             *  or the code that comes before a list  
+             */
+
+            //Create a new GenSettings to store all the info we find.
+            //Maybe, in the future we might be overwritting and already-existing one
+            //think about this
             GenSettings gs = new GenSettings();
 
-            h = h.ToLower();
-
+            //check there's anything here to parse...
+            //i think this should already have been done elsewhere,
+            //but I'm sure something could have slipped through,
+            //better safe than sorry
             if( h.Length > 0 ) {
 
-                //get pick type
+                //this bit is case insensitive, so
+                h = h.ToLower();
+
+                //-------------------------------------------//
+                //Section One
+                //Pick Type
+                //-------------------------------------------//
+
                 PickType pt = gs.pickType;
-                int startIndex = h.IndexOf( "pick " );
-                if( startIndex >= 0 ) {
-                    startIndex += 4;
-                    int equalsIndex = h.IndexOf( '=', startIndex );
-                    string pickTypeString = h.Substring( equalsIndex + 1 );
 
-                    string[] possibleTypes = { "random", "shuffle", "cycle" };
+                //first check the shorthand way
+                int startIndex = h.IndexOf( '%' );
+                if( startIndex >= 0 && h.Length > startIndex + 1 ) {
 
-                    //DEBUG
-                    //Console.WriteLine( $"pickTypeString =\"{pickTypeString}\"" );
+                    //index of the character indicating the picktype
+                    int nextIndex = startIndex + 1;
+                    //possible characters
+                    char[] possibleTypes = { 'r', 's', 'c' };
 
                     for( int i = 0; i < possibleTypes.Length; i++ ) {
 
-                        int typeLength = possibleTypes[i].Length;
-
-                        if( pickTypeString.Length >= typeLength &&
-                            pickTypeString.Contains( possibleTypes[i] ) ) {
+                        if( h[nextIndex] == possibleTypes[i] ) {
                             pt = (PickType)i;
-
-                            //DEBUG
-                            //Console.WriteLine( $"pick type set to:{pt}" );
-
                             break;
+                        }
+
+                    }
+                } else {
+
+                    //now check the longhand way
+                    startIndex = h.IndexOf( "pick " );
+                    if( startIndex >= 0 ) {
+                        startIndex += 4;
+                        int equalsIndex = h.IndexOf( '=', startIndex );
+                        string pickTypeString = h.Substring( equalsIndex + 1 );
+
+                        string[] possibleTypes = { "random", "shuffle", "cycle" };
+
+                        //DEBUG
+                        //Console.WriteLine( $"pickTypeString =\"{pickTypeString}\"" );
+
+                        for( int i = 0; i < possibleTypes.Length; i++ ) {
+
+                            int typeLength = possibleTypes[i].Length;
+
+                            if( pickTypeString.Length >= typeLength &&
+                                pickTypeString.Contains( possibleTypes[i] ) ) {
+                                pt = (PickType)i;
+
+                                //DEBUG
+                                //Console.WriteLine( $"pick type set to:{pt}" );
+
+                                break;
+                            }
                         }
                     }
                 }

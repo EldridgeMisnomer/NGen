@@ -127,7 +127,7 @@ gem3 = [umple, bumple, jigget, splinch]
 
 ### Setting Pick Type in the header
 
-You can set the Pick Type for all Word Lists in generators which follow a header by writting `pick =` followed by the Pick Type you want from three possibilities: `random`, `shuffle`, and `cycle`, eg:
+You can set the Pick Type for all Word Lists in generators which follow a header by writing `pick =` followed by the Pick Type you want from three possibilities: `random`, `shuffle`, and `cycle`, eg:
 
 ```
 ^
@@ -147,6 +147,29 @@ gen2 = [one, two, three, four, five]
 
 gen3 = [ 1 of Hearts, 2 of Clubs, 4 of Diamonds, 3 of Spades, Queen of Hearts, etc ]
 ```
+
+There is a shorthand way of choosing the Pick Type. Instead of writing `pick = random` the `%` symbol can be used followed by a `r`, an `s`, or a `c` for 'random', 'shuffle', or 'cycle' respectively. 
+It is important that there be no whitespace between the two characters, so `%s` is acceptable but `% s` will not work.
+
+```
+^
+	%c
+^
+
+# gen 1 will be set to cycle
+
+gen1 = [Greg, Nancy, Albert, Mario]
+
+^
+	%s
+^
+
+#gen2 will be set to shuffle
+
+gen2 = [Watermelon, Catapult, Saddle, Joshua]
+```
+
+However, for the sake of clarity, it is not recommended to use this format in the header, rather it is intended to be used in other places (as yet not implemented!)
 
 see [Pick Types](#pick-types) for more information.
 
