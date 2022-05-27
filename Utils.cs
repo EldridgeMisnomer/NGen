@@ -55,21 +55,39 @@ namespace NGen {
              *  Fisher–Yates based shuffle for an array
              *  it stops the last element from becoming the first element
              *  thereby avoiding repeats
+             *  
+             *  it only does this to arrays longer than 2 elements
+             *  because a 2 element list always stays the same
+             *      0, 1 --> 0, 1 
+             *      
+             *  although it'll work on other small-element lists,
+             *  it's probably not a good idea to limit the permutations like this
+             *  at the very least for 3 and 4 element lists
              */
 
             int count = array.Length;
-            while( count > 1 ) {
-                count--;
-                int pos;
-                if( count == array.Length - 1 ) {
-                    pos = rand.Next( 1, count );
-                } else {
-                    pos = rand.Next( count + 1 );
+
+            if( count > 2 ) {
+
+                while( count > 1 ) {
+                    count--;
+                    int pos;
+                    if( count == array.Length - 1 ) {
+                        pos = rand.Next( 1, count );
+                    } else {
+                        pos = rand.Next( count + 1 );
+                    }
+                    T value = array[pos];
+                    array[pos] = array[count];
+                    array[count] = value;
                 }
-                T value = array[pos];
-                array[pos] = array[count];
-                array[count] = value;
+
+            } else {
+
+                array.Shuffle();
+
             }
+
 
         }
 

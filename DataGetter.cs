@@ -11,6 +11,10 @@ namespace NGen {
 
         public static NGen ParseTxtFile( string path ) {
 
+            //settings for new ListGens
+            GenSettings defaultSettings = new GenSettings();
+            GenSettings currentSettings;
+
             //Get the file as an array of lines
             string[] lines = PU.GetDataFromTxt( path );
             //Remove the comments
@@ -60,7 +64,7 @@ namespace NGen {
              *  sending declarations along with their matching headers on to the LineProcessor
              */
 
-            List<string> headerLines = new List<string>();
+            string headerString = "";
             List<string> declareLines = new List<string>();
             bool inHeader = false;
 
@@ -86,13 +90,13 @@ namespace NGen {
                             //process the current headerLines and declareLines
                             //before moving on
                             if( declareLines.Count > 0 ) {
-                                Dictionary<string, Gen> tempGens = LineProcessor( headerLines.ToArray(), declareLines.ToArray() );
+                                Dictionary<string, Gen> tempGens = LineProcessor( headerString, declareLines.ToArray() );
 
                                 foreach( KeyValuePair<string, Gen> g in tempGens ) {
                                     gens.Add( g.Key, g.Value );
                                 }
 
-                                headerLines = new List<string>();
+                                headerString = "";
                                 declareLines = new List<string>();
 
                             }
@@ -101,13 +105,19 @@ namespace NGen {
                         //if there is more string after the header symbol
                         //add it to headerLines
                         if( lines[i].Trim().Length > lines[i].IndexOf( PU.CharMap( CharType.header ) ) + 1 ) {
-                            headerLines.Add( lines[i] );
+                            if( headerString.Length > 0 ) {
+                                headerString += " ";
+                            }
+                            headerString += lines[i];
                         }
                     } else {
 
                         //add lines to the correct list depending on mode
                         if( inHeader ) {
-                            headerLines.Add( lines[i] );
+                            if( headerString.Length > 0 ) {
+                                headerString += " ";
+                            }
+                            headerString += lines[i];
                         } else {
                             declareLines.Add( lines[i] );
                         }
@@ -118,7 +128,7 @@ namespace NGen {
 
             //add the final declarations to the dictionary
             if( declareLines.Count > 0 ) {
-                Dictionary<string, Gen> tempGens = LineProcessor( headerLines.ToArray(), declareLines.ToArray() );
+                Dictionary<string, Gen> tempGens = LineProcessor( headerString, declareLines.ToArray() );
 
                 foreach( KeyValuePair<string, Gen> g in tempGens ) {
                     gens.Add( g.Key, g.Value );
@@ -129,7 +139,49 @@ namespace NGen {
 
         }
 
-        private static Dictionary<string, Gen> LineProcessor( string[] header, string[] lines ) {
+        private static GenSettings ParseHeader ( string h ) {
+
+            GenSettings gs = new GenSettings();
+
+            h = h.ToLower();
+
+            if( h.Length > 0 ) {
+
+                //get pick type
+                PickType pt = gs.pickType;
+                int startIndex = h.IndexOf( "pick " );
+                if( startIndex >= 0 ) {
+                    startIndex += 4;
+                    int equalsIndex = h.IndexOf( '=', startIndex );
+                    string pickTypeString = h.Substring( equalsIndex + 1 );
+
+                    string[] possibleTypes = { "random", "shuffle", "cycle" };
+
+                    //DEBUG
+                    //Console.WriteLine( $"pickTypeString =\"{pickTypeString}\"" );
+
+                    for( int i = 0; i < possibleTypes.Length; i++ ) {
+
+                        int typeLength = possibleTypes[i].Length;
+
+                        if( pickTypeString.Length >= typeLength &&
+                            pickTypeString.Contains( possibleTypes[i] ) ) {
+                            pt = (PickType)i;
+
+                            //DEBUG
+                            //Console.WriteLine( $"pick type set to:{pt}" );
+
+                            break;
+                        }
+                    }
+                }
+                gs.pickType = pt;
+            }
+
+            return gs;
+        }
+
+        private static Dictionary<string, Gen> LineProcessor( string header, string[] lines ) {
             /*
              *  receives the comment-stripped lines from the text file
              *  and process them into generator declarations,
@@ -137,6 +189,8 @@ namespace NGen {
              *  
              *  will eventually handle headers
              */
+
+            GenSettings gs = ParseHeader( header );
 
             List<string> names = new List<string>();
             List<string> declarations = new List<string>();
@@ -186,7 +240,7 @@ namespace NGen {
             //create a dictionary and return it
             Dictionary<string, Gen> namedDeclarations = new Dictionary<string, Gen>();
             for( int i = 0; i < names.Count; i++ ) {
-                Gen g = SenGenProcessor( declarations[i] );
+                Gen g = SenGenProcessor( declarations[i], gs );
                 namedDeclarations.Add( names[i], g );
             }
             return namedDeclarations;
@@ -252,7 +306,7 @@ namespace NGen {
 
         }
 
-        private static Gen SenGenProcessor( string s ) {
+        private static Gen SenGenProcessor( string s, GenSettings headerSettings ) {
             /*
              * This will take a string and turn it into a SenGen,
              * although, if it is a simple sentence it may return
@@ -278,7 +332,7 @@ namespace NGen {
                 string postBrackets;
                 string[] bracketsContents = GetBracketsContents( postBracketStart, out postBrackets );
 
-                ListGen wg = WrdGenProcessor( bracketsContents );
+                ListGen wg = ListGenProcessor( bracketsContents, headerSettings );
                 gens.Add( wg );
 
                 //process postBrackets text
@@ -288,7 +342,7 @@ namespace NGen {
 
                     if( PU.StringContinsList( postBrackets ) ) {
 
-                        Gen pbg = SenGenProcessor( postBrackets );
+                        Gen pbg = SenGenProcessor( postBrackets, headerSettings );
                         gens.Add( pbg );
 
                     } else {
@@ -324,7 +378,7 @@ namespace NGen {
             }
         }
 
-        private static ListGen WrdGenProcessor( string[] sArr ) {
+        private static ListGen ListGenProcessor( string[] sArr, GenSettings headerSettings ) {
             /*
              *  receives the contents of square brackets and turns them into a ListGen
              */
@@ -347,7 +401,7 @@ namespace NGen {
                 foreach( string s in sArr ) {
                     if( PU.StringContinsList( s ) ) {
 
-                        Gen g = SenGenProcessor( s );
+                        Gen g = SenGenProcessor( s, headerSettings );
                         gens.Add( g );
 
                     } else {
@@ -356,13 +410,13 @@ namespace NGen {
                     }
                 }
 
-                wg = new ListGen( gens.ToArray() );
+                wg = new ListGen( gens.ToArray(), headerSettings );
 
             } else {
 
                 //if there are no nested lists, create a simple ListGen out of the strings
                 Gen[] gens = MultiWrdProcessor( sArr );
-                wg = new ListGen( gens );
+                wg = new ListGen( gens, headerSettings );
 
             }
 

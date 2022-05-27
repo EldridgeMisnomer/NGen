@@ -27,7 +27,52 @@ Lists can be nested, eg:
 
 This will still output a single name each time, from one or other of the nested lists
 
-### Text outside lists
+### Pick Types
+
+The word which is selected for output from a list can be picked in one of three basic ways: random, shuffle, and cycle.
+At the moment, the Pick Type can only be set in the Header (see Setting Pick Type in Header for more information), this will change soon.
+
+#### Random pick type
+
+The default Pick Type is random - one of the elements from the list will be selected at random each time.
+
+```
+^
+	pick = random
+^
+
+randomgen = [harpsichord, lute, harmonium, flute, harp, oboe]
+```
+Each time the generator is run, any one of the elements in the list has an equal chance of being picked
+
+#### Shuffle pick type
+
+When the Pick Type is set to shuffle, elements are still picked randomly, but instead of picking a random one each time, the whole list is reordered randomly before the generator is ever run, and then the elements are picked in order, one at a time. When all the elements have been picked, the list is reordered randomly again and picking starts again at the beginning.
+This mostly avoids the same element being picked twice in a row (it can still happen directly after a shuffle), and ensures that all elements from the list are seen given enough picks.
+
+```
+^
+	pick = shuffle
+^
+
+shufflegen = [bee, spider, caterpillar, beetle]
+```
+In the above example, the list might be reordered to `[spider, beetle, caterpillar, bee]` and will then output first 'spider', then 'beetle', then 'caterpillar'. Once 'bee' has been picked the list is shuffled again.
+
+#### Cycle pick type
+
+When the Pick Type is set to cycle, elements are not picked randomly at all, but instead in the order they were written in. Once the last element is reached the first will be picked next.
+
+```
+^
+	pick = cycle
+^
+
+cyclegen = [shrub, bush, tree] 
+```
+The above will always output elements in the same order: 'shrub', then 'bush', then 'tree' then 'shrub' and so on.
+
+## Text outside lists
 
 Not all text need be inside a list. Text outside of lists will always be reproduced, eg:
 
@@ -37,7 +82,7 @@ This will output a single random name each time, but always starting with "Mr"
 
 ## Referencing generators
 Writing complicated generators in one go can be difficult, so instead the task can be split into multiple generators.
-One generator can reference the output of another generator by using its name preceeded by a `$` symbol, like so:
+One generator can reference the output of another generator by using its name preceded by a `$` symbol, like so:
 
 ```
 honorific = [Mr, Ms, Mrs, Miss, Master, Sir, Madam]
@@ -51,7 +96,7 @@ These generator references can be included in lists and nested.
 
 ## Headers
 
-In order to set up some perameters and behaviours globally, an NGen file can include a header, which is surrounded by `^` characters.
+In order to set up some parameters and behaviours globally, an NGen file can include a header, which is surrounded by `^` characters.
 
 ```
 ^
@@ -80,7 +125,31 @@ gen2 = I [came back from, went to] [Tipperary, Anglesey, the pub]
 gem3 = [umple, bumple, jigget, splinch]
 ```
 
-At the present moment, headers don't actually do anything at all, but you can still include them, and one day they will.
+### Setting Pick Type in the header
+
+You can set the Pick Type for all Word Lists in generators which follow a header by writting `pick =` followed by the Pick Type you want from three possibilities: `random`, `shuffle`, and `cycle`, eg:
+
+```
+^
+	pick = cycle
+^
+
+#gen1 and gen2 will both have their Pick Type set to cycle
+
+gen1 = [a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, y, v, x, y, z]
+gen2 = [one, two, three, four, five]
+
+^
+	pick = shuffle
+^
+
+#gen3 will have its Pick Type set to shuffle
+
+gen3 = [ 1 of Hearts, 2 of Clubs, 4 of Diamonds, 3 of Spades, Queen of Hearts, etc ]
+```
+
+see Pick Types for more information.
+
 
 ## Comments
 
