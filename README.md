@@ -8,7 +8,7 @@ Text generators are written in simple text files. At their simplest they consist
 An NGen file can contain multiple generators with complex constructions for returning text.
 
 <details><summary>Table of Contents</summary>
-<p>
+
 * [Generators](#generators)
 * [Word Lists](#word-lists)
 * [Text outside Lists](#text-outside-lists)
@@ -16,7 +16,7 @@ An NGen file can contain multiple generators with complex constructions for retu
 * [Headers](#headers)
 * [Comments](#comments)
 * [Escaping characters](#escaping-characters)
-</p>
+
 </details>
 
 
