@@ -186,12 +186,15 @@ namespace NGen {
                 //this bit is case insensitive, so
                 h = h.ToLower();
 
+                //DEBUG
+                Console.WriteLine( $"h is: '{h}'" );
+
                 //-------------------------------------------//
                 //Section One
                 //Pick Type
                 //-------------------------------------------//
 
-                PickType pt = gs.pickType;
+                PickType pt = gs.PickType;
 
                 //first check the shorthand way
                 int startIndex = h.IndexOf( '%' );
@@ -247,7 +250,60 @@ namespace NGen {
                         }
                     }
                 }
-                gs.pickType = pt;
+                gs.PickType = pt;
+
+                //-------------------------------------------//
+                //Section Two
+                //Repeat Type
+                //-------------------------------------------//
+
+                RepeatType rt = gs.RepType;
+
+                //first check the shorthand way
+                startIndex = h.IndexOf( '&' );
+                    //TODO
+                    //NOTE: there is a potential problem here, I think. 
+                    //if the character is the last character in the string
+                    //then it won't be detected
+                if( startIndex >= 0 && h.Length > startIndex + 1 ) {
+
+                    //index of the character indicating the picktype
+                    int nextIndex = startIndex + 1;
+
+                    char rtChar = h[nextIndex];
+
+                    //check if the character after the repeat symbol is a number
+                    if( char.IsDigit( rtChar ) ) {
+
+                        rt = RepeatType.normal;
+
+                    } else {
+
+                        if( rtChar == 'u') {
+
+                            rt = RepeatType.uniform;
+
+                        } else  if( rtChar == 'f' ) {
+
+                            rt = RepeatType.constant;
+
+                        } else if( rtChar == 'w' ) {
+
+                            rt = RepeatType.weighted;
+
+                        } else {
+
+                            rt = RepeatType.normal;
+
+                        }
+
+                    }
+
+                }
+                gs.RepType = rt;
+                gs.SetDefaults();
+
+
             }
 
             return gs;
@@ -295,7 +351,13 @@ namespace NGen {
                         //settings.Add( gs );
 
                         if( nameSplit.Length > 1 ) {
-                            GenSettings genGS = ParseHeader( nameSplit[1], gs );
+
+                            string headerString = "";
+                            for( int j = 1; j < nameSplit.Length; j++ ) {
+                                headerString += nameSplit[j] + " ";
+                            }
+
+                            GenSettings genGS = ParseHeader( headerString, gs );
                             settings.Add( genGS );
                         } else {
                             settings.Add( gs );

@@ -99,14 +99,14 @@ namespace NGen {
         }
 
         private void Setup() {
-            if( gs.pickType == PickType.cycle ||
-                gs.pickType == PickType.shuffle ){//||
+            if( gs.PickType == PickType.cycle ||
+                gs.PickType == PickType.shuffle ){//||
                 //pickType == PickType.noRepShuffle ) {
 
                 nextWrd = 0;
             }
 
-            if( gs.pickType == PickType.shuffle ) {
+            if( gs.PickType == PickType.shuffle ) {
                 wrds.Shuffle();
             }
 
@@ -117,11 +117,57 @@ namespace NGen {
 
         public override string GetTxt() {
 
+            string s = "";
+            int repeats = 0;
+
+            //Choose the number of repeats based on the repeat type
+            switch( gs.RepType ) {
+
+                case RepeatType.constant:
+                    repeats = gs.RepMax;
+                    break;
+    
+                case RepeatType.uniform:
+                    repeats = Utils.RandomRangeInt( gs.RepMin, gs.RepMax + 1 );
+                    break;
+
+                case RepeatType.normal:
+
+                    if( gs.UseMeanDev ) {
+
+                        repeats = Utils.RandomNormalMeanDevInt( gs.RepMin, gs.RepMax, gs.RepMean, gs.RepStdDev );
+                        break;
+
+                    } else {
+
+                        repeats = Utils.RandomNormalRangeInt( gs.RepMin, gs.RepMax );
+                        break;
+
+                    }
+                case RepeatType.weighted:
+                    repeats = Utils.RandomWeightedInt( gs.RepWeights );
+                    break;
+
+            }
+
+            //get text repeatedly
+            for( int i = 0; i < repeats + 1; i++ ) {
+                s += PickTxt();
+                if( i != gs.RepMax ) {
+                    s += gs.separator;
+                }
+            }
+
+            return s;
+        }
+
+        public string PickTxt() {
+
             if( wrds.Length == 1 ) {
                 return wrds[0].GetTxt();
             } else {
 
-                switch(gs.pickType) {
+                switch(gs.PickType) {
 
                     case PickType.random:
                         return Utils.RandFromArray( wrds ).GetTxt();

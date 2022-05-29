@@ -39,7 +39,7 @@ This is an extremely simple generator, but much more complex ones can be constru
 
 A generator name must be unique - no two generators can have the same name; they can have any characters in them except spaces or other whitespace; and they are case insensitive.
 
-### Setting pick type in generators
+### Setting Pick Type in the Generator
 
 The way that words are picked from lists can be set for all lists in a generator (see [Pick Types](#pick-types) for more information on how words are picked from lists).
 
@@ -64,6 +64,9 @@ Pick Types can also be [set in the header](#setting-pick-type-in-the-header), bu
 gen1 %c = [a, b, c, d, e, f, g]
 ```
 
+### Setting Repeat Type in the Generator
+
+TODO
 
 ### Multiline generators
 
@@ -99,7 +102,7 @@ This will still output a single name each time, from one or other of the nested 
 ### Pick Types
 
 The word which is selected for output from a list can be picked in one of three basic ways: random, shuffle, and cycle.
-At the moment, the Pick Type can only be set in the Header (see [Setting Pick Type in the Header](#setting-pick-type-in-the-header)) for more information), and in the generator (see [Setting pick type in generators](#setting-pick-type-in-generators) for more), this will change soon.
+At the moment, the Pick Type can only be set in the Header (see [Setting Pick Type in the Header](#setting-pick-type-in-the-header)) for more information), and in the generator (see [Setting Pick Type in the Generator](#setting-pick-type-in-the-generator) for more), this will change soon.
 
 #### Random pick type
 
@@ -140,6 +143,54 @@ When the Pick Type is set to cycle, elements are not picked randomly at all, but
 cyclegen = [shrub, bush, tree] 
 ```
 The above will always output elements in the same order: 'shrub', then 'bush', then 'tree' then 'shrub' and so on.
+
+### Repeats
+
+Lists can be told to repeat themeselves a fixed or random number of times using several different methods for picking the number of repetitions. This is useful if, for example, you're generating a person's name and you want to add the possibility of a second or even a third name drawn from the same pool.
+
+This is done by setting the Repeat Type.
+There are 4 different  repeat types: `fixed`, `uniform`, `normal`, and `weighted`.
+The default Repeat Type is `fixed`, but the number of repeats are set to zero, so Lists don't, by default, repeat themselves.
+
+**Note:** All numbers here refer to the number of *repetitions* not the number of instances; so 0 repetitions, still mean that a list will output once. To add the possibility of a list not outputting at all, you'll have to wait, because it hasn't been implemented yet.
+
+Repetition can currently only be set in generators, see [Setting Repeat Type in the Generator](#setting-repeat-type-in-the-generator) for more information.
+
+The Repeat symbol is `&` and you choose the type by adding the first letter of the type after the symbol, so: `&f`, `&u`, `&n`, `&w`. If you omit the letter, a `normal` repeat type will be set.
+
+#### Fixed Repeat Type
+
+A List with a `fixed` Repeat Type will always output the same number of times. Currently the default number of repetitions is 0, and there is no way to change it, so this Repeat Type isn't at all useful yet.
+
+#### Uniform Repeat Type
+
+A List with a `uniform` Repeat Type will repeat a number of times between its minimum and maximum (both inclusive). The default minimum is 0 and the default maximum is 3. Whenever the List has to output text it will pick a number between its minimum and maximum following a uniform distribution, that is each possibility has an equal chance to occur, 0 is just as likely as 3.
+
+```
+uniformlist &u = [ Henry, Mary, Jane, Louis, Caleb, Martha, Richard, Anna ] 
+```
+
+Example outputs might be:
+	"Mary Louis Louis", 
+	"Henry", 
+	"Richard Caleb"
+And so on.
+
+#### Normal Repeat Type
+
+A `normal` repeat type will repeat a number of times between its miniumum and maximum following a normal or gaussian distribution, with the mean equal to the minimum and the standard deviation calculated so that the maximum is possible but very unlikely (somewhere between 0.1 and 0.01%).
+The default min is 0 and the default max is 4. This means that 0 is the most likely number of repeats, 1 is less likely than 0, 2 is less likely than 1, 3 is less likely than 2, and 4 is the least likely of all possibilities.
+
+**TODO** explain this better when my head is more screwed on, also think of an example below
+
+```
+normallist &n = []
+```
+
+#### Weighted Repeat Type
+
+**TODO** explain this when my head works at all
+
 
 ## Text outside lists
 
