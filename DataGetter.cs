@@ -21,7 +21,6 @@ namespace NGen {
             //process the lines into Gens with names
             Dictionary<string, Gen> gens = HeaderProcessor( strippedLines );
 
-            //TODO - check for duplicate names
             //TODO - weighted pickTypes
             //TODO - remap special characters
             //TODO - set min, max, mean, stdDev for repeats
@@ -31,6 +30,7 @@ namespace NGen {
             //TODO - check what happens if no header, or no header at beginning but yes one later
             //TODO - better optimise WrdProcessor
             //TODO - add repeat to ProxyGens
+            //TODO - check for matching brackets
 
 
             //Check all ProxyGens to see if their genNames are in the dictionary
@@ -47,7 +47,7 @@ namespace NGen {
                         proxyGens[i].SetGen( gens[name] );
 
                     } else {
-                        Console.WriteLine( $"Error: ProxyGen name \"{name}\" has not been created" );
+                        Console.WriteLine( $"Generator Reference Error: '{name}' has not been created" );
                     }
                 }
             }
@@ -106,7 +106,14 @@ namespace NGen {
                                 Dictionary<string, Gen> tempGens = LineProcessor( gs, declareLines.ToArray() );
 
                                 foreach( KeyValuePair<string, Gen> g in tempGens ) {
-                                    gens.Add( g.Key, g.Value );
+
+                                    if( !gens.ContainsKey( g.Key ) ) {
+
+                                        gens.Add( g.Key, g.Value );
+
+                                    } else {
+                                        Console.WriteLine( $"Duplicate Generator Name Error: Only the first generator with the name '{g.Key}' has been added." );
+                                    }
                                 }
 
                                 headerString = "";
@@ -149,7 +156,13 @@ namespace NGen {
                 Dictionary<string, Gen> tempGens = LineProcessor( gs, declareLines.ToArray() );
 
                 foreach( KeyValuePair<string, Gen> g in tempGens ) {
-                    gens.Add( g.Key, g.Value );
+                    if( !gens.ContainsKey( g.Key ) ) {
+
+                        gens.Add( g.Key, g.Value );
+
+                    } else {
+                        Console.WriteLine( $"Duplicate Generator Name Error: Only the first generator with the name '{g.Key}' has been added." );
+                    }
                 }
             }
 
@@ -458,13 +471,22 @@ namespace NGen {
             }
 
             if( names.Count != declarations.Count ) {
-                Console.WriteLine( $"Line Processor Error: the number of names ({names.Count}) did not match the number of gernator declarations ({declarations.Count})" );
+                Console.WriteLine( $"Line Processor Error: the number of names ({names.Count}) did not match the number of generator declarations ({declarations.Count})" );
             }
 
             //create a dictionary and return it
             Dictionary<string, Gen> namedDeclarations = new Dictionary<string, Gen>();
             for( int i = 0; i < names.Count; i++ ) {
                 Gen g = GP.SenGenProcessor( declarations[i], settings[i] );
+
+                if( !namedDeclarations.ContainsKey( names[i] ) ) {
+
+                    namedDeclarations.Add( names[i], g );
+
+                } else {
+                    Console.WriteLine( $"Duplicate Generator Name Error: Only the first generator with the name '{names[i]}' has been added." );
+                }
+
                 namedDeclarations.Add( names[i], g );
             }
             return namedDeclarations;

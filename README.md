@@ -16,6 +16,7 @@ An NGen file can contain multiple generators with complex constructions for retu
 * [Headers](#headers)
 * [Comments](#comments)
 * [Escaping characters](#escaping-characters)
+* [Error Messages](#error-messages)
 
 </details>
 
@@ -148,7 +149,7 @@ The above will always output elements in the same order: 'shrub', then 'bush', t
 
 ### Repeats
 
-Lists can be told to repeat themeselves a fixed or random number of times using several different methods for picking the number of repetitions. This is useful if, for example, you're generating a person's name and you want to add the possibility of a second or even a third name drawn from the same pool.
+Lists can be told to repeat themselves a fixed or random number of times using several different methods for picking the number of repetitions. This is useful if, for example, you're generating a person's name and you want to add the possibility of a second or even a third name drawn from the same pool.
 
 This is done by setting the Repeat Type.
 There are 4 different  Repeat Types: `fixed`, `uniform`, `normal`, and `weighted`.
@@ -178,7 +179,7 @@ And so on.
 
 #### Normal Repeat Type
 
-A `normal` repeat type will repeat a number of times between its miniumum and maximum following a normal or gaussian distribution, with the mean equal to the minimum and the standard deviation calculated so that the maximum is possible but very unlikely (somewhere between 0.1 and 0.01%).
+A `normal` repeat type will repeat a number of times between its minimum and maximum following a normal or gaussian distribution, with the mean equal to the minimum and the standard deviation calculated so that the maximum is possible but very unlikely (somewhere between 0.1 and 0.01%).
 The default min is 0 and the default max is 4. This means that 0 is the most likely number of repeats, 1 is less likely than 0, 2 is less likely than 1, 3 is less likely than 2, and 4 is the least likely of all possibilities.
 
 **TODO** explain this better when my head is more screwed on, also think of an example below
@@ -189,16 +190,16 @@ normallist &n = []
 
 #### Weighted Repeat Type
 
-A `weighted` List will repeat a number of times between zero and a chosem maximum, but allows you to asign weights to each possible number to make it more or less likely.
+A `weighted` List will repeat a number of times between zero and a chosen maximum, but allows you to assign weights to each possible number to make it more or less likely.
 The default weights are: `{ 3, 4, 2, 1 }`, the first number in the list representing the chance for zero repeats, the last number in the list representing the chance for the maximum number of repeats (in this example 3), and the nth number in the list representing the chance for that number of repeats.
 
 So, for example, with weights of { 0, 1, 0, 1, 0, 1 } a List will always repeat at least once and it could repeat either 1, 3, or 5 times, with each of those numbers having an equal probability.
 
 Or, another example, the weights: { 1, 2, 1 } allow a list to repeat either 0, 1, or 2 times, but once is twice as likely as the other two possibilities.
 
-This Repeat Type gives the greatest flexibility in asigning probabilities to number of repeats, but it is also the most verbose and the fiddliest to use.
+This Repeat Type gives the greatest flexibility in assigning probabilities to number of repeats, but it is also the most verbose and the fiddliest to use.
 
-**Note:** Currently there is no way to change the weights. This will be ammended in future.
+**Note:** Currently there is no way to change the weights. This will be amended in future.
 
 ```
 weightedgen &w = I was [ very ] happy.
@@ -318,6 +319,48 @@ see [Repeats](#repeats) for more information.
 
 #### Resetting behaviour in the Header
 
+Header settings can be reset to their defaults by using the keyword `reset`.
+
+When using multiple headers, settings in a second header will overwrite those in the first, however, any settings present in the first but not in the second will not be changed, eg:
+
+```
+^
+	repeat = cycle
+	pick = shuffle
+^
+
+gen1 = [ one, two...
+
+^
+	pick = random
+^
+
+gen2 = [ one, two...
+```
+
+In the above example, because the second header doesn't set the Repeat Type, `gen2` will have a Repeat Type of `cycle`, which was set in the first header.
+
+In order to change all settings back to their defaults, use the `reset` keyword somewhere in the header, as below where `gen2` will have the default Repeat Type of `fixed`.
+
+```
+^
+	repeat = cycle
+	pick = shuffle
+^
+
+gen1 = [ one, two...
+
+^
+	reset
+	pick = random
+^
+
+gen2 = [ one, two...
+```
+
+The location of `reset` in the header is not important.`
+
+A header can contain just the word `reset` in order to change everything back to their defaults without setting any other behaviours.
 
 
 ## Comments
@@ -349,3 +392,93 @@ money = [$100, $200]
 money2 = [\$100, \$200]
 
 ```
+
+## Error Messages
+
+Having a problem with your NGen file? NGen will try to always give you an error when it identifies a problem with your file, below you can find all the errors NGen produces along with explanations and examples.
+
+### Generator Reference Error
+
+##### Full Text:
+
+*"Generator Reference Error: '\{name\}' has not been created"*
+
+##### Explanation:
+
+Generator References allow the output of one Generator to be put into another generator, like so:
+
+```
+gen1 = [ a, b, c ]
+gen2 = [ $gen1, d, e, f ]
+```
+
+In this case, NGen has not been able to find a Generator with the name given in the Reference.
+
+##### Example:
+
+```
+#This is INCORRECT code
+gen1 = [ a, b, c ]
+gen2 = [ $gem1, d, e, f ]
+```
+
+##### Possible Solution:
+
+The most likely cause is the misspelling of one or other of the names, either the Generator name or the name in the Reference, as above. To solve it, correct the spelling of one or the other, the above code should read:
+
+```
+gen1 = [ a, b, c ]
+gen2 = [ $gen1, d, e, f ]
+```
+
+### Duplicate Generator Name Error
+
+##### Full Text:
+
+*"Duplicate Generator Name Error: Only the first generator with the name '\{name\}' has been added."*
+
+##### Explanation:
+
+All Generators must have unique names. If two or more generators share a name, then only the first one will be added by NGen, any subsequent ones will be ignored.
+
+##### Example:
+
+```
+#This is INCORRECT code
+gen = [ a, b, c ]
+gen = [ d, e, f ]
+```
+
+##### Possible Solution:
+
+Rename all generators with duplicate names.
+
+
+### Line Processor Error
+
+##### Full Text:
+
+*"Line Processor Error: the number of names (\{names.Count\}) did not match the number of generator declarations (\{declarations.Count\})"*
+
+##### Explanation:
+
+All Generators consist of a name and a declaration - some text to output. This error occurs when NGen identifies either a name without a declaration or a declaration without a name.
+
+##### Example:
+
+```
+#This is INCORRECT code
+gen =
+= [ d, e, f ]
+```
+
+##### Possible Solution:
+
+The most likely cause for this problem is a stray `=` which hasn't been escaped, try searching your document for `=` and escaping any which are not part of declarations, like this: `\=`.
+
+Alternatively you may have forgotten to add a name for a generator, or vica-versa.
+
+TODO - Matching Brackets
+TODO - Invalid Path
+TODO - Character Map does not contain Character
+TODO - Number of Repeats with given Mean and StdDev
