@@ -4,6 +4,7 @@
 
         //pick behaviour (only for lists)
         public PickType PickType{ get; set; }
+        public bool NoRep{ get; set; }
 
         //repeat behaviour
         public RepeatType RepType { get; set; }
@@ -26,6 +27,7 @@
 
             //pick behaviour
             PickType = gs.PickType;
+            NoRep = gs.NoRep;
 
             //repeat behaviour
             RepType = gs.RepType;
@@ -44,9 +46,10 @@
 
             //pick behaviour
             PickType = PickType.random;
+            NoRep = false;
 
             //repeat behaviour
-            RepType = RepeatType.constant;
+            RepType = RepeatType.@fixed;
             RepMax = 0;
             RepMin = 0;
             RepStdDev = 0;
@@ -58,9 +61,9 @@
             
         }
 
-        public void SetDefaults() {
+        public void SetRepeatDefaults() {
             switch( RepType ) {
-                case RepeatType.constant:
+                case RepeatType.@fixed:
                     RepMax = 0;
                     break;
                 case RepeatType.uniform:

@@ -22,12 +22,15 @@ namespace NGen {
             Dictionary<string, Gen> gens = HeaderProcessor( strippedLines );
 
             //TODO - check for duplicate names
-            //TODO - repeats
-            //TODO - variable %
-            //TODO - set allow repeat elements from lists
+            //TODO - weighted pickTypes
             //TODO - remap special characters
-            //TODO - header reset defaults
-            //TODO - weighted randoms
+            //TODO - set min, max, mean, stdDev for repeats
+            //TODO - chance to output nothing
+            //TODO - Set NoRep to false
+            //TODO - fix NoRep shuffle function
+            //TODO - check what happens if no header, or no header at beginning but yes one later
+            //TODO - better optimise WrdProcessor
+            //TODO - add repeat to ProxyGens
 
 
             //Check all ProxyGens to see if their genNames are in the dictionary
@@ -48,8 +51,6 @@ namespace NGen {
                     }
                 }
             }
-
-            proxyGens = new List<ProxyGen>();
 
             NGen nGen = new NGen( gens );
 
@@ -98,7 +99,7 @@ namespace NGen {
                                 //          and then there IS a header
 
                                 //Create a new GensSettings from the header, using the previous genSettings as a basis
-                                GenSettings gs = ParseHeader( headerString, genSettings[ genSettings.Count - 1 ] );
+                                GenSettings gs = ParseMainHeader( headerString, genSettings[ genSettings.Count - 1 ] );
                                 //store the new GenSettings
                                 genSettings.Add( gs );
 
@@ -143,7 +144,7 @@ namespace NGen {
 
                 //Create a new GensSettings from the header, using the previous genSettings as a basis
                 //we don't need to store this one as it's the last
-                GenSettings gs = ParseHeader( headerString, genSettings[genSettings.Count - 1] );
+                GenSettings gs = ParseMainHeader( headerString, genSettings[genSettings.Count - 1] );
 
                 Dictionary<string, Gen> tempGens = LineProcessor( gs, declareLines.ToArray() );
 
@@ -153,6 +154,98 @@ namespace NGen {
             }
 
             return gens;
+
+        }
+
+        private static GenSettings ParseMainHeader( string h, GenSettings oldSettings ) {
+            /*
+             *  deals with the long-hand parsing of headers, only used in main headers
+             *  and done with a different technique to shorthand headers
+             */
+
+            h = h.ToLower();
+
+            GenSettings gs;
+
+            if( h.Contains( "reset" ) ) {
+                gs = new GenSettings();
+            } else {
+                gs = new GenSettings( oldSettings );
+            }
+
+
+            if( h.Length > 0 ) {
+
+                //Pick Type
+
+                PickType pt = gs.PickType;
+
+                StringToEnum<PickType>( h, "pick", ref pt );
+                gs.PickType = pt;
+
+                //Repeat Type
+
+                RepeatType rt = gs.RepType;
+
+                StringToEnum<RepeatType>( h, "repeat", ref rt );
+                gs.RepType = rt;
+                gs.SetRepeatDefaults();
+
+                if( h.Contains("norep") ) {
+                    gs.NoRep = true;
+                }
+
+            }
+
+            return gs;
+        }
+
+        private static void StringToEnum<T>( string source, string type, ref T e ) where T : System.Enum {
+            /*
+             *  Does a little trimming on a string, 
+             *  and then looks to see if it contains an enum name
+             *  sets the referenced enum to that name if it exists
+             */
+
+
+            int startIndex = source.IndexOf( type );
+            if( startIndex >= 0 ) {
+                startIndex += type.Length;
+                int equalsIndex = source.IndexOf( '=', startIndex );
+                string searchString = source.Substring( equalsIndex + 1 );
+
+                int enumNameIndex = DoesStringContainEnumName<T>( searchString );
+
+                if( enumNameIndex >= 0 ) {
+
+                    e = (T)(object)enumNameIndex;
+
+                }
+
+            }
+
+        }
+
+        private static int DoesStringContainEnumName<T>( string s ) where T : System.Enum {
+            /*
+             *  Checks to see if the string contains any of the names contained in the given enum
+             *  If it does, returns an int which can later be converted 
+             *  back into an enum, if it doesn't, returns -1
+             */
+
+
+            string[] names = Enum.GetNames( typeof(T) );
+
+            for( int i = 0; i < names.Length; i++ ) {
+                if( s.Contains( names[i]) ) {
+
+                    //DEBUG
+                    Console.WriteLine( $"enum name found: '{names[i]}'" );
+
+                    return i;
+                }
+            }
+            return -1;
 
         }
 
@@ -169,22 +262,16 @@ namespace NGen {
             //Maybe, in the future we might be overwritting an already-existing one
             //think about this
 
-            GenSettings gs;
+            GenSettings gs = oldSettings;
 
-            if( h.Contains( "reset" ) ) {
-                gs = new GenSettings();
-            } else {
-                gs = new GenSettings (oldSettings);
-            }
+            //this bit is case insensitive, so
+            h = h.ToLower();
 
             //check there's anything here to parse...
             //i think this should already have been done elsewhere,
             //but I'm sure something could have slipped through,
             //better safe than sorry
             if( h.Length > 0 ) {
-
-                //this bit is case insensitive, so
-                h = h.ToLower();
 
                 //DEBUG
                 Console.WriteLine( $"h is: '{h}'" );
@@ -197,7 +284,7 @@ namespace NGen {
                 PickType pt = gs.PickType;
 
                 //first check the shorthand way
-                int startIndex = h.IndexOf( '%' );
+                int startIndex = h.IndexOf( '?' );
                 if( startIndex >= 0 && h.Length > startIndex + 1 ) {
 
                     //DEBUG
@@ -220,37 +307,17 @@ namespace NGen {
                         }
 
                     }
-                } else {
-
-                    //now check the longhand way
-                    startIndex = h.IndexOf( "pick " );
-                    if( startIndex >= 0 ) {
-                        startIndex += 4;
-                        int equalsIndex = h.IndexOf( '=', startIndex );
-                        string pickTypeString = h.Substring( equalsIndex + 1 );
-
-                        string[] possibleTypes = { "random", "shuffle", "cycle" };
-
-                        //DEBUG
-                        //Console.WriteLine( $"pickTypeString =\"{pickTypeString}\"" );
-
-                        for( int i = 0; i < possibleTypes.Length; i++ ) {
-
-                            int typeLength = possibleTypes[i].Length;
-
-                            if( pickTypeString.Length >= typeLength &&
-                                pickTypeString.Contains( possibleTypes[i] ) ) {
-                                pt = (PickType)i;
-
-                                //DEBUG
-                                //Console.WriteLine( $"pick type set to:{pt}" );
-
-                                break;
-                            }
-                        }
-                    }
                 }
+
                 gs.PickType = pt;
+
+                int noRepIndex = h.IndexOf( '!' );
+
+                //TODO - there is currently no way to unset NoRep at all
+
+                if( noRepIndex >= 0 ) {
+                    gs.NoRep = true;
+                }
 
                 //-------------------------------------------//
                 //Section Two
@@ -285,7 +352,7 @@ namespace NGen {
 
                         } else  if( rtChar == 'f' ) {
 
-                            rt = RepeatType.constant;
+                            rt = RepeatType.@fixed;
 
                         } else if( rtChar == 'w' ) {
 
@@ -301,11 +368,10 @@ namespace NGen {
 
                 }
                 gs.RepType = rt;
-                gs.SetDefaults();
-
 
             }
 
+            gs.SetRepeatDefaults();
             return gs;
         }
 

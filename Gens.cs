@@ -17,7 +17,7 @@ namespace NGen {
         private readonly string wrd;
 
         public Wrd( string str ) {
-            wrd = PU.StripEscapes(str);
+            wrd = PU.StripEscapes(str.Trim());
         }
 
         public override string GetTxt() {
@@ -123,7 +123,7 @@ namespace NGen {
             //Choose the number of repeats based on the repeat type
             switch( gs.RepType ) {
 
-                case RepeatType.constant:
+                case RepeatType.@fixed:
                     repeats = gs.RepMax;
                     break;
     
@@ -170,37 +170,43 @@ namespace NGen {
                 switch(gs.PickType) {
 
                     case PickType.random:
-                        return Utils.RandFromArray( wrds ).GetTxt();
-                    //case PickType.noRepRandom:
-                    //    return Utils.NonRepeatingRandFromArray( wrds, ref lastWrd ).GetTxt();
+
+                        if( gs.NoRep ) {
+
+                            return Utils.NonRepeatingRandFromArray( wrds, ref lastWrd ).GetTxt();
+
+                        } else {
+
+                            return Utils.RandFromArray( wrds ).GetTxt();
+
+                        }
+
                     case PickType.shuffle:
                         string output = wrds[nextWrd].GetTxt();
 
                         nextWrd++;
                         if( nextWrd >= wrds.Length ) {
-                            wrds.Shuffle();
+
+                            if( gs.NoRep ) {
+                                wrds.NonRepeatingShuffle();
+                            } else {
+                                wrds.Shuffle();
+                            }
                             nextWrd = 0;
                         }
 
                         return output;
-                    //case PickType.noRepShuffle:
-                    //    output = wrds[nextWrd].GetTxt();
-
-                    //    nextWrd++;
-                    //    if( nextWrd >= wrds.Length ) {
-                    //        wrds.NonRepeatingShuffle();
-                    //       nextWrd = 0;
-                    //    }
-
-                    //    return output;
+                    
                     case PickType.cycle:
+
                         output = wrds[nextWrd].GetTxt();
 
                         nextWrd = ( nextWrd + 1 ) % wrds.Length;
                         return output;
-                    default:
-                        return Utils.RandFromArray( wrds ).GetTxt();
 
+                    default:
+
+                        return Utils.RandFromArray( wrds ).GetTxt();
 
                 }
 

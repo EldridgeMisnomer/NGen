@@ -43,15 +43,15 @@ A generator name must be unique - no two generators can have the same name; they
 
 The way that words are picked from lists can be set for all lists in a generator (see [Pick Types](#pick-types) for more information on how words are picked from lists).
 
-There are three Pick Types: `random`, `shuffle`, and `cycle`. By writing the Pick Type symbol (`%`) followed by the first letter of the Type you want after the generator name (so `%r`, `%s`, or `%c`), you set the Pick Type for all Lists in that Generator. eg:
+There are three Pick Types: `random`, `shuffle`, and `cycle`. By writing the Pick Type symbol (`?`) followed by the first letter of the Type you want after the generator name (so `?r`, `?s`, or `?c`), you set the Pick Type for all Lists in that Generator. eg:
 
 ```
 #this generator will shuffle all its Lists
-generator %s = [[Banquo, Rosaline , Bardolph], [Polonius, Oberon, Benvolio], [Demetrius, Fortinbras, Stephano]]
+generator ?s = [[Banquo, Rosaline , Bardolph], [Polonius, Oberon, Benvolio], [Demetrius, Fortinbras, Stephano]]
 ```
 The above generator contains multiple, nested lists, all of which will have the shuffle Pick Type, rather than the default Pick Type of random.
 
-__Note:__ The space between the generator name and the Pick Type is one of the few times where whitespace is important in NGen; without the space, the `%s` will be included in the generator name.
+__Note:__ The space between the generator name and the Pick Type is one of the few times where whitespace is important in NGen; without the space, the `?s` will be included in the generator name.
 
 Pick Types can also be [set in the header](#setting-pick-type-in-the-header), but setting the pick type at the generator level will override the header's Pick Type.
 
@@ -61,12 +61,14 @@ Pick Types can also be [set in the header](#setting-pick-type-in-the-header), bu
 	#because the generator below has a pick type which will override it.
 	pick = shuffle
 ^
-gen1 %c = [a, b, c, d, e, f, g]
+gen1 ?c = [a, b, c, d, e, f, g]
 ```
 
 ### Setting Repeat Type in the Generator
 
 TODO
+
+The Repeat symbol is `&` and you choose the type by adding the first letter of the type after the symbol, so: `&f`, `&u`, `&n`, `&w`. If you omit the letter, a `normal` repeat type will be set.
 
 ### Multiline generators
 
@@ -149,14 +151,12 @@ The above will always output elements in the same order: 'shrub', then 'bush', t
 Lists can be told to repeat themeselves a fixed or random number of times using several different methods for picking the number of repetitions. This is useful if, for example, you're generating a person's name and you want to add the possibility of a second or even a third name drawn from the same pool.
 
 This is done by setting the Repeat Type.
-There are 4 different  repeat types: `fixed`, `uniform`, `normal`, and `weighted`.
+There are 4 different  Repeat Types: `fixed`, `uniform`, `normal`, and `weighted`.
 The default Repeat Type is `fixed`, but the number of repeats are set to zero, so Lists don't, by default, repeat themselves.
 
 **Note:** All numbers here refer to the number of *repetitions* not the number of instances; so 0 repetitions, still mean that a list will output once. To add the possibility of a list not outputting at all, you'll have to wait, because it hasn't been implemented yet.
 
-Repetition can currently only be set in generators, see [Setting Repeat Type in the Generator](#setting-repeat-type-in-the-generator) for more information.
-
-The Repeat symbol is `&` and you choose the type by adding the first letter of the type after the symbol, so: `&f`, `&u`, `&n`, `&w`. If you omit the letter, a `normal` repeat type will be set.
+Repetition can be set in generators or in the header, see [Setting Repeat Type in the Generator](#setting-repeat-type-in-the-generator) or [Setting Repeat Type in the Header](#setting-repeat-type-in-the-header) for more information.
 
 #### Fixed Repeat Type
 
@@ -189,7 +189,28 @@ normallist &n = []
 
 #### Weighted Repeat Type
 
-**TODO** explain this when my head works at all
+A `weighted` List will repeat a number of times between zero and a chosem maximum, but allows you to asign weights to each possible number to make it more or less likely.
+The default weights are: `{ 3, 4, 2, 1 }`, the first number in the list representing the chance for zero repeats, the last number in the list representing the chance for the maximum number of repeats (in this example 3), and the nth number in the list representing the chance for that number of repeats.
+
+So, for example, with weights of { 0, 1, 0, 1, 0, 1 } a List will always repeat at least once and it could repeat either 1, 3, or 5 times, with each of those numbers having an equal probability.
+
+Or, another example, the weights: { 1, 2, 1 } allow a list to repeat either 0, 1, or 2 times, but once is twice as likely as the other two possibilities.
+
+This Repeat Type gives the greatest flexibility in asigning probabilities to number of repeats, but it is also the most verbose and the fiddliest to use.
+
+**Note:** Currently there is no way to change the weights. This will be ammended in future.
+
+```
+weightedgen &w = I was [ very ] happy.
+```
+In the above example there is only one list and it only contains one word, "happy", because the list is weighted it can repeat up to 3 times, to produce one of the following sentences:
+
+	I was very happy.
+	I was very very happy.
+	I was very very very happy.
+	I was very very very very happy.
+
+However, the second sentence is the most likely, the first is slightly less like, the third is half as likely as the second, and the fourth is the least likey - 4 times less likely than the second.
 
 
 ## Text outside lists
@@ -242,10 +263,16 @@ gen2 = I [came back from, went to] [Tipperary, Anglesey, the pub]
 ^
 	And this header affects gen3
 ^
-gem3 = [umple, bumple, jigget, splinch]
+gen3 = [umple, bumple, jigget, splinch]
 ```
 
-### Setting Pick Type in the header
+### Setting Behaviours in the Header
+
+The primary use for the header is to set the behaviour of all generators which follow it.
+Currently Pick Type, Repeat Type and No Repeat behaviour can be set, there is also a `reset` command which will switch everything back to its defaults.
+
+
+#### Setting Pick Type in the Header
 
 You can set the Pick Type for all Word Lists in generators which follow a header by writing `pick =` followed by the Pick Type you want from three possibilities: `random`, `shuffle`, and `cycle`, eg:
 
@@ -268,30 +295,29 @@ gen2 = [one, two, three, four, five]
 gen3 = [ 1 of Hearts, 2 of Clubs, 4 of Diamonds, 3 of Spades, Queen of Hearts, etc ]
 ```
 
-There is a shorthand way of choosing the Pick Type. Instead of writing `pick = random` the `%` symbol can be used followed by a `r`, an `s`, or a `c` for 'random', 'shuffle', or 'cycle' respectively. 
-It is important that there be no whitespace between the two characters, so `%s` is acceptable but `% s` will not work.
-
-```
-^
-	%c
-^
-
-# gen 1 will be set to cycle
-
-gen1 = [Greg, Nancy, Albert, Mario]
-
-^
-	%s
-^
-
-#gen2 will be set to shuffle
-
-gen2 = [Watermelon, Catapult, Saddle, Joshua]
-```
-
-However, for the sake of clarity, it is not recommended to use this format in the header, rather it is intended to be [used at the generator level](#setting-pick-type-in-generators).
-
 see [Pick Types](#pick-types) for more information.
+
+
+#### Setting Repeat Type in the Header
+
+you can set the Repeat Type for all Lists which follow a header by writing `repeat =` followed by the Repeat Type you want, there are four possibilities: `fixed`, `uniform`, `normal`, and `weighted`.
+
+There is currently no way of changing any of the settings for these Repeat Types - they stay on their defaults. This is to come soon.
+
+```
+^
+	repeat = weighted
+^
+
+#gen will repeat following a weighted distribution
+gen = [ ho, humm, zoodle, wordle ]
+```
+
+see [Repeats](#repeats) for more information.
+
+
+#### Resetting behaviour in the Header
+
 
 
 ## Comments
