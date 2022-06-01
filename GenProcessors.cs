@@ -35,13 +35,12 @@ namespace NGen {
                 List<Gen> gens = new List<Gen>();
 
                 foreach( string w in words ) {
+
                     if( PU.StringContainsRef( w ) ) {
 
                         int refIndex = w.IndexOf( PU.CharMap( CharType.reference ) );
                         string name = w.Substring( refIndex + 1, w.Length - refIndex - 1 );
-                        ProxyGen pg = new ProxyGen( name.Trim() );
-                        //add to the ProxyGen list for connecting up later
-                        proxyGens.Add( pg );
+                        ProxyGen pg = ProxyProcessor( name );
                         gens.Add( pg );
 
                     } else {
@@ -56,6 +55,15 @@ namespace NGen {
             } else {
                 return new Wrd( s );
             }
+
+        }
+
+        public static ProxyGen ProxyProcessor( string s ) {
+
+            ProxyGen pg = new ProxyGen( s.Trim() );
+            //add to the ProxyGen list for connecting up later
+            proxyGens.Add( pg );
+            return pg;
 
         }
 

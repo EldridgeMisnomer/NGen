@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Utils;
 
 using PU = NGen.ParserUtils;
 using GP = NGen.GenProcessors;
+using HP = NGen.HeaderParsers;
+
 
 namespace NGen {
 
@@ -57,6 +60,7 @@ namespace NGen {
             return nGen;
 
         }
+
 
         private static Dictionary<string, Gen> HeaderProcessor( string[] lines ) {
             /*
@@ -193,14 +197,14 @@ namespace NGen {
 
                 PickType pt = gs.PickType;
 
-                StringToEnum<PickType>( h, "pick", ref pt );
+                EnumHelpers.StringToEnum<PickType>( h, "pick", ref pt );
                 gs.PickType = pt;
 
                 //Repeat Type
 
                 RepeatType rt = gs.RepType;
 
-                StringToEnum<RepeatType>( h, "repeat", ref rt );
+                EnumHelpers.StringToEnum<RepeatType>( h, "repeat", ref rt );
                 gs.RepType = rt;
                 gs.SetRepeatDefaults();
 
@@ -213,55 +217,6 @@ namespace NGen {
             return gs;
         }
 
-        private static void StringToEnum<T>( string source, string type, ref T e ) where T : System.Enum {
-            /*
-             *  Does a little trimming on a string, 
-             *  and then looks to see if it contains an enum name
-             *  sets the referenced enum to that name if it exists
-             */
-
-
-            int startIndex = source.IndexOf( type );
-            if( startIndex >= 0 ) {
-                startIndex += type.Length;
-                int equalsIndex = source.IndexOf( '=', startIndex );
-                string searchString = source.Substring( equalsIndex + 1 );
-
-                int enumNameIndex = DoesStringContainEnumName<T>( searchString );
-
-                if( enumNameIndex >= 0 ) {
-
-                    e = (T)(object)enumNameIndex;
-
-                }
-
-            }
-
-        }
-
-        private static int DoesStringContainEnumName<T>( string s ) where T : System.Enum {
-            /*
-             *  Checks to see if the string contains any of the names contained in the given enum
-             *  If it does, returns an int which can later be converted 
-             *  back into an enum, if it doesn't, returns -1
-             */
-
-
-            string[] names = Enum.GetNames( typeof(T) );
-
-            for( int i = 0; i < names.Length; i++ ) {
-                if( s.Contains( names[i]) ) {
-
-                    //DEBUG
-                    Console.WriteLine( $"enum name found: '{names[i]}'" );
-
-                    return i;
-                }
-            }
-            return -1;
-
-        }
-
         private static GenSettings ParseHeader( string h, GenSettings oldSettings ) {
 
             /*
@@ -271,11 +226,7 @@ namespace NGen {
              *  or the code that comes before a list  
              */
 
-            //Create a new GenSettings to store all the info we find.
-            //Maybe, in the future we might be overwritting an already-existing one
-            //think about this
-
-            GenSettings gs = oldSettings;
+            GenSettings gs = new GenSettings(oldSettings);
 
             //this bit is case insensitive, so
             h = h.ToLower();
@@ -289,102 +240,10 @@ namespace NGen {
                 //DEBUG
                 Console.WriteLine( $"h is: '{h}'" );
 
-                //-------------------------------------------//
-                //Section One
-                //Pick Type
-                //-------------------------------------------//
-
-                PickType pt = gs.PickType;
-
-                //first check the shorthand way
-                int startIndex = h.IndexOf( '?' );
-                if( startIndex >= 0 && h.Length > startIndex + 1 ) {
-
-                    //DEBUG
-                    //Console.WriteLine( "Shorthand pick type detected" );
-
-                    //index of the character indicating the picktype
-                    int nextIndex = startIndex + 1;
-                    //possible characters
-                    char[] possibleTypes = { 'r', 's', 'c' };
-
-                    for( int i = 0; i < possibleTypes.Length; i++ ) {
-
-                        if( h[nextIndex] == possibleTypes[i] ) {
-                            pt = (PickType)i;
-
-                            //DEBUG
-                            //Console.WriteLine( $"Pick type is: {pt}" );
-
-                            break;
-                        }
-
-                    }
-                }
-
-                gs.PickType = pt;
-
-                int noRepIndex = h.IndexOf( '!' );
-
-                //TODO - there is currently no way to unset NoRep at all
-
-                if( noRepIndex >= 0 ) {
-                    gs.NoRep = true;
-                }
-
-                //-------------------------------------------//
-                //Section Two
-                //Repeat Type
-                //-------------------------------------------//
-
-                RepeatType rt = gs.RepType;
-
-                //first check the shorthand way
-                startIndex = h.IndexOf( '&' );
-                    //TODO
-                    //NOTE: there is a potential problem here, I think. 
-                    //if the character is the last character in the string
-                    //then it won't be detected
-                if( startIndex >= 0 && h.Length > startIndex + 1 ) {
-
-                    //index of the character indicating the picktype
-                    int nextIndex = startIndex + 1;
-
-                    char rtChar = h[nextIndex];
-
-                    //check if the character after the repeat symbol is a number
-                    if( char.IsDigit( rtChar ) ) {
-
-                        rt = RepeatType.normal;
-
-                    } else {
-
-                        if( rtChar == 'u') {
-
-                            rt = RepeatType.uniform;
-
-                        } else  if( rtChar == 'f' ) {
-
-                            rt = RepeatType.@fixed;
-
-                        } else if( rtChar == 'w' ) {
-
-                            rt = RepeatType.weighted;
-
-                        } else {
-
-                            rt = RepeatType.normal;
-
-                        }
-
-                    }
-
-                }
-                gs.RepType = rt;
+                HP.HeaderShorthandSifter( h, ref gs );
 
             }
 
-            gs.SetRepeatDefaults();
             return gs;
         }
 
@@ -486,8 +345,6 @@ namespace NGen {
                 } else {
                     Console.WriteLine( $"Duplicate Generator Name Error: Only the first generator with the name '{names[i]}' has been added." );
                 }
-
-                namedDeclarations.Add( names[i], g );
             }
             return namedDeclarations;
         }

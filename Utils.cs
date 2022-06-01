@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NGen {
-    public static class Utils {
+namespace Utils {
+
+    public static class Rand {
 
         private static readonly Random rand = new Random();
 
@@ -151,6 +152,15 @@ namespace NGen {
 
         }
 
+        public static bool PercChanceTest( double percChance ) {
+            double chance = percChance / 100;
+            return ChanceTest( chance );
+        }
+
+        public static bool ChanceTest( double chance ) {
+            return rand.NextDouble() < chance;
+        }
+
         public static void NonRepeatingShuffle<T>( this T[] array ) {
             /*
              *  Fisher–Yates based shuffle for an array
@@ -196,21 +206,51 @@ namespace NGen {
             }
         }
 
+        public static int RandomDoubleWeightedInt( double[] weights ) {
+
+            double weightSum = 0;
+            foreach( double d in weights ) {
+                weightSum += d;
+            }
+
+            double random = NextDouble( weightSum );
+
+            for( int i = 0; i < weights.Length; i++ ) {
+                if( weights[i] != 0 && random < weights[i] ) {
+                    return i;
+                }
+
+            random -= weights[i];
+
+            }
+
+            return weights.Length - 1;
+        }
+
+        public static double NextDouble( double max ) {
+
+            return rand.NextDouble() * max;
+
+        }
+
+        public static double NextDouble( double min, double max ) {
+            return ( rand.NextDouble() * ( max - min ) ) + min;
+        }
+
         public static int RandomWeightedInt( int[] weights ) {
             //this function picks a random integer using a list of probablilty weights.
 
-            int weightSum = 0;
-
             //sum the weights
+            int weightSum = 0;
             for( int i = 0; i < weights.Length; i++ ) {
                 weightSum += weights[i];
             }
 
             //generate a random number based on the sum of the weights
             int random = rand.Next( weightSum );
-            //
+
             for( int i = 0; i < weights.Length; i++ ) {
-                if( random < weights[i] ) {
+                if( weights[i] != 0 && random < weights[i] ) {
                     return i;
                 }
                 random -= weights[i];
@@ -223,6 +263,83 @@ namespace NGen {
         public static int RandomRangeInt( int min, int max ) {
 
             return rand.Next( min, max );
+
+        }
+
+        public static double[] CalculateLinearWeightsFromMinMax( double min, double max, int numWeights, bool maxFirst = true ) {
+
+            double[] weights = new double[numWeights];
+
+            //if we only need 2 weights, just return the min and the max
+            if( numWeights == 2 ) {
+
+                if( maxFirst ) {
+                    weights[0] = max;
+                    weights[1] = min;
+                } else {
+                    weights[0] = min;
+                    weights[1] = max;
+                }
+
+            } else {
+
+                //if there's no difference between min and max
+                //make all weights the same
+                double dif = max - min;
+
+                if( dif == 0 ) {
+
+                    for( int i = 0; i < weights.Length; i++ ) {
+                        weights[i] = min;
+                    }
+
+                } else {
+
+                    //otherwise, calculate new weights
+                    double spacing = dif / (double)( numWeights - 1 );
+
+                    double weight;
+                    if( maxFirst ) {
+                        weight = max;
+                    } else {
+                        weight = min;
+                    }
+
+                    for( int i = 0; i < weights.Length; i++ ) {
+                        weights[i] = weight;
+                        if( maxFirst ) {
+                            weight -= spacing;
+                        } else {
+                            weight += spacing;
+                        }
+                    }
+
+                }
+            }
+
+            return weights;
+        }
+
+        public static double[] CalculateWeightsFromMult( double mult, int numWeights ) {
+
+            double weight;
+
+            if( mult > 0 ) {
+                weight = 1;
+            } else {
+                weight = 1000;
+            }
+
+            double[] weights = new double[numWeights];
+
+            for( int i = 0; i < weights.Length; i++ ) {
+
+                weights[i] = weight;
+                weight *= mult;
+
+            }
+
+            return weights;
 
         }
     }

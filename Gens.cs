@@ -1,4 +1,7 @@
-﻿using PU = NGen.ParserUtils;
+﻿using System;
+using Utils;
+
+using PU = NGen.ParserUtils;
 
 namespace NGen {
 
@@ -64,8 +67,6 @@ namespace NGen {
         /*
          *  A container for an array of words.
          *  It will return a random word from the array each time
-         *  It will never return the same words twice in a row 
-         *      (unless there is only one word)
          */
 
         //words
@@ -80,85 +81,195 @@ namespace NGen {
 
         public ListGen( string[] words, GenSettings settings ) {
 
-            //convert strings into Wrds and but them into their array
+            gs = settings;
+
+            //convert strings into Wrds and put them into their array
             wrds = new Gen[words.Length];
             for( int i = 0; i < wrds.Length; i++ ) {
                 wrds[i] = new Wrd( PU.StripEscapes( words[i].Trim() ) );
             }
 
-            gs = settings;
             Setup();
         }
 
         public ListGen( Gen[] words, GenSettings settings ) {
 
+            gs = settings;
+
             wrds = words;
 
-            gs = settings;
             Setup();
         }
 
         private void Setup() {
+
             if( gs.PickType == PickType.cycle ||
-                gs.PickType == PickType.shuffle ){//||
-                //pickType == PickType.noRepShuffle ) {
+                gs.PickType == PickType.shuffle ) {
 
                 nextWrd = 0;
+
             }
 
             if( gs.PickType == PickType.shuffle ) {
+
                 wrds.Shuffle();
+
             }
 
-/*            if( pickType == PickType.noRepShuffle ) {
-                wrds.NonRepeatingShuffle();
-            }*/
+            if( gs.PickType == PickType.weighted ) {
+
+                //calculate weigths based on the given factor
+                if( gs.WeightsFromFac ) {
+
+                    int num = wrds.Length;
+                    gs.PickWeights = Rand.CalculateWeightsFromMult( gs.WeightFac, num );
+
+                    //calculate weigths based on first and last given weights
+                } else if( gs.WeightsFromEnds ) {
+
+                    int num = wrds.Length;
+                    double min = Math.Min( gs.WeightStart, gs.WeightEnd );
+                    double max = Math.Max( gs.WeightStart, gs.WeightEnd );
+
+                    gs.PickWeights = Rand.CalculateLinearWeightsFromMinMax( min, max, num, gs.WeightStart > gs.WeightEnd );
+
+                } else {
+                    //if weights have already been set,
+                    //but there are a different number of weights than there are Gens in the list
+                    //we'll have to calculate some to fill in the gap
+                    //or remove some
+
+
+                    int dif = wrds.Length - gs.PickWeights.Length;
+
+                    //if there are too few weights
+                    if( dif > 0 ) {
+
+                        //check we have enough weights to calculate from
+                        if( gs.PickWeights.Length > 1 ) {
+
+                            //calculate the missing weights
+                            double[] weights = gs.PickWeights;
+                            double lastWeight = weights[weights.Length - 1];
+                            double penultimateWeight = weights[weights.Length - 2];
+
+                            double min = Math.Min( lastWeight, penultimateWeight );
+                            double max = Math.Max( lastWeight, penultimateWeight );
+
+                            //note - missing weights include penultimate and last weights
+                            double[] missingWeights = Rand.CalculateLinearWeightsFromMinMax( min, max, dif + 2, penultimateWeight > lastWeight );
+
+                            double[] newWeights = new double[wrds.Length];
+
+                            //put old weights and new weights together in one array
+                            for( int i = 0; i < newWeights.Length; i++ ) {
+
+                                    if( i < weights.Length - 2 ) {
+
+                                    newWeights[i] = weights[i];
+
+                                } else {
+
+                                    newWeights[i] = missingWeights[i - weights.Length + 2];
+
+                                }
+                            }
+
+                            gs.PickWeights = newWeights;
+
+                        } else {
+                            //if there's only one weight given
+                            //(which I don't think should ever happen - but you never know)
+                            //switch to default Factor calculation
+
+                            gs.WeightsFromFac = true;
+                            gs.WeightFac = 0.8;
+                            Setup();
+                        }
+
+
+                    } else if ( dif < 0 ) {
+                        //there are more weights than Gens, so remove some weights, starting at the back
+
+                        double[] weights = gs.PickWeights;
+                        Array.Resize( ref weights, wrds.Length );
+                        gs.PickWeights = weights;
+
+
+                    }
+
+
+                }
+
+            }
+
+
         }
 
         public override string GetTxt() {
 
             string s = "";
-            int repeats = 0;
 
-            //Choose the number of repeats based on the repeat type
-            switch( gs.RepType ) {
+            if( gs.OutputChance == 1 || Rand.ChanceTest( gs.OutputChance ) ) {
 
-                case RepeatType.@fixed:
-                    repeats = gs.RepMax;
-                    break;
-    
-                case RepeatType.uniform:
-                    repeats = Utils.RandomRangeInt( gs.RepMin, gs.RepMax + 1 );
-                    break;
+                int repeats = 0;
 
-                case RepeatType.normal:
+                //Choose the number of repeats based on the repeat type
+                switch( gs.RepType ) {
 
-                    if( gs.UseMeanDev ) {
-
-                        repeats = Utils.RandomNormalMeanDevInt( gs.RepMin, gs.RepMax, gs.RepMean, gs.RepStdDev );
+                    case RepeatType.@fixed:
+                        repeats = gs.RepMax;
                         break;
 
-                    } else {
-
-                        repeats = Utils.RandomNormalRangeInt( gs.RepMin, gs.RepMax );
+                    case RepeatType.uniform:
+                        repeats = Rand.RandomRangeInt( gs.RepMin, gs.RepMax + 1 );
                         break;
 
+                    case RepeatType.normal:
+
+                        if( gs.UseMean ) {
+
+                            repeats = Rand.RandomNormalMeanDevInt( gs.RepMin, gs.RepMax, gs.RepMean, gs.RepStdDev );
+                            break;
+
+                        } else {
+
+                            repeats = Rand.RandomNormalRangeInt( gs.RepMin, gs.RepMax );
+                            break;
+
+                        }
+                    case RepeatType.weighted:
+                        repeats = Rand.RandomWeightedInt( gs.RepWeights );
+                        break;
+
+                }
+
+                //get text repeatedly
+                for( int i = 0; i < repeats + 1; i++ ) {
+                    s += PickTxt();
+                    if( i != gs.RepMax ) {
+                        s = AddSeparator( s );
                     }
-                case RepeatType.weighted:
-                    repeats = Utils.RandomWeightedInt( gs.RepWeights );
-                    break;
-
-            }
-
-            //get text repeatedly
-            for( int i = 0; i < repeats + 1; i++ ) {
-                s += PickTxt();
-                if( i != gs.RepMax ) {
-                    s += gs.separator;
                 }
             }
 
             return s;
+        }
+
+        private string AddSeparator( string s ) {
+
+            if( gs.UseProxySeparator ) {
+
+                s += gs.ProxySeparator.GetTxt();
+
+            } else {
+
+                s += gs.Separator;
+
+            }
+
+            return s;
+
         }
 
         public string PickTxt() {
@@ -173,11 +284,11 @@ namespace NGen {
 
                         if( gs.NoRep ) {
 
-                            return Utils.NonRepeatingRandFromArray( wrds, ref lastWrd ).GetTxt();
+                            return Rand.NonRepeatingRandFromArray( wrds, ref lastWrd ).GetTxt();
 
                         } else {
 
-                            return Utils.RandFromArray( wrds ).GetTxt();
+                            return Rand.RandFromArray( wrds ).GetTxt();
 
                         }
 
@@ -185,7 +296,7 @@ namespace NGen {
                         string output = wrds[nextWrd].GetTxt();
 
                         nextWrd++;
-                        if( nextWrd >= wrds.Length ) {
+                        if( nextWrd >= ( wrds.Length * gs.ShufflePoint ) ) {
 
                             if( gs.NoRep ) {
                                 wrds.NonRepeatingShuffle();
@@ -201,12 +312,12 @@ namespace NGen {
 
                         output = wrds[nextWrd].GetTxt();
 
-                        nextWrd = ( nextWrd + 1 ) % wrds.Length;
+                        nextWrd = ( nextWrd + 1 + gs.Skip ) % wrds.Length;
                         return output;
 
                     default:
 
-                        return Utils.RandFromArray( wrds ).GetTxt();
+                        return Rand.RandFromArray( wrds ).GetTxt();
 
                 }
 

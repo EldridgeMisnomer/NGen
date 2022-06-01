@@ -127,6 +127,15 @@ namespace NGen {
 
         }
 
+        public static string[] StringSplitOnUnEscapedCharacter( string s, char c ) {
+
+            string pattern = @"(?<!\\)" + c;
+            //DEBUG
+            //Console.WriteLine( $"RegEx Split. String is: '{s}', char is: '{c}', pattern is: '{pattern}'");
+            return Regex.Split( s, pattern );
+
+        }
+
         public static string StripEscapes( string s ) {
             /*
              * Removes all escape characters from a string, unless it is preceeded by an escape
@@ -158,6 +167,39 @@ namespace NGen {
                 return ' ';
             }
 
+        }
+
+
+        public static int StringToInt( string s ) {
+
+            int num;
+            if( int.TryParse( s, out num ) ) {
+
+                return num;
+
+            } else {
+
+                //TODO document
+                Console.WriteLine( $"Setting Error: '{s}' not recognised as an integer." );
+                return -1;
+
+            }
+        }
+
+        public static double StringToDouble( string s ) {
+
+            double num;
+            if( double.TryParse( s, out num ) ) {
+
+                return num;
+
+            } else {
+
+                //TODO document
+                Console.WriteLine( $"Setting Error: '{s}' not recognised as a double." );
+                return -1;
+
+            }
         }
 
         public static string[] GetDataFromTxt( string path ) {
