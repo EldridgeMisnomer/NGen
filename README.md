@@ -1,18 +1,19 @@
 # NGen
-A procedural text generator orientated towards generating short texts - like names.
+A simple scripting language for creating procedural text generators with a focus on the creation of short texts - like names.
 
-Text generators are written in simple text files. At their simplest they consist of a single named generator, for example:
+Text generators are written in simple text files. At their simplest they consist of a single named Generator, for example:
 
 `hi = Hello World`
 
-An NGen file can contain multiple generators with complex constructions for returning text.
+An NGen file can contain multiple Generators with complex constructions for returning text.
 
 <details><summary>Table of Contents</summary>
 
 * [Generators](#generators)
-* [Word Lists](#word-lists)
-* [Text outside Lists](#text-outside-lists)
-* [Referencing generators](#referencing-generators)
+* [Generator Components](#generator-components)
+	* [Lists](#lists)
+    * [Sentences](#sentences)
+    * [Proxies](#proxies)
 * [Headers](#headers)
 * [Comments](#comments)
 * [Escaping characters](#escaping-characters)
@@ -23,57 +24,57 @@ An NGen file can contain multiple generators with complex constructions for retu
 
 ---
 
-The following are the currently available features:
 
 ## Generators
 
-A generator is a name, followed by an `=` sign, followed by some text which will be returned when that generator is run. 
+A Generator consists of a Name, followed by an `=` sign, followed by some text which will be returned when that Generator is run. 
 
 ```
 	generator = some text
 ```
 
 In the above example, every time the generator is run it will return the same text: "some text".
-This is an extremely simple generator, but much more complex ones can be constructed. The most important component of most generators is the [List](#word-lists)
+This is an extremely simple generator, but much more complex ones can be constructed.
 
-### Generator names
+There are three diferent components which Generators can contain:
+* [Lists](#lists)
+* Sentences
+* Proxies
 
-A generator name must be unique - no two generators can have the same name; they can have any characters in them except spaces or other whitespace; and they are case insensitive.
+ The most important component of most generators is the [List](#word-lists)
 
-### Setting Pick Type in the Generator
+### Generator Names
 
-The way that words are picked from lists can be set for all lists in a generator (see [Pick Types](#pick-types) for more information on how words are picked from lists).
+A Generator Name must be unique – no two Generators can have the same Name; it can contain any characters but no whitespace. 
 
-There are three Pick Types: `random`, `shuffle`, and `cycle`. By writing the Pick Type symbol (`?`) followed by the first letter of the Type you want after the generator name (so `?r`, `?s`, or `?c`), you set the Pick Type for all Lists in that Generator. eg:
+Names are case insensitive, that is 'Name' is the same as 'name' is the same as 'NAME'.
 
-```
-#this generator will shuffle all its Lists
-generator ?s = [[Banquo, Rosaline , Bardolph], [Polonius, Oberon, Benvolio], [Demetrius, Fortinbras, Stephano]]
-```
-The above generator contains multiple, nested lists, all of which will have the shuffle Pick Type, rather than the default Pick Type of random.
-
-__Note:__ The space between the generator name and the Pick Type is one of the few times where whitespace is important in NGen; without the space, the `?s` will be included in the generator name.
-
-Pick Types can also be [set in the header](#setting-pick-type-in-the-header), but setting the pick type at the generator level will override the header's Pick Type.
+Some example good and bad names:
 
 ```
-^
-	#this pick setting in the header doesn't do anything, 
-	#because the generator below has a pick type which will override it.
-	pick = shuffle
-^
-gen1 ?c = [a, b, c, d, e, f, g]
+#these names are all good
+adj = [ short, wiry, blue]
+PANIC = [ argh, wraaaagh, oof, erk, eeeep ]
+so_slow = [ slowly, very slowly, inch by inch, oh so slow]
+*!&xx??** = [ !#**, #@!!, @@x!*, !!! ]
+#although the last one is perhaps not the most sensible name for a generator
+
+#these names won't work
+#'adj' has already been used, names must be unique so this won't work
+adj = [ wobbly, worried, slick ]
+#names are case insensitve, and 'adj' has already been used, so this won't work
+Adj = [ stinky, smelly, shrieking ]
+#this won't work because names cannot contain spaces
+long gen = once upon a time in the land of the jolly blue mermen...
+#(actually, it will work - but the name of the generator will be 'long' and the 'gen' will be discarded...
+#...this can be dangerous however, as we will see later, there is a chance that it won't be discarded 
+#and will affect the behaviour of the generator
+
 ```
 
-### Setting Repeat Type in the Generator
+### Multiline Generators
 
-TODO
-
-The Repeat symbol is `&` and you choose the type by adding the first letter of the type after the symbol, so: `&f`, `&u`, `&n`, `&w`. If you omit the letter, a `normal` repeat type will be set.
-
-### Multiline generators
-
-Complicated generators take space to construct and doing so on a single line can be tricky and hard to read, so longer definitions can be written on multiple lines
+Complicated Generators take space to construct and doing so on a single line can be tricky and hard to read, so longer definitions can be written on multiple lines:
 
 ```
 multilineVeg = [
@@ -83,18 +84,51 @@ multilineVeg = [
 ]
 ```
 
-In general, whitespace such as tabs, linebreaks and spaces, are ignored. There are some exceptions to this, such as every [commented](#comments) line having to have a `#` character at the beginning of it.
 
+### Mulitiple Generators
 
-## Word Lists
+A single NGen file can contain definitions for multiple Generators, as many as you like.
 
-Word Lists are the basic unit of construction for most name generators. They are contained within square brackets `[]` and elements within them are separated by commas `,`:
+```
+gen1 = [ a, b, c...
+gen2 = [ robot, fish, monster...
+gen3 = [ ball, hoop, socket, laughter...
+etc
+```
+
+### Settings in Generators
+
+As we will see later, the components of Generators (Lists, Sentences, and Proxies) have Behaviours which can be changed with Settings.
+
+Settings in Generators are written in a kind of shorthand between the Generator Name and the `=` sign, for example:
+
+```
+gen1 %0.7 _- &f4 = [ one, two, three, four ]
+```
+
+These will be covered in detail below
+
+TODO - link to relevant sections once they exist
+
+**Note:** The space between the Generator Name and the Settings is important, without it the Settings will be ignored and will be included in the Name.
+
+## Generator Components
+
+A Generator can hold three different types of components, any generator will have at least one components, although it may consist of many.
+
+* [Lists](#lists) are the most common and most useful component, they consist of a list of words of which only one will be output by the Generator.
+* [Sentences](#sentences) contain multiple elements which will *all* be output in sequence by the Generator.
+* [Proxies](#proxies) allow one generator to reference the ouput of another Generator.
+
+### Lists
+
+Lists are the basic unit of construction for most name generators. They are contained within square brackets `[]` and elements within them are separated by commas `,`:
 
 `name = [Rupert, Marjory, Caleb, Alba]`
 
 This will output a single name from the list each time.
 
-### Nested Lists
+#### Nested Lists
 
 Lists can be nested, eg:
 
@@ -102,12 +136,12 @@ Lists can be nested, eg:
 
 This will still output a single name each time, from one or other of the nested lists
 
-### Pick Types
+#### Pick Types
 
 The word which is selected for output from a list can be picked in one of three basic ways: random, shuffle, and cycle.
 At the moment, the Pick Type can only be set in the Header (see [Setting Pick Type in the Header](#setting-pick-type-in-the-header)) for more information), and in the generator (see [Setting Pick Type in the Generator](#setting-pick-type-in-the-generator) for more), this will change soon.
 
-#### Random pick type
+##### Random pick type
 
 The default Pick Type is random - one of the elements from the list will be selected at random each time.
 
@@ -120,7 +154,7 @@ randomgen = [harpsichord, lute, harmonium, flute, harp, oboe]
 ```
 Each time the generator is run, any one of the elements in the list has an equal chance of being picked
 
-#### Shuffle pick type
+##### Shuffle pick type
 
 When the Pick Type is set to shuffle, elements are still picked randomly, but instead of picking a random one each time, the whole list is reordered randomly before the generator is ever run, and then the elements are picked in order, one at a time. When all the elements have been picked, the list is reordered randomly again and picking starts again at the beginning.
 This mostly avoids the same element being picked twice in a row (it can still happen directly after a shuffle), and ensures that all elements from the list are seen given enough picks.
@@ -134,7 +168,7 @@ shufflegen = [bee, spider, caterpillar, beetle]
 ```
 In the above example, the list might be reordered to `[spider, beetle, caterpillar, bee]` and will then output first 'spider', then 'beetle', then 'caterpillar'. Once 'bee' has been picked the list is shuffled again.
 
-#### Cycle pick type
+##### Cycle pick type
 
 When the Pick Type is set to cycle, elements are not picked randomly at all, but instead in the order they were written in. Once the last element is reached the first will be picked next.
 
@@ -147,7 +181,7 @@ cyclegen = [shrub, bush, tree]
 ```
 The above will always output elements in the same order: 'shrub', then 'bush', then 'tree' then 'shrub' and so on.
 
-### Repeats
+#### Repeats
 
 Lists can be told to repeat themselves a fixed or random number of times using several different methods for picking the number of repetitions. This is useful if, for example, you're generating a person's name and you want to add the possibility of a second or even a third name drawn from the same pool.
 
@@ -159,11 +193,11 @@ The default Repeat Type is `fixed`, but the number of repeats are set to zero, s
 
 Repetition can be set in generators or in the header, see [Setting Repeat Type in the Generator](#setting-repeat-type-in-the-generator) or [Setting Repeat Type in the Header](#setting-repeat-type-in-the-header) for more information.
 
-#### Fixed Repeat Type
+##### Fixed Repeat Type
 
 A List with a `fixed` Repeat Type will always output the same number of times. Currently the default number of repetitions is 0, and there is no way to change it, so this Repeat Type isn't at all useful yet.
 
-#### Uniform Repeat Type
+##### Uniform Repeat Type
 
 A List with a `uniform` Repeat Type will repeat a number of times between its minimum and maximum (both inclusive). The default minimum is 0 and the default maximum is 3. Whenever the List has to output text it will pick a number between its minimum and maximum following a uniform distribution, that is each possibility has an equal chance to occur, 0 is just as likely as 3.
 
@@ -177,7 +211,7 @@ Example outputs might be:
 	"Richard Caleb"
 And so on.
 
-#### Normal Repeat Type
+##### Normal Repeat Type
 
 A `normal` repeat type will repeat a number of times between its minimum and maximum following a normal or gaussian distribution, with the mean equal to the minimum and the standard deviation calculated so that the maximum is possible but very unlikely (somewhere between 0.1 and 0.01%).
 The default min is 0 and the default max is 4. This means that 0 is the most likely number of repeats, 1 is less likely than 0, 2 is less likely than 1, 3 is less likely than 2, and 4 is the least likely of all possibilities.
@@ -188,7 +222,7 @@ The default min is 0 and the default max is 4. This means that 0 is the most lik
 normallist &n = []
 ```
 
-#### Weighted Repeat Type
+##### Weighted Repeat Type
 
 A `weighted` List will repeat a number of times between zero and a chosen maximum, but allows you to assign weights to each possible number to make it more or less likely.
 The default weights are: `{ 3, 4, 2, 1 }`, the first number in the list representing the chance for zero repeats, the last number in the list representing the chance for the maximum number of repeats (in this example 3), and the nth number in the list representing the chance for that number of repeats.
@@ -214,7 +248,7 @@ In the above example there is only one list and it only contains one word, "happ
 However, the second sentence is the most likely, the first is slightly less like, the third is half as likely as the second, and the fourth is the least likey - 4 times less likely than the second.
 
 
-## Text outside lists
+### Sentences
 
 Not all text need be inside a list. Text outside of lists will always be reproduced, eg:
 
@@ -222,7 +256,7 @@ Not all text need be inside a list. Text outside of lists will always be reprodu
 
 This will output a single random name each time, but always starting with "Mr"
 
-## Referencing generators
+### Proxies
 Writing complicated generators in one go can be difficult, so instead the task can be split into multiple generators.
 One generator can reference the output of another generator by using its name preceded by a `$` symbol, like so:
 
