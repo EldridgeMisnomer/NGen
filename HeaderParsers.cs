@@ -111,6 +111,9 @@ namespace NGen {
                         break;
                 }
 
+                //DEBUG
+                //Console.WriteLine( $"Pick Type Selected:{gs.PickType}" );
+
                 if( gs.PickType != PickType.random ) {
 
                     if( s.Length > 1 ) {
@@ -119,6 +122,13 @@ namespace NGen {
 
                         //This should split by '-' but not when the '-' is escaped '\-'
                         string[] sNumParts = ParserUtils.StringSplitOnUnEscapedCharacter( sNum, '-' );
+
+/*                        //DEBUG
+                        string d = "";
+                        foreach( string sd in sNumParts ) {
+                            d += sd + ", ";
+                        }
+                        Console.WriteLine( $"sNumParts: {d}" );*/
 
                         if( gs.PickType == PickType.weighted ) {
 
@@ -162,11 +172,19 @@ namespace NGen {
                                 double[] weights = new double[sNumParts.Length];
                                 for( int i = 0; i < weights.Length; i++ ) {
 
-                                    double n = PU.StringToDouble( sNumParts[0] );
+                                    double n = PU.StringToDouble( sNumParts[i] );
                                     if( n < 0 ) n = 1;
                                     weights[i] = n;
                                 }
 
+/*                                //DEBUG
+                                string sw = "";
+                                foreach( double dw in weights ) {
+                                    sw += dw.ToString() + ", ";
+                                }
+                                Console.WriteLine( "Calculated weights from header: " + sw );*/
+
+                                gs.PickWeights = weights;
                                 gs.WeightsFromEnds = false;
                                 gs.WeightsFromFac = false;
 

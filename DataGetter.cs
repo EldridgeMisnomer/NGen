@@ -242,6 +242,15 @@ namespace NGen {
 
                 HP.HeaderShorthandSifter( h, ref gs );
 
+                //DEBUG
+/*                string sw = "";
+                foreach( double dw in gs.PickWeights ) {
+                    sw += dw.ToString() + ", ";
+                }
+                Console.WriteLine( $"ParseHeaderEnd, weights are now: {sw}" );
+                Console.WriteLine( $"ParseHeaderEnd, pickType is: {gs.PickType}" );*/
+
+
             }
 
             return gs;

@@ -315,6 +315,18 @@ namespace NGen {
                         nextWrd = ( nextWrd + 1 + gs.Skip ) % wrds.Length;
                         return output;
 
+                    case PickType.weighted:
+
+/*                        //DEBUG
+                        string s = "";
+                        foreach( double d in gs.PickWeights ) {
+                            s += d.ToString() +", ";
+                        }
+                        Console.WriteLine( $"Weights are: {s}" );
+                        Console.WriteLine( $"fac;{gs.WeightFac}, wfromfac:{gs.WeightsFromFac}, WfromE:{gs.WeightsFromEnds}" );*/
+
+                        return wrds[Rand.RandomDoubleWeightedInt( gs.PickWeights )].GetTxt();
+
                     default:
 
                         return Rand.RandFromArray( wrds ).GetTxt();

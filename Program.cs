@@ -12,38 +12,13 @@ namespace NGen {
             //Test Code
             int numTestToRunPerName = 120;
 
-            string[] outputs = { "aaa", "bbb", "ccc", "ddd", "eee" };
-            int[] counts = { 0, 0, 0, 0, 0 };
-
             foreach( string s in genNames ) {
                 Console.WriteLine( $"{s}:" );
                 for( int i = 0; i < numTestToRunPerName; i++ ) {
-                    //Console.WriteLine( "\t" + nGen.GenTxt(s) );
-
-                    string lpo = nGen.GenTxt(s);
-
-                    for( int x = 0; x < 5; x++ ) {
-
-                        if( lpo == outputs[x] ) {
-                            counts[x] ++;
-                            break;
-                        }
-
-                    }
-
+                    Console.WriteLine( "\t" + nGen.GenTxt(s) );
                 }
                 Console.WriteLine( "" );
             }
-            string l1 = "";
-            string l2 = "";
-
-            for( int i = 0; i < counts.Length; i++ ) {
-                l1 += outputs[i] + "\t";
-                l2 += counts[i] + "\t";
-            }
-
-            Console.WriteLine( l1 );
-            Console.WriteLine( l2 );
 
 
 /*            string test = "0";
