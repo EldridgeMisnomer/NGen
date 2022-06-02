@@ -24,10 +24,7 @@ namespace NGen {
             //process the lines into Gens with names
             Dictionary<string, Gen> gens = HeaderProcessor( strippedLines );
 
-            //TODO - weighted pickTypes
             //TODO - remap special characters
-            //TODO - set min, max, mean, stdDev for repeats
-            //TODO - chance to output nothing
             //TODO - Set NoRep to false
             //TODO - fix NoRep shuffle function
             //TODO - check what happens if no header, or no header at beginning but yes one later

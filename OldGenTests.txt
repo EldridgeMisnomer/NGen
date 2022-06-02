@@ -51,3 +51,118 @@ name = $honorific $surname
 #test2 = pre1 [a, b, c, d] mid1 [x, y, z ] post
 #test3 = [[one, three, five], [two, four, six]] and then what[nice, lovely, delicious] [[toes, fingers, feet], [eyelids, whiskers, earlobes], [antlers, tusks, quills]] you have
 #test4 = [ 1, [a,b,c], [x,y,z] ]
+
+
+#This is a comment
+#
+# ? for pick type - ?r, ?s, ?c, ?w
+# random has no possible settings
+# shuffle has a shuffle-point setting between 0.0 and 1.0 - shuffle this far through the 'deck'
+# cycle has a skip setting, an int (default is 0), how many cards to skip when cycling
+# weighted is the most complicated
+#
+# repeat types: (@)fixed, uniform, normal, weighted
+#
+#& for repeat
+#& resets to default - this is standart behaviour for all shorthand codes
+#repeat normal is &n - which gives a mean of 0, a max of 4, stdDev of 1
+#repeat with defined min and max is &n1-10
+#repeat with fixed min of 0 is &n5
+#negative mean requires \-
+#repeat with defined min, mean, and max is &n 0-2-6
+#repeat with defined min, mean, stdDev and max is &n0-2-4-6
+#repeat with uniform distribution is &u (default is min 0, max 3)
+#repeat uniform with min and max is &u2-4
+#repeat weighted is &w (default is {3, 4, 2, 1 })
+#repeat with defined weights is &w1-2-7-12
+#repeat fixed &f1 = always repeat once (0 is default)
+
+#spearators - two types: string and proxy:
+#_ is symbol and sets default
+#_followed by any character other than $ sets a string as a separator, eg. _-
+#_followed by a proxyname, eg. _$sep1, sets a proxyGen as the separator
+
+^
+#separator = ?w1,10[-, ]
+#chance = 0.1
+#pick = random norep
+#repeat = fixed
+^
+
+sep = [ _, *, x ]
+one _$sep =  [ a, b, c, d, e, f, g, h ] [ alpha, beta, zeta, whateva ]
+#two %0.5 ?c1 = [ 1, 2, 3, 4, 5, 6, 7, 8 ]
+
+
+#testm & = [ a, b, c, d, e, f, g, h, i, j, k, l, m, n ]
+
+#cyclename ?c &u = [ one, two, three, four, five, six, seven, eight, nine, ten ]
+
+#multilineVeg &f =  [
+#				artichoke, beetroot, carrot, cauliflower, celery, 
+#				endive, kale, leek, marrow, pea, 
+#				potato, pumpkin, spinach, squash, yarrow
+#			    ]
+
+#weighted ?w = [ once, twice, three times, a, lady ]
+
+#weighted2 ?w10-2-2-1-1 = [ aaa, bbb, ccc, ddd, eee ]
+#weighted2b ?w10-2-1-1 = [ aaa, bbb, ccc, ddd, eee ]
+
+#weighted3 ?w0.75 = [ air, bat, car, dog, egg, fox, god ]
+
+weighted4 ?w1-15 = [ air, bat, car, dog, egg, fox, god, hat, ice, jog, kol, log, mum, nag, oop, poo ]
+
+
+#test to see if tags are necessary
+
+#version 1 - no tags, no dependent lists
+
+vehicles = The [blue, old, vintage] [car, bike, truck] [drove, sped, accelerated] [along the road, over the bridge, through town].
+
+#version 2 - nested lists
+
+vehicles = The [[blue, old, vintage] [car, bike, truck], [drove, sped, accelerated] [along the road, over the bridge, through town], [nimble, white, new] [monoplane, glider, aerolite] [zipped, buzzed, flew] [towards the horizone, below the clouds, among the birds]].
+
+#version 3 - proxies
+
+s1 = [blue, old, vintage] [car, bike, truck] [drove, sped, accelerated] [along the road, over the bridge, through town]
+s2 = [nimble, white, new] [monoplane, glider, aerolite] [zipped, buzzed, flew] [towards the horizone, below the clouds, among the birds]
+
+sentence = The [$s1, $s2].
+
+version 4 - more proxies
+
+landvehicle = [car, bike, truck]
+landadj = [blue, old, vintage]
+landverb = [drove, sped, accelerated]
+landpp = [along the road, over the bridge, through town]
+
+airvehicle = [monoplane, glider, aerolite] 
+airadj = [nimble, white, new] 
+airverb = [zipped, buzzed, flew] 
+airpp = [towards the horizone, below the clouds, among the birds]
+
+sentence = The [ $landadj $landvehicle $landverb $landpp, $airadj $airvehicle $airverb $airpp ].
+
+s1 = $landadj $landvehicle $landverb $landpp
+s2 = $airadj $airvehicle $airverb $airpp
+sentence2 = The [s1, s2].
+
+#note that some of these, eg adjectives, could be reused for different vehicles, 
+#but we have no way of doing that without typing it all again
+#our tag version should deal with this
+
+version 5 - tags (not implemented)
+
+vehicle (land) = [car, bike, truck]
+adj (land) = [blue, old, vintage]
+verb (land) = [drove, sped, accelerated]
+pp (land) = [along the road, over the bridge, through town]
+
+vehicle (air) = [monoplane, glider, aerolite] 
+adj (air) = [nimble, white, new] 
+verb (air) = [zipped, buzzed, flew] 
+pp (air) = [towards the horizone, below the clouds, among the birds]
+
+sentence (air) (land) = The $adj $vehicle $verb $pp

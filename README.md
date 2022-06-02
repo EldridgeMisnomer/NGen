@@ -14,6 +14,10 @@ An NGen file can contain multiple Generators with complex constructions for retu
 	* [Lists](#lists)
     * [Sentences](#sentences)
     * [Proxies](#proxies)
+* [Component Behaviour Settings](#component-behaviour-settings)
+    * [Lists](#list-settings)
+    * [Sentences](#sentence-settings)
+    * [Proxies](#proxy-settings)
 * [Headers](#headers)
 * [Comments](#comments)
 * [Escaping characters](#escaping-characters)
@@ -33,15 +37,16 @@ A Generator consists of a Name, followed by an `=` sign, followed by some text w
 	generator = some text
 ```
 
-In the above example, every time the generator is run it will return the same text: "some text".
-This is an extremely simple generator, but much more complex ones can be constructed.
+In the above example, every time the Generator is run it will return the same text: "some text".
+This is an extremely simple Generator, but much more complex ones can be constructed.
 
 There are three diferent components which Generators can contain:
-* [Lists](#lists)
-* Sentences
-* Proxies
 
- The most important component of most generators is the [List](#word-lists)
+* [Lists](#lists)
+* [Sentences](#sentences)
+* [Proxies](#proxies)
+
+ The most important component of most Generators is the [List](#lists)
 
 ### Generator Names
 
@@ -53,7 +58,7 @@ Some example good and bad names:
 
 ```
 #these names are all good
-adj = [ short, wiry, blue]
+adj = [ short, wiry, blue ]
 PANIC = [ argh, wraaaagh, oof, erk, eeeep ]
 so_slow = [ slowly, very slowly, inch by inch, oh so slow]
 *!&xx??** = [ !#**, #@!!, @@x!*, !!! ]
@@ -74,7 +79,7 @@ long gen = once upon a time in the land of the jolly blue mermen...
 
 ### Multiline Generators
 
-Complicated Generators take space to construct and doing so on a single line can be tricky and hard to read, so longer definitions can be written on multiple lines:
+Complicated Generators take space to construct and doing so on a single line can be tricky and hard to read; so longer definitions can be written on multiple lines:
 
 ```
 multilineVeg = [
@@ -128,6 +133,8 @@ Lists are the basic unit of construction for most name generators. They are cont
 
 This will output a single name from the list each time.
 
+For more about customising Lists, see [List Settings](#list-settings)
+
 #### Nested Lists
 
 Lists can be nested, eg:
@@ -135,6 +142,71 @@ Lists can be nested, eg:
 `name = [[Jason, Alberto, Vince], [Wendy, Samantha, Paula]]`
 
 This will still output a single name each time, from one or other of the nested lists
+
+### Sentences
+
+Most of the time you don't have to think about Sentences, there are no special symbols used for writing them, and they will be created automatically when needed. They also don't have many Behaviours which can be changed.
+
+Sentences consist of multiple elements which will always be output by the Generator they are in, for example:
+
+`name = Mr [Thronton, Cleeson, Speg]`
+
+The text "Mr" above will always be output by the Generator, no matter what. Both the text "Mr" and the List ("Thronton, Cleeson, Speg") are contained within a Sentence which will output both of them in order.
+
+In the example below there are two Lists, both of which will be output, in order, because they are together in a Sentence:
+
+`vp = [run, jog, sprint] [quickly, energetically, furiously]`
+
+For more about Sentences see TODO
+
+
+### Proxies
+Writing complicated Generators in one go can be difficult, so instead the task can be split into multiple Generators.
+
+A Proxy is a way of including the output from one Gnerator inside another Generator; it is writting by using a `$` symbol followed by the Generator Name, like so:
+
+```
+honorific = [Mr, Ms, Mrs, Miss, Master, Sir, Madam]
+surname = [Clancey, Dumblethorn, Addlington, Cranch, Asperly]
+
+name = $honorific $surname
+```
+
+In the above example, When the "name" Generator is run, it will take the output from the "honorific" and "surname" Generators and combine them in a Sentence (the "honorific" and "surname" Generators can also still be run separately).
+
+For more about Proxies see TODO
+
+## Component Behaviour Settings
+
+*TODO - clear up the language here, find a better way to describe it*
+
+Components have certain Behaviours which can be changed with Settings. For example, Lists output one random element, the way it chooses this element can be modified by changing its Settings.
+
+Behaviour Settings are most important for Lists, but all Component types have different Behaviours.
+
+* List Settings
+* Sentence Settings
+* Proxy Settings
+
+*TODO - add links here*
+
+### List Settings
+
+Lists have the following Settings:
+
+* Pick
+* Repeat
+* Output
+* Separator
+* ??NoRep
+
+### Sentence Settings
+
+Sentences only have one Setting - Separator.
+
+### Proxy Settings
+
+Proxies do not (yet) have any Settings
 
 #### Pick Types
 
@@ -248,27 +320,6 @@ In the above example there is only one list and it only contains one word, "happ
 However, the second sentence is the most likely, the first is slightly less like, the third is half as likely as the second, and the fourth is the least likey - 4 times less likely than the second.
 
 
-### Sentences
-
-Not all text need be inside a list. Text outside of lists will always be reproduced, eg:
-
-`name = Mr [Thronton, Cleeson, Speg]`
-
-This will output a single random name each time, but always starting with "Mr"
-
-### Proxies
-Writing complicated generators in one go can be difficult, so instead the task can be split into multiple generators.
-One generator can reference the output of another generator by using its name preceded by a `$` symbol, like so:
-
-```
-honorific = [Mr, Ms, Mrs, Miss, Master, Sir, Madam]
-surname = [Clancey, Dumblethorn, Addlington, Cranch, Asperly]
-
-name = $honorific $surname
-```
-
-When the "name" generator is run, it will access the "honorific" and "surname" generators to provide an output (the "honorific" and "surname" generators can also still be run separately).
-These generator references can be included in lists and nested.
 
 ## Headers
 
