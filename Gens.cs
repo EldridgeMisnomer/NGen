@@ -9,6 +9,24 @@ namespace NGen {
 
         public abstract string GetTxt();
 
+        //settings
+        protected GenSettings gs;
+
+        protected string AddSeparator( string s ) {
+
+            if( gs.UseProxySeparator ) {
+
+                s += gs.ProxySeparator.GetTxt();
+
+            } else {
+
+                s += gs.Separator;
+
+            }
+
+            return s;
+
+        }
     }
 
     public class Wrd : Gen {
@@ -71,9 +89,6 @@ namespace NGen {
 
         //words
         private readonly Gen[] wrds;
-
-        //settings
-        private readonly GenSettings gs;
 
         //state
         private int lastWrd = 0;
@@ -256,22 +271,6 @@ namespace NGen {
             return s;
         }
 
-        private string AddSeparator( string s ) {
-
-            if( gs.UseProxySeparator ) {
-
-                s += gs.ProxySeparator.GetTxt();
-
-            } else {
-
-                s += gs.Separator;
-
-            }
-
-            return s;
-
-        }
-
         public string PickTxt() {
 
             if( wrds.Length == 1 ) {
@@ -345,9 +344,9 @@ namespace NGen {
          */
 
         private readonly Gen[] wrds;
-        private string separator = " ";
 
-        public SenGen( Gen[] gens) {
+        public SenGen( Gen[] gens, GenSettings genSettings ) {
+            gs = genSettings;
             wrds = gens;
         }
 
@@ -358,7 +357,7 @@ namespace NGen {
             for( int i = 0; i < wrds.Length; i++ ) {
                 s += wrds[i].GetTxt();
                 if( i != wrds.Length - 1 ) {
-                    s += separator;
+                    s = AddSeparator( s );
                 }
             }
 

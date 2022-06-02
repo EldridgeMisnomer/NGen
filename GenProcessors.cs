@@ -14,7 +14,7 @@ namespace NGen {
         }
 
 
-        public static Gen WrdProcessor( string s ) {
+        public static Gen WrdProcessor( string s, GenSettings headerSettings ) {
             /*
              *  Takes any string which would normally be treated as a Wrd
              *      ie - it doesn't have any complicated construction - like lists - in it
@@ -49,7 +49,7 @@ namespace NGen {
                     }
                 }
 
-                SenGen sg = new SenGen( gens.ToArray() );
+                SenGen sg = new SenGen( gens.ToArray(), headerSettings );
                 return sg;
 
             } else {
@@ -67,7 +67,7 @@ namespace NGen {
 
         }
 
-        public static Gen[] MultiWrdProcessor( string[] s ) {
+        public static Gen[] MultiWrdProcessor( string[] s, GenSettings genSettings ) {
             /*
              *  Processes an array of potential Wrds
              *  Checking for ProxyGens
@@ -76,7 +76,7 @@ namespace NGen {
             Gen[] gens = new Gen[s.Length];
 
             for( int i = 0; i < s.Length; i++ ) {
-                gens[i] = WrdProcessor( s[i] );
+                gens[i] = WrdProcessor( s[i], genSettings );
             }
 
             return gens;
@@ -110,7 +110,7 @@ namespace NGen {
                         gens.Add( g );
 
                     } else {
-                        Gen g = WrdProcessor( s );
+                        Gen g = WrdProcessor( s, headerSettings );
                         gens.Add( g );
                     }
                 }
@@ -120,7 +120,7 @@ namespace NGen {
             } else {
 
                 //if there are no nested lists, create a simple ListGen out of the strings
-                Gen[] gens = MultiWrdProcessor( sArr );
+                Gen[] gens = MultiWrdProcessor( sArr, headerSettings );
                 wg = new ListGen( gens, headerSettings );
 
             }
@@ -138,7 +138,7 @@ namespace NGen {
             //Create a list to contain gens, this will eventually be turned into the SenGen
             List<Gen> gens = new List<Gen>();
 
-            //Check to see if we have any WrdGens
+            //Check to see if we have any ListGens
             if( PU.StringContinsList( s ) ) {
 
                 string preBracketStart;
@@ -147,7 +147,7 @@ namespace NGen {
                 //If there is any text in the preBrackets string
                 //we can treat it as just a Wrd, because we know it can't contain a list
                 if( preBracketStart.Trim().Length > 0 ) {
-                    Gen g = WrdProcessor( preBracketStart.Trim() );
+                    Gen g = WrdProcessor( preBracketStart.Trim(), headerSettings );
                     gens.Add( g );
                 }
 
@@ -171,7 +171,7 @@ namespace NGen {
 
                         //if there's no list there, treat it as a Wrd
                         //and add it to the list
-                        Gen g = WrdProcessor( postBrackets.Trim() );
+                        Gen g = WrdProcessor( postBrackets.Trim(), headerSettings );
                         gens.Add( g );
                     }
                 }
@@ -181,7 +181,7 @@ namespace NGen {
                 //If there are no WrdLists, then dump the whole string into a Wrd
                 //DEBUG
                 //Console.WriteLine( $"string had no lists: \"{s}\"" );
-                Gen g = WrdProcessor( s.Trim() );
+                Gen g = WrdProcessor( s.Trim(), headerSettings );
                 gens.Add( g );
 
             }
@@ -194,7 +194,7 @@ namespace NGen {
 
             } else {
 
-                SenGen sg = new SenGen( gens.ToArray() );
+                SenGen sg = new SenGen( gens.ToArray(), headerSettings );
                 return sg;
 
             }
