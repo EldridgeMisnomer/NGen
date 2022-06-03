@@ -603,7 +603,7 @@ Every commented line must have a `#` as its first character.
 
 As we have seen, NGen uses special characters like `[` and `$` to define things like Lists and References, the complete list of these special characters is:
 
-`# = [ ] , $`
+`# = [ ] , $ /`
 
 Sometimes you want to use these characters in your text, to do so they need to be escaped by putting a `\` character before them, otherwise they will be read as part of your generator structure, and not part of its content. eg:
 
@@ -616,6 +616,35 @@ money = [$100, $200]
 money2 = [\$100, \$200]
 
 ```
+
+### Table of Special Characters
+
+Here is a table of all Special Characters in NGen:
+
+| Character | Function							|
+|-----------|-----------------------------------|
+| #  		| Comment							|
+| =			| assignement						|
+| [			| start List						|
+| ]			| end List							|
+| ,			| separates List elements			|
+| $			| denotes a Proxy				    |
+| /			| denotes the end of a Proxy name   |
+
+### Table of Shorthand Characters
+
+Here's a table showing all the codes used in shorthand Settings:
+
+
+| Character | Function			|  Settings			|
+|-----------|-------------------|-------------------|
+| ?  		| Pick				| ?r, ?s, ?c, ?w    |
+| &			| Repeat			| &f, &u, &n, &w	|
+| %			| Output Chance		|					|
+| _			| Separator			|					|
+| *			| Once				|					|
+| >			| Allow Duplicates  |					|
+| !			| Switch Off		| *!, >!			|
 
 ## Error Messages
 
