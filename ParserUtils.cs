@@ -221,7 +221,7 @@ namespace NGen {
 
         }
 
-        public static string GetBracketsStart( string s, out string preBrackets ) {
+        public static string GetBracketsStart( string s, out string preBrackets, out string bracketsHeaderString ) {
             /*
              * finds the starting point of the brackets and returns the input string
              * minus anything before the start, also outputs a prefix separately
@@ -251,7 +251,39 @@ namespace NGen {
                 }
             }
 
+            bracketsHeaderString = ExtractBracketsHeaderString( ref preBrackets );
+
             return contents;
+        
+        }
+
+        private static string ExtractBracketsHeaderString( ref string preBrackets ) {
+            string bracketsHeaderString = "";
+
+            //Check prebrackets for a header
+            if( preBrackets.Length > 0 ) {
+
+                int spaceIndex = preBrackets.LastIndexOf( ' ' );
+
+                if( spaceIndex == -1 ||
+                    spaceIndex < preBrackets.Length - 1 ) {
+
+                    bracketsHeaderString = preBrackets.Substring( spaceIndex + 1 );
+
+                    //if there is a header, remove it from the preBrackets string
+                    if( preBrackets.Length > bracketsHeaderString.Length + 1 ) {
+
+                        preBrackets = preBrackets.Substring( 0, spaceIndex );
+
+                    } else {
+
+                        preBrackets = "";
+
+                    }
+                }
+            }
+
+            return bracketsHeaderString;
         }
 
 

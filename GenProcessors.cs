@@ -141,8 +141,15 @@ namespace NGen {
             //Check to see if we have any ListGens
             if( PU.StringContinsList( s ) ) {
 
+                //separate text before and after the start of the brackets
+                //also get the header string, if there is one
                 string preBracketStart;
-                string postBracketStart = PU.GetBracketsStart( s, out preBracketStart );
+                string bracketsHeaderString;
+                string postBracketStart = PU.GetBracketsStart( s, out preBracketStart, out bracketsHeaderString );
+
+                //DEBUG
+                Console.WriteLine( $"preBracket text is: '{preBracketStart}'" );
+                Console.WriteLine( $"bracketsHeader text is: '{bracketsHeaderString}'" );
 
                 //If there is any text in the preBrackets string
                 //we can treat it as just a Wrd, because we know it can't contain a list
@@ -151,10 +158,20 @@ namespace NGen {
                     gens.Add( g );
                 }
 
+                //separate text within the brackets from text after them
                 string postBrackets;
                 string[] bracketsContents = PU.GetBracketsContents( postBracketStart, out postBrackets );
 
-                ListGen wg = ListGenProcessor( bracketsContents, headerSettings );
+                //if we had a header string, process it
+                GenSettings newGS = new GenSettings( headerSettings );
+
+                if( bracketsHeaderString.Length > 0 ) {
+
+                    HeaderParsers.HeaderShorthandSifter( bracketsHeaderString, ref newGS );
+                
+                }
+
+                ListGen wg = ListGenProcessor( bracketsContents, newGS );
                 gens.Add( wg );
 
                 //process postBrackets text
