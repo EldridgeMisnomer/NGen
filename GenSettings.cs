@@ -5,7 +5,7 @@
         //pick behaviour (only for lists)
         public PickType PickType { get; set; }
 
-        public bool NoRep { get; set; }
+        public bool AllowRepeats { get; set; }
         public double ShufflePoint { get; set; }
         public int Skip { get; set; }
 
@@ -22,7 +22,7 @@
 
         public int RepMax { get; set; }
         public int RepMin { get; set; }
-        public int RepStdDev { get; set; }
+        public double RepStdDev { get; set; }
         public int RepMean { get; set; }
         public bool UseMean { get; set; }
         public bool UseDev { get; set; }
@@ -36,7 +36,8 @@
         public ProxyGen ProxySeparator { get; set; }
         public bool UseProxySeparator { get; set; }
 
-
+        //once behaviour (only for proxies)
+        public bool Once { get; set; }
 
         public GenSettings() {
             Reset();
@@ -46,7 +47,7 @@
 
             //pick behaviour
             PickType = gs.PickType;
-            NoRep = gs.NoRep;
+            AllowRepeats = gs.AllowRepeats;
             ShufflePoint = gs.ShufflePoint;
             Skip = gs.Skip;
 
@@ -76,6 +77,9 @@
             ProxySeparator = gs.ProxySeparator;
             UseProxySeparator = gs.UseProxySeparator;
 
+            //once
+            Once = gs.Once; 
+
         }
 
         public void SetRepType( RepeatType rt ) {
@@ -86,7 +90,7 @@
 
             //pick behaviour
             PickType = PickType.random;
-            NoRep = false;
+            AllowRepeats = true;
             ShufflePoint = 1;
             Skip = 0;
 
@@ -117,6 +121,9 @@
             double[] defaultPickWeights = new double [0];
             PickWeights = defaultPickWeights;
 
+            //once
+            Once = false;
+
         }
 
         public void SetRepeatDefaults() {
@@ -132,6 +139,7 @@
                     RepMax = 4;
                     RepMin = 0;
                     UseMean = false;
+                    UseDev = false;
                     break;
                 case RepeatType.weighted:
                     int[] defaultRepWeights = { 3, 4, 2, 1 };

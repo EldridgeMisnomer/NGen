@@ -48,25 +48,46 @@ namespace NGen {
 
     public class ProxyGen : Gen {
         /*
-         * This is a Gen which stands as a proxy for another named Gen
-         * We don't yet have a way to access these
+         *  This is a Gen which stands as a proxy for another named Gen
+         * 
+         *  It has one setting it uses, so far:
+         *      Once - where it only retrieves text from a Gen the first time
+         *          and after that it alawys returns the same text
          */
 
         private Gen gen;
         private readonly string genName;
 
-        public ProxyGen( string name ) {
+        private string onceText = null;
+
+        public ProxyGen( string name, GenSettings genSettings ) {
             genName = name;
+
+            gs = genSettings;
         }
 
         public override string GetTxt() {
 
             if( gen == null ) {
-                return $"**{genName}**";
-            } else {
-                return gen.GetTxt();
-            }
 
+                return $"**{genName}**";
+
+            } else {
+
+                if( gs.Once ) {
+
+                    if( onceText == null ) {
+
+                        onceText = gen.GetTxt();
+
+                    }
+                    return onceText;
+
+                } else {
+
+                    return gen.GetTxt();
+                }
+            }
         }
 
         public void SetGen( Gen g ) {
@@ -212,14 +233,10 @@ namespace NGen {
 
 
                     }
-
-
                 }
-
             }
-
-
         }
+
 
         public override string GetTxt() {
 
@@ -244,8 +261,18 @@ namespace NGen {
 
                         if( gs.UseMean ) {
 
-                            repeats = Rand.RandomNormalMeanDevInt( gs.RepMin, gs.RepMax, gs.RepMean, gs.RepStdDev );
-                            break;
+                            if( gs.UseDev ) {
+
+                                repeats = Rand.RandomNormalRangeMeanDevInt( gs.RepMin, gs.RepMax, gs.RepMean, gs.RepStdDev );
+                                break;
+
+                            } else {
+
+                                repeats = Rand.RandomNormalRangeMeanInt( gs.RepMin, gs.RepMax, gs.RepMean );
+                                break;
+
+                            }
+
 
                         } else {
 
@@ -281,13 +308,13 @@ namespace NGen {
 
                     case PickType.random:
 
-                        if( gs.NoRep ) {
+                        if( gs.AllowRepeats ) {
 
-                            return Rand.NonRepeatingRandFromArray( wrds, ref lastWrd ).GetTxt();
+                            return Rand.RandFromArray( wrds ).GetTxt();
 
                         } else {
 
-                            return Rand.RandFromArray( wrds ).GetTxt();
+                            return Rand.NonRepeatingRandFromArray( wrds, ref lastWrd ).GetTxt();
 
                         }
 
@@ -297,10 +324,14 @@ namespace NGen {
                         nextWrd++;
                         if( nextWrd >= ( wrds.Length * gs.ShufflePoint ) ) {
 
-                            if( gs.NoRep ) {
-                                wrds.NonRepeatingShuffle();
-                            } else {
+                            if( gs.AllowRepeats ) {
+
                                 wrds.Shuffle();
+
+                            } else {
+
+                                wrds.NonRepeatingShuffle();
+
                             }
                             nextWrd = 0;
                         }
@@ -315,14 +346,6 @@ namespace NGen {
                         return output;
 
                     case PickType.weighted:
-
-/*                        //DEBUG
-                        string s = "";
-                        foreach( double d in gs.PickWeights ) {
-                            s += d.ToString() +", ";
-                        }
-                        Console.WriteLine( $"Weights are: {s}" );
-                        Console.WriteLine( $"fac;{gs.WeightFac}, wfromfac:{gs.WeightsFromFac}, WfromE:{gs.WeightsFromEnds}" );*/
 
                         return wrds[Rand.RandomDoubleWeightedInt( gs.PickWeights )].GetTxt();
 
@@ -355,9 +378,13 @@ namespace NGen {
             string s = "";
 
             for( int i = 0; i < wrds.Length; i++ ) {
+
                 s += wrds[i].GetTxt();
+
                 if( i != wrds.Length - 1 ) {
+
                     s = AddSeparator( s );
+
                 }
             }
 

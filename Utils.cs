@@ -90,9 +90,17 @@ namespace Utils {
 
         }
 
-        public static int RandomNormalMeanDevInt( int min, int max, int mean, int deviation ) {
+        public static int RandomNormalRangeMeanInt( int min, int max, int mean ) {
 
-            double dNum = RandomNormalRangeMeanDev( (double)min, (double)(max + 1), (double)mean, (double)deviation );
+            double stdDev = ( max - min ) / 4;
+            int num = RandomNormalRangeMeanDevInt( min, max, mean, stdDev );
+            return num;
+
+        }
+
+        public static int RandomNormalRangeMeanDevInt( int min, int max, int mean, double deviation ) {
+
+            double dNum = RandomNormalRangeMeanDev( (double)min, (double)(max + 1), (double)mean, deviation );
             int num = (int)Math.Floor( dNum );
             return num;
         }

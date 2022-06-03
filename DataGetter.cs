@@ -216,7 +216,7 @@ namespace NGen {
                 gs.SetRepeatDefaults();
 
                 if( h.Contains("norep") ) {
-                    gs.NoRep = true;
+                    gs.AllowRepeats = true;
                 }
 
             }

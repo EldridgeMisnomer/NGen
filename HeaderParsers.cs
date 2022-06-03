@@ -253,7 +253,7 @@ namespace NGen {
                 if( s[0] == ParserUtils.CharMap( CharType.reference ) ) {
 
                     string proxyName = s.Substring( 1, s.Length - 1 );
-                    ProxyGen pg = GenProcessors.ProxyProcessor( proxyName );
+                    ProxyGen pg = GenProcessors.ProxyProcessor( proxyName, gs );
                     gs.ProxySeparator = pg;
                     gs.UseProxySeparator = true;
 
@@ -387,7 +387,7 @@ namespace NGen {
 
         private static void HeaderNoRepParser( ref GenSettings gs ) {
 
-            gs.NoRep = true;
+            gs.AllowRepeats = true;
 
         }
 

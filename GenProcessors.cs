@@ -40,7 +40,7 @@ namespace NGen {
 
                         int refIndex = w.IndexOf( PU.CharMap( CharType.reference ) );
                         string name = w.Substring( refIndex + 1, w.Length - refIndex - 1 );
-                        ProxyGen pg = ProxyProcessor( name );
+                        ProxyGen pg = ProxyProcessor( name, headerSettings );
                         gens.Add( pg );
 
                     } else {
@@ -58,9 +58,9 @@ namespace NGen {
 
         }
 
-        public static ProxyGen ProxyProcessor( string s ) {
+        public static ProxyGen ProxyProcessor( string s, GenSettings genSettings ) {
 
-            ProxyGen pg = new ProxyGen( s.Trim() );
+            ProxyGen pg = new ProxyGen( s.Trim(), genSettings );
             //add to the ProxyGen list for connecting up later
             proxyGens.Add( pg );
             return pg;
