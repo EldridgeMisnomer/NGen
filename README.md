@@ -71,6 +71,8 @@ so_slow = [ slowly, very slowly, inch by inch, oh so slow]
 adj = [ wobbly, worried, slick ]
 #names are case insensitve, and 'adj' has already been used, so this won't work
 Adj = [ stinky, smelly, shrieking ]
+#this won't work because it has prohibited characters in it
+*!&$$??** = [ !#**, #@!!, @@x!*, !!! ]
 #this won't work because names cannot contain spaces
 long gen = once upon a time in the land of the jolly blue mermen...
 #(actually, it will work - but the name of the generator will be 'long' and the 'gen' will be discarded...
@@ -159,7 +161,7 @@ In the example below there are two Lists, both of which will be output, in order
 
 `vp = [run, jog, sprint] [quickly, energetically, furiously]`
 
-For more about Sentences see TODO
+For more about Sentences see [Sentence Settings](#sentence-settings)
 
 
 ### Proxies
@@ -176,7 +178,7 @@ name = $honorific $surname
 
 In the above example, When the "name" Generator is run, it will take the output from the "honorific" and "surname" Generators and combine them in a Sentence (the "honorific" and "surname" Generators can also still be run separately).
 
-For more about Proxies see TODO
+For more about Proxies see [Proxy Settings](#proxy-settings)
 
 ## Component Settings
 
@@ -185,20 +187,18 @@ Components have certain Settings which can be changed to alter how they behave. 
 Settings are most important for Lists, but all Component types have different Settings.
 
 * [List Settings](#list-settings)
-* Sentence Settings
-* Proxy Settings
-
-*TODO - add links here*
+* [Sentence Settings](#sentence-settings)
+* [Proxy Settings](#proxy-settings)
 
 ### List Settings
 
 Lists have Settings in the following categories:
 
-* Pick
+* [Pick](#pick-settings)
 * Repeat
 * Output
 * Separator
-* ??NoRep
+* Allow Duplicates - TODO *think of a better name for this*
 
 Settings are normally changed using shorthand codes written either after the Generator Name or immediately before the List:
 
@@ -218,13 +218,6 @@ Settings after a Generator Name *must* be separated from the Name by a space, an
 
 See below for details about how to apply Settings to Lists. TODO - *link this up*
 
-### Sentence Settings
-
-Sentences only have one Setting - Separator.
-
-### Proxy Settings
-
-Proxies do not (yet) have any Settings
 
 #### Pick Settings
 
@@ -245,7 +238,12 @@ gen1 ?s = I put my [ shirt, shoes, socks ] on, shoved my
 	and jumped ?[ in the car, on my bike, into the jeep ]
 ```
 
-For more about what the different symbols mean and how to change Settings, see the sections below.
+For more about what the different symbols mean and how to change Settings, see the sections below:
+
+* [Random](#random-pick)
+* [Shuffle](#shuffle-pick)
+* [Cycle](#cycle-pick)
+* [Weighted](#weighted-pick)
 
 ##### Random Pick
 
@@ -362,6 +360,35 @@ Be careful about setting a high factor, particularly with long lists, as you mig
 
 The default factor is `0.8`, and this can be set just by writing `?w`.
 
+
+
+### Sentence Settings
+
+Sentences only have one Setting - Separator.
+
+### Proxy Settings
+
+Proixes have a single setting, called Once.
+
+#### Once Setting
+
+Once can be set to On or Off, default is Off.
+
+The normal use for a Proxy is to place the output from one Generator inside another, thus allowing more complex constructions. Generally the same effect can be achieved using Nested Lists, but Proxies tend to be easier to read and can also be reused in more than one other Generator.
+
+Turning Once on changes this Behaviour. If Once is set to On then the Proxy will only get the output from its Generator Once, the first time it is accessed, and thereafter it will store whatever was output the first time; this allows a Proxy to be used as a kind of storage. Take this example:
+
+```
+items = [ wallet, keys, left shoe, favourite tie ]
+lostitem * = $items
+s1 = Yesterday I lost my $lostitem/. 
+	I was so sad, I loved my $lostitem so much, 
+	I didn't know what I'd do without my $lostitem/.
+```
+
+Here NGen is being used to tell a simple story with a procedurally generated element – the item which is lost is chosen randomly, if the Proxy containing the possible lost items were used normally it would mean that the lost item would change each time it is referenced in the sentence; instead, the Proxy is set to Once and it stores the first item it gets and repeats it every other time it is asked for output.
+
+Once can be switched on by typing the symbol `*`, or off by typing `*!`.
 
 
 
