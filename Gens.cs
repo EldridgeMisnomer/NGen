@@ -7,7 +7,12 @@ namespace NGen {
 
     public abstract class Gen {
 
-        public abstract string GetTxt();
+        public string GetTxt() {
+            string s = GetOutput();
+            return s;
+        }
+
+        protected abstract string PickTxt();
 
         //settings
         protected GenSettings gs;
@@ -28,6 +33,72 @@ namespace NGen {
 
         }
 
+        protected int DoRepeats() {
+            int repeats = 0;
+
+            //Choose the number of repeats based on the repeat type
+            switch( gs.RepType ) {
+
+                case RepeatType.@fixed:
+                    repeats = gs.RepMax;
+                    break;
+
+                case RepeatType.uniform:
+                    repeats = Rand.RandomRangeInt( gs.RepMin, gs.RepMax + 1 );
+                    break;
+
+                case RepeatType.normal:
+
+                    if( gs.UseMean ) {
+
+                        if( gs.UseDev ) {
+
+                            repeats = Rand.RandomNormalRangeMeanDevInt( gs.RepMin, gs.RepMax, gs.RepMean, gs.RepStdDev );
+                            break;
+
+                        } else {
+
+                            repeats = Rand.RandomNormalRangeMeanInt( gs.RepMin, gs.RepMax, gs.RepMean );
+                            break;
+
+                        }
+
+
+                    } else {
+
+                        repeats = Rand.RandomNormalRangeInt( gs.RepMin, gs.RepMax );
+                        break;
+
+                    }
+                case RepeatType.weighted:
+                    repeats = Rand.RandomWeightedInt( gs.RepWeights );
+                    break;
+            }
+
+            return repeats;
+        }
+
+        protected string GetOutput() {
+
+            string s = "";
+
+            if( gs.OutputChance == 1 || Rand.ChanceTest( gs.OutputChance ) ) {
+
+                int repeats = DoRepeats();
+
+                //get text repeatedly
+                for( int i = 0; i < repeats + 1; i++ ) {
+                    s += PickTxt();
+                    if( i != gs.RepMax ) {
+                        s = AddSeparator( s );
+                    }
+                }
+            }
+
+            return s;
+        }
+
+
         public bool GetNoSepBefore() {
             return gs.NoSepBefore;
         }
@@ -47,7 +118,7 @@ namespace NGen {
             wrd = PU.StripEscapes(str.Trim());
         }
 
-        public override string GetTxt() {
+        protected override string PickTxt() {
             return wrd;
         }
     }
@@ -72,8 +143,7 @@ namespace NGen {
             gs = genSettings;
         }
 
-        public override string GetTxt() {
-
+        protected override string PickTxt() {
             if( gen == null ) {
 
                 return $"**{genName}**";
@@ -243,68 +313,7 @@ namespace NGen {
             }
         }
 
-
-        public override string GetTxt() {
-
-            string s = "";
-
-            if( gs.OutputChance == 1 || Rand.ChanceTest( gs.OutputChance ) ) {
-
-                int repeats = 0;
-
-                //Choose the number of repeats based on the repeat type
-                switch( gs.RepType ) {
-
-                    case RepeatType.@fixed:
-                        repeats = gs.RepMax;
-                        break;
-
-                    case RepeatType.uniform:
-                        repeats = Rand.RandomRangeInt( gs.RepMin, gs.RepMax + 1 );
-                        break;
-
-                    case RepeatType.normal:
-
-                        if( gs.UseMean ) {
-
-                            if( gs.UseDev ) {
-
-                                repeats = Rand.RandomNormalRangeMeanDevInt( gs.RepMin, gs.RepMax, gs.RepMean, gs.RepStdDev );
-                                break;
-
-                            } else {
-
-                                repeats = Rand.RandomNormalRangeMeanInt( gs.RepMin, gs.RepMax, gs.RepMean );
-                                break;
-
-                            }
-
-
-                        } else {
-
-                            repeats = Rand.RandomNormalRangeInt( gs.RepMin, gs.RepMax );
-                            break;
-
-                        }
-                    case RepeatType.weighted:
-                        repeats = Rand.RandomWeightedInt( gs.RepWeights );
-                        break;
-
-                }
-
-                //get text repeatedly
-                for( int i = 0; i < repeats + 1; i++ ) {
-                    s += PickTxt();
-                    if( i != gs.RepMax ) {
-                        s = AddSeparator( s );
-                    }
-                }
-            }
-
-            return s;
-        }
-
-        public string PickTxt() {
+        protected override string PickTxt() {
 
             if( wrds.Length == 1 ) {
                 return wrds[0].GetTxt();
@@ -360,7 +369,6 @@ namespace NGen {
                         return Rand.RandFromArray( wrds ).GetTxt();
 
                 }
-
             }
         }
     }
@@ -379,7 +387,7 @@ namespace NGen {
             wrds = gens;
         }
 
-        public override string GetTxt() {
+        protected override string PickTxt() {
 
             string s = "";
 

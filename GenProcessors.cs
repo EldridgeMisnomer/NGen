@@ -40,10 +40,17 @@ namespace NGen {
 
                         int refIndex = w.IndexOf( PU.CharMap( CharType.reference ) );
 
-                        //This name may contain punctuation
-                        //how do we get rid of it????
                         string name = w.Substring( refIndex + 1, w.Length - refIndex - 1 );
 
+                        GenSettings gs = new GenSettings( headerSettings );
+
+                        if( refIndex > 0 ) {
+                            string proxyHeaderString = w.Substring( 0, refIndex );
+                            HeaderParsers.HeaderShorthandSifter( proxyHeaderString, ref gs );
+                            Console.WriteLine( $"ProxyHeader is: '{proxyHeaderString}'" );
+                        }
+
+                        //This name may contain punctuation
                         int proxyEnd = name.IndexOf( PU.CharMap( CharType.proxyEnd ) );
                         string excess = null;
                         if( proxyEnd > 0 ) {
@@ -54,15 +61,15 @@ namespace NGen {
                                 name = name.Substring( 0, name.Length - 1 );
                             }
                         }
-                        ProxyGen pg = ProxyProcessor( name, headerSettings );
+                        ProxyGen pg = ProxyProcessor( name, gs );
                         gens.Add( pg );
 
                         if( excess != null ) {
 
-                            GenSettings gs = new GenSettings( headerSettings );
+                            GenSettings gs2 = new GenSettings( headerSettings );
                             gs.NoSepBefore = true;
 
-                            Wrd wrd = new Wrd( excess, gs);
+                            Wrd wrd = new Wrd( excess, gs2);
                             gens.Add( wrd );
                         }
 
