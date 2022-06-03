@@ -32,6 +32,16 @@ namespace NGen {
             //TODO - add repeat to ProxyGens
             //TODO - check for matching brackets
 
+            //Perhaps:
+            //TODO - ProxyGens could have a Onece setting - meaning they get an output the first time and then store it. Now the proxy has fixed text
+            //for eg. Imagine writing a story:
+
+            //items = [wallet, keys, left shoe]
+            //lostitem = $items(once)
+            //s1 = Yesterday I lost my $lostitem. I was so sad, I loved my $lostitem so much, I didn't know what I'd do without my $lostitem
+
+            //in the above we want to refer to something picked from a list multiple times, so we store it in a 'once' proxygen
+
 
             //Check all ProxyGens to see if their genNames are in the dictionary
             //if they are, pass them their gens

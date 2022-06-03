@@ -14,7 +14,7 @@ An NGen file can contain multiple Generators with complex constructions for retu
 	* [Lists](#lists)
     * [Sentences](#sentences)
     * [Proxies](#proxies)
-* [Component Behaviour Settings](#component-behaviour-settings)
+* [Component Settings](#component-settings)
     * [Lists](#list-settings)
     * [Sentences](#sentence-settings)
     * [Proxies](#proxy-settings)
@@ -176,15 +176,13 @@ In the above example, When the "name" Generator is run, it will take the output 
 
 For more about Proxies see TODO
 
-## Component Behaviour Settings
+## Component Settings
 
-*TODO - clear up the language here, find a better way to describe it*
+Components have certain Settings which can be changed to alter how they behave. For example, Lists output one random element, the way it chooses this element can be modified by changing its Settings.
 
-Components have certain Behaviours which can be changed with Settings. For example, Lists output one random element, the way it chooses this element can be modified by changing its Settings.
+Settings are most important for Lists, but all Component types have different Settings.
 
-Behaviour Settings are most important for Lists, but all Component types have different Behaviours.
-
-* List Settings
+* [List Settings](#list-settings)
 * Sentence Settings
 * Proxy Settings
 
@@ -192,13 +190,31 @@ Behaviour Settings are most important for Lists, but all Component types have di
 
 ### List Settings
 
-Lists have the following Settings:
+Lists have Settings in the following categories:
 
 * Pick
 * Repeat
 * Output
 * Separator
 * ??NoRep
+
+Settings are normally changed using shorthand codes written either after the Generator Name or immediately before the List:
+
+```
+#two different ways of changing a list's settings
+
+#here the settings are written in shorthand after the generator name
+gen1 %0.8 &n = [ hat, coat, scarf, gloves ]
+
+#here the settings are written in shorthand before the list
+gen2 = ?c&f1[ boots, sandles, slippers ]
+```
+
+Settings after a Generator Name are applied to all Lists in the Generator, whereas Settings before a List apply only to that particular List.
+
+Settings after a Generator Name *must* be separated from the Name by a space, and can be written separately or bunched together (ie: either `genname %0.8 &n = ...` or `genname %0.8&n= ...`), on the other hand Settings before a List *cannot* be separated from the List by a space and *must* be written bunched together ( ie: `&w[one, two, three]`).
+
+See below for details about how to apply Settings to Lists. TODO - *link this up*
 
 ### Sentence Settings
 
@@ -208,50 +224,144 @@ Sentences only have one Setting - Separator.
 
 Proxies do not (yet) have any Settings
 
-#### Pick Types
+#### Pick Settings
 
-The word which is selected for output from a list can be picked in one of three basic ways: random, shuffle, and cycle.
-At the moment, the Pick Type can only be set in the Header (see [Setting Pick Type in the Header](#setting-pick-type-in-the-header)) for more information), and in the generator (see [Setting Pick Type in the Generator](#setting-pick-type-in-the-generator) for more), this will change soon.
+Lists always output one element, normally chosen at random; exactly how this word is picked can be changed by modifying a List's Pick Settings.
 
-##### Random pick type
+There are four different ways of picking an element for output: `random`(the default), `shuffle`, `cycle`, and `weighted`.
 
-The default Pick Type is random - one of the elements from the list will be selected at random each time.
+Pick Settings are applied to a list by using the `?` symbol followed by a letter to indicate which Pick method you want (`?r`, `?s`, `?c`, `?w`), followed by any optional settings you want to apply.
+
+Writing just '?' will set the Pick Settings to their default (`random`), useful when, for example, you have applied a different Pick method after the Generator Name, but you want a List to be set back to `random`, eg:
 
 ```
-^
-	pick = random
-^
+#the generator has pick set to shuffle, this will be set for all the lists in the generator
+#the third list has its pick set back to the default - random
 
+gen1 ?s = I put my [ shirt, shoes, socks ] on, shoved my 
+	[ keys, wallet, phone ] in my pocket, left the house 
+	and jumped ?[ in the car, on my bike, into the jeep ]
+```
+
+For more about what the different symbols mean and how to change Settings, see the sections below.
+
+##### Random Pick
+
+The default Pick method is `random` - one of the elements from the list will be selected at random each time, every element has an equal probability of being picked each time.
+
+```
 randomgen = [harpsichord, lute, harmonium, flute, harp, oboe]
 ```
-Each time the generator is run, any one of the elements in the list has an equal chance of being picked
+Each time the generator is run, any one of the elements in the list has an equal chance of being picked.
 
-##### Shuffle pick type
+There are no optional settings for `random`.
 
-When the Pick Type is set to shuffle, elements are still picked randomly, but instead of picking a random one each time, the whole list is reordered randomly before the generator is ever run, and then the elements are picked in order, one at a time. When all the elements have been picked, the list is reordered randomly again and picking starts again at the beginning.
+You can set a List to `random` with just the `?` symbol, or by writing `?r`, eg:
+
+```
+gen = ?r[ alpha, beta, gamma, delta, epsilon, zeta ]
+```
+
+##### Shuffle Pick
+
+When Pick is set to `shuffle`, List elements are still picked randomly, but instead of picking a random one each time, the whole list is reordered randomly before the generator is ever run, and then the elements are picked in order, one at a time. 
+
+When all the elements have been picked, the List is shuffled again and picking starts again at the beginning.
 This mostly avoids the same element being picked twice in a row (it can still happen directly after a shuffle), and ensures that all elements from the list are seen given enough picks.
 
 ```
-^
-	pick = shuffle
-^
-
-shufflegen = [bee, spider, caterpillar, beetle]
+shufflegen ?s = [bee, spider, caterpillar, beetle]
 ```
 In the above example, the list might be reordered to `[spider, beetle, caterpillar, bee]` and will then output first 'spider', then 'beetle', then 'caterpillar'. Once 'bee' has been picked the list is shuffled again.
 
-##### Cycle pick type
+You can set a List to `shuffle` by writing the Pick symbol `?` followed by the letter `s`, as in the above example.
 
-When the Pick Type is set to cycle, elements are not picked randomly at all, but instead in the order they were written in. Once the last element is reached the first will be picked next.
+`shuffle` has an optional Shuffle Point Setting. The Shuffle Point is how far through the list you want to shuffle, by default this is set to one, but can be set to any point between 0 and 1 (must be greater than 0) by writing the number you want after the letter `s`.
+
+For example, ` ?s0.5[ one, two, three, four, five, six ]` this List will be shuffled after half the elements have been output from it (in this case 3).
+
+##### Cycle Pick
+
+When Pick is set to `cycle`, elements are not picked randomly at all, but instead in the order they were written in. Once the last element is reached the first will be picked next.
 
 ```
-^
-	pick = cycle
-^
-
-cyclegen = [shrub, bush, tree] 
+cyclegen = ?c[shrub, bush, tree] 
 ```
+
 The above will always output elements in the same order: 'shrub', then 'bush', then 'tree' then 'shrub' and so on.
+
+You can set a List to `cycle` by writing the Pick symbol `?` followed by the letter `c`, as in the above example.
+
+`cycle` has an optional Skip setting. Skip is how many elements are skipped between outputs, by default this is set to 0. You can set the Skip by writing a positive integer (eg. 1,2,3,4...) after the letter `c`, eg: `?c2`.
+
+If the above example were set to Skip 1, like this `cyclegen = ?c1[shrub, bush, tree]` then the output would be: 'shrub', 'tree', 'bush', 'shrub' and so on. Note that, depending on the number of elements in the List, this could mean that some elements are never output.
+
+I'm not sure why this might be useful, but it is possible.
+
+##### Weighted Pick
+
+The `weighted` Pick method is the most versatile, but also the most verbose to set, and a little tricky to understand. It allows you to apply individual weights to each element in the List to control the probability of it being picked. These weights can be set manually or interpolated using a coupld of different methods.
+
+```
+weightedgen ?w = [ azalea, begonia, carnation, dahlia, erigeron ]
+```
+
+In the above example the first element in the List ('azalea') is the most likely to be picked, the second element is slightly less likely to be picked, and the third even less likely. The last element in the List ('erigeron') will be picked extremely rarely, less than one time in 100.
+
+You can set a List to `weighted` by writing the Pick symbol `?` followed by the letter `w`, as above.
+
+There are a three different ways to set the weights, the most transparent of which is to set the weights for each individual element by writing a series of numbers separated by dashes `-`, for example:
+
+```
+individualweightsgen = ?w1-2-4-8[ one, two, three, four ]
+```
+
+There are four different elements in the above List, and four weights have been set ( `1-2-4-8` ), this means that each weight applies to a single element in the list. In this case the first element is the least likely to be picked, the second is twice as likely as that to be picked, and so on, the fourth element is the most likely to be picked, it will be output 8 times out of 15 or about 53% of the time.
+
+The second way to specify the weights is to set just the first and last weight, and let NGen interpolate all the others. You do this as above, but only setting 2 numbers, separated by a dash (`-`), the first number is the weight of the first element and the second is the weight of the last element, eg:
+
+```
+interpolatedweightsgen = ?w10-1[ one, two, three, four ]
+```
+
+There are four different elements in the above List, the first ('one') has a weight of `10` and the last ('four') has a weight of `1`. NGen will calculate the remaining weights by interpolating linearly between the first and last weights. In this case this will generate a set of weights like this: `10-7-4-1`, the first element is therefore the most likely to be picked (about 45% of the time), and the last is the least likely to be picked (about 5% of the time).
+
+Note that if you specify more than 2 weights, but not enough for all elements in the list, then linear interpolation will again be used to fill in the missing weights, for example:
+
+```
+missingweightsgen ?w7-5-2 = [ one, two, three, four ]
+```
+
+In the above Generator three weights have been specified but there are four elements in the List, in cases like these the final weight specified is assumed to be for the final element in the List, and the remaining weights are applied to the other elements, starting from the beginning of the List. In this case the weights are `7-5-?-2`, the third weight is missing and will be interpolated as `3.5`, half way between `5` and `2`, giving weights of: `7-5-3.2-2`. This demonstrates that weights don't have to be whole numbers.
+
+Note that if the weights before and after the missing weights are the same, then all missing weights will be the same, for example:
+
+```
+missingweightgen ?w5-3-1-1 = [ one, two, three, four, five, six, seven]
+```
+Here there are four weights and seven elements, the last two weights given are both `1` so *all* the missing weights will also be `1`, the final interpolated set of weights here will be: `5-3-1-1-1-1-1`.
+
+The third and final way of setting Pick weights, is also the default, and the simplest, but it is also the most abstract which is why it has been left to last; it is just to set a multiplication factor by putting a single number (which can be a decimal) after the `w`, like so:
+
+```
+factorweightgen = ?w0.6 = [ one, two, three, four ]
+```
+
+In the above example, because the factor is less than 1, each element will be less likely than the last. Internally NGen sets the first element's weight to an arbitrary high number, for example 10, and then each subsequent weight is calculated by multiplying the previous weight by the factor. Here we would get weights of `10-6-3.6-2.16`. This provides a kine of exponential interpolation.
+
+If the factor is greater than 1, then each element will be more likely to be picked than the last. Internally the first weight is set to an arbitrary low number, and then each subsequent weight is again calculated by multiplying the previous weight by the factor, for example:
+
+```
+factorweightgen ?w2 = [ one, two, three, four ]
+```
+Here the weights would be calculted as `1-2-4-8`, the final element is the most likely to be picked (about 53% of the time).
+
+Be careful about setting a high factor, particularly with long lists, as you might end up with only the last element being picked most of the time, and the first elements never being picked. For example, with a factor of 3 and a list 10 elements long the last element will be picked about 67% of the time, and the first element will only be picked about 0.003% of the time.
+
+The default factor is `0.8`, and this can be set just by writing `?w`.
+
+
+
 
 #### Repeats
 
