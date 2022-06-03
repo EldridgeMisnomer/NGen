@@ -27,6 +27,10 @@ namespace NGen {
             return s;
 
         }
+
+        public bool GetNoSepBefore() {
+            return gs.NoSepBefore;
+        }
     }
 
     public class Wrd : Gen {
@@ -37,7 +41,9 @@ namespace NGen {
 
         private readonly string wrd;
 
-        public Wrd( string str ) {
+        public Wrd( string str, GenSettings genSettings ) {
+
+            gs = genSettings;
             wrd = PU.StripEscapes(str.Trim());
         }
 
@@ -122,7 +128,7 @@ namespace NGen {
             //convert strings into Wrds and put them into their array
             wrds = new Gen[words.Length];
             for( int i = 0; i < wrds.Length; i++ ) {
-                wrds[i] = new Wrd( PU.StripEscapes( words[i].Trim() ) );
+                wrds[i] = new Wrd( PU.StripEscapes( words[i].Trim() ), settings );
             }
 
             Setup();
@@ -383,7 +389,10 @@ namespace NGen {
 
                 if( i != wrds.Length - 1 ) {
 
-                    s = AddSeparator( s );
+                    if( !wrds[i + 1].GetNoSepBefore() ) {
+
+                        s = AddSeparator( s );
+                    }
 
                 }
             }

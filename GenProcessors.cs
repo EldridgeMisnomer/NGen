@@ -27,7 +27,7 @@ namespace NGen {
              *  into one Wrd
              */
 
-            if( PU.StringContainsRef( s ) ) {
+            if( PU.StringContainsProxy( s ) ) {
                 //split the string based on spaces
                 char[] separators = { ' ' };
                 string[] words = s.Split( separators, StringSplitOptions.RemoveEmptyEntries );
@@ -36,15 +36,38 @@ namespace NGen {
 
                 foreach( string w in words ) {
 
-                    if( PU.StringContainsRef( w ) ) {
+                    if( PU.StringContainsProxy( w ) ) {
 
                         int refIndex = w.IndexOf( PU.CharMap( CharType.reference ) );
+
+                        //This name may contain punctuation
+                        //how do we get rid of it????
                         string name = w.Substring( refIndex + 1, w.Length - refIndex - 1 );
+
+                        int proxyEnd = name.IndexOf( PU.CharMap( CharType.proxyEnd ) );
+                        string excess = null;
+                        if( proxyEnd > 0 ) {
+                            if( proxyEnd < name.Length - 1 ) {
+                                excess = name.Substring( proxyEnd + 1 );
+                                name = name.Substring( 0, proxyEnd );
+                            } else {
+                                name = name.Substring( 0, name.Length - 1 );
+                            }
+                        }
                         ProxyGen pg = ProxyProcessor( name, headerSettings );
                         gens.Add( pg );
 
+                        if( excess != null ) {
+
+                            GenSettings gs = new GenSettings( headerSettings );
+                            gs.NoSepBefore = true;
+
+                            Wrd wrd = new Wrd( excess, gs);
+                            gens.Add( wrd );
+                        }
+
                     } else {
-                        Wrd wrd = new Wrd( w );
+                        Wrd wrd = new Wrd( w, headerSettings );
                         gens.Add( wrd );
                     }
                 }
@@ -53,12 +76,14 @@ namespace NGen {
                 return sg;
 
             } else {
-                return new Wrd( s );
+                return new Wrd( s, headerSettings );
             }
 
         }
 
         public static ProxyGen ProxyProcessor( string s, GenSettings genSettings ) {
+
+            //We need to check the string s for punctuation
 
             ProxyGen pg = new ProxyGen( s.Trim(), genSettings );
             //add to the ProxyGen list for connecting up later

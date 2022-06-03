@@ -50,7 +50,9 @@ There are three diferent components which Generators can contain:
 
 ### Generator Names
 
-A Generator Name must be unique – no two Generators can have the same Name; it can contain any characters but no whitespace. 
+A Generator Name must be unique – no two Generators can have the same Name; it can contain any characters with a few exceptions, and no whitespace. 
+
+Generator Names cannot contain these characters: `$`, `[`, `]`, `/`
 
 Names are case insensitive, that is 'Name' is the same as 'name' is the same as 'NAME'.
 

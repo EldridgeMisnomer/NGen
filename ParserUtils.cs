@@ -36,7 +36,8 @@ namespace NGen {
                     { CharType.closeList, ']' },
                     { CharType.listSeparator, ',' },
                     { CharType.reference, '$' },
-                    { CharType.header, '^' }
+                    { CharType.header, '^' },
+                    { CharType.proxyEnd, '/' }
                 };
 
 
@@ -44,7 +45,7 @@ namespace NGen {
             return NonEscapedCharCheck( s, CharMap( CharType.openList ) );
         }
 
-        public  static bool StringContainsRef( string s ) {
+        public  static bool StringContainsProxy( string s ) {
             return NonEscapedCharCheck( s,  CharMap( CharType.reference ) );
         }
 
@@ -83,7 +84,6 @@ namespace NGen {
                 return false;
             }
         }
-
 
         private static int[] GetAllCharacterIndexes( string s, char c ) {
             List<int> charIndexes = new List<int>();
