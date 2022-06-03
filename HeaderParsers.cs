@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using PU = NGen.ParserUtils;
 
 namespace NGen {
@@ -9,7 +9,12 @@ namespace NGen {
 
         public static void HeaderShorthandSifter( string s, ref GenSettings gs ) {
 
-            List<char> charList = new List<char> { '&', '%', '!', '?', '_' };
+            /*
+             *  Characters listed are, in order:
+             *      Repeat, Output Chance, AllowRepeats, Pick, Separator, Once
+             */
+
+            List<char> charList = new List<char> { '&', '%', '>', '?', '_', '*' };
 
             char lastChar = 'x';
             string lastString = "";
@@ -62,9 +67,9 @@ namespace NGen {
                     HeaderOutputChanceParser( s, ref gs );
                     break;
 
-                case '!':
+                case '>':
 
-                    HeaderNoRepParser( ref gs );
+                    HeaderNoRepParser( s, ref gs );
                     break;
 
                 case '?':
@@ -73,6 +78,10 @@ namespace NGen {
 
                 case '_':
                     HeaderSeparatorParser( s, ref gs );
+                    break;
+
+                case '*':
+                    HeaderOnceParser( s, ref gs );
                     break;
 
             }
@@ -385,10 +394,30 @@ namespace NGen {
         }
 
 
-        private static void HeaderNoRepParser( ref GenSettings gs ) {
+        private static void HeaderNoRepParser( string s, ref GenSettings gs ) {
 
-            gs.AllowRepeats = true;
+            if( s.Length > 0 && s.Contains( '!' ) ) {
 
+                gs.AllowRepeats = false;
+
+            } else {
+
+                gs.AllowRepeats = true;
+
+            }
+        }        
+        
+        private static void HeaderOnceParser( string s, ref GenSettings gs ) {
+
+            if( s.Length > 0 && s.Contains( '!' ) ) {
+
+                gs.Once = false;
+
+            } else {
+
+                gs.Once = true;
+
+            }
         }
 
         private static void HeaderOutputChanceParser( string s, ref GenSettings gs ) {
