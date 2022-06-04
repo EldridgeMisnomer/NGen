@@ -114,7 +114,9 @@ namespace NGen {
 
         public Wrd( string str, GenSettings genSettings ) {
 
-            gs = genSettings;
+            gs = new GenSettings(genSettings);
+            //stop wrds getting repeats
+            gs.Reset();
             wrd = PU.StripEscapes(str.Trim());
         }
 
