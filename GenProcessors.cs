@@ -67,7 +67,7 @@ namespace NGen {
                         if( excess != null ) {
 
                             GenSettings gs2 = new GenSettings( headerSettings );
-                            gs.NoSepBefore = true;
+                            gs2.NoSepBefore = true;
 
                             Wrd wrd = new Wrd( excess, gs2);
                             gens.Add( wrd );

@@ -10,7 +10,7 @@ namespace NGen {
             string[] genNames = nGen.GetGenNames();
 
             //Test Code
-            int numTestToRunPerName = 12;
+            int numTestToRunPerName = 5;
 
             foreach( string s in genNames ) {
                 Console.WriteLine( $"{s}:" );

@@ -35,6 +35,8 @@ namespace NGen {
             //TODO - ??? add 1 or two default Lists - Numbers, Letters, Alphanumeric, Uppercase Letters
             //TODO - ??? some form of controlling case
 
+            //TODO - shoud proxies have output chance switched off when set to once? -- I think  No, but worth thinking about
+
             List<ProxyGen> proxyGens = GP.GetProxyGens();
 
             if( proxyGens.Count > 0 ) {
