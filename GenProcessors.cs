@@ -47,7 +47,7 @@ namespace NGen {
                         if( refIndex > 0 ) {
                             string proxyHeaderString = w.Substring( 0, refIndex );
                             HeaderParsers.HeaderShorthandSifter( proxyHeaderString, ref gs );
-                            Console.WriteLine( $"ProxyHeader is: '{proxyHeaderString}'" );
+                            //Console.WriteLine( $"ProxyHeader is: '{proxyHeaderString}'" );
                         }
 
                         //This name may contain punctuation
@@ -62,16 +62,17 @@ namespace NGen {
                             }
                         }
                         ProxyGen pg = ProxyProcessor( name, gs );
-                        gens.Add( pg );
 
                         if( excess != null ) {
 
-                            GenSettings gs2 = new GenSettings( headerSettings );
-                            gs2.NoSepBefore = true;
-
+                            GenSettings gs2 = new GenSettings();
                             Wrd wrd = new Wrd( excess, gs2);
-                            gens.Add( wrd );
+                            //DEBUG
+                            //Console.WriteLine( $"Follower GetTxt is: '{wrd.GetTxt()}'" );
+                            pg.AddFollower( wrd );
                         }
+
+                        gens.Add( pg );
 
                     } else {
                         Wrd wrd = new Wrd( w, headerSettings );
@@ -160,7 +161,7 @@ namespace NGen {
             return wg;
         }
 
-        public static Gen SenGenProcessor( string s, GenSettings headerSettings ) {
+        public static SenGen SenGenProcessor( string s, GenSettings headerSettings ) {
             /*
              * This will take a string and turn it into a SenGen,
              * although, if it is a simple sentence it may return
@@ -180,8 +181,8 @@ namespace NGen {
                 string postBracketStart = PU.GetBracketsStart( s, out preBracketStart, out bracketsHeaderString );
 
                 //DEBUG
-                Console.WriteLine( $"preBracket text is: '{preBracketStart}'" );
-                Console.WriteLine( $"bracketsHeader text is: '{bracketsHeaderString}'" );
+                //Console.WriteLine( $"preBracket text is: '{preBracketStart}'" );
+                //Console.WriteLine( $"bracketsHeader text is: '{bracketsHeaderString}'" );
 
                 //If there is any text in the preBrackets string
                 //we can treat it as just a Wrd, because we know it can't contain a list
@@ -235,18 +236,9 @@ namespace NGen {
 
             }
 
-            //if only one gen has been created, return it,
-            //otherwise create a SenGen and return that
-            if( gens.Count == 1 ) {
+            SenGen sg = new SenGen( gens.ToArray(), headerSettings );
+            return sg;
 
-                return gens[0];
-
-            } else {
-
-                SenGen sg = new SenGen( gens.ToArray(), headerSettings );
-                return sg;
-
-            }
         }
     }
 }

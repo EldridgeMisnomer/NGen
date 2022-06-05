@@ -32,6 +32,7 @@
         public double OutputChance { get; set; }
 
         //spearator
+        public bool UseSeparator { get; set; }
         public string Separator { get; set; }
         public ProxyGen ProxySeparator { get; set; }
         public bool UseProxySeparator { get; set; }
@@ -39,6 +40,9 @@
 
         //once behaviour (only for proxies)
         public bool Once { get; set; }
+
+        //follower (only for proxies)
+        public Gen follower = null;
 
 
         public GenSettings() {
@@ -75,6 +79,7 @@
             OutputChance = gs.OutputChance;
 
             //separator
+            UseSeparator = gs.UseSeparator;
             Separator = gs.Separator;
             ProxySeparator = gs.ProxySeparator;
             UseProxySeparator = gs.UseProxySeparator;
@@ -118,6 +123,7 @@
             OutputChance = 1;
 
             //separator
+            UseSeparator = true;
             Separator = " ";
             ProxySeparator = null;
             UseProxySeparator = false;

@@ -1,4 +1,4 @@
-	honorific = [
+	honorific %0.06 = [
 		Sir, Captain, Master, Reverend, Her Royal Highness, Lady, Ms, Dame, Rt Hon,
 		Dr, Mr, His Worshipfulness, The Right Honourable, Lord, Duke, Marquess, Duchess, Marchioness, Countess,
 		Viscount, Baron, Monsieur, Don, Madame, Doña, Herr, Frau, Prince, Professor, Canon
@@ -100,7 +100,7 @@
 	#include final .
 	initials = $initial/.
 
-	postNom = [
+	postNom >! %0.037 = [
 		BSc, Esquire, QC, Esq, MD, DPhil, VC, Bt, GBE, CB,
 		OBE, MBE, RRC, DSC, SGM, QHP, QHDS, SCJ, MP, MPE,
 		BA, MA, MSc, MBA, PhD, HNC, AfCGI, OFM Cap., BAc, FRCA,
@@ -110,8 +110,10 @@
 		MIOS, MITAI, FRSTMH, MCIWM, AWS, FZS, Jr
 	]
 	
+	fnamelname = $firstname $lastname
+	
 	# 1 % chance of a nickname instead of a first name + a last name
-	nicknor = ?w1-100 = [ $nickname, $firstname $lastname ]
+	nicknor = ?w1-100 = $honorific  [ $nickname, $fnamelname ] $postNom
 	
 	# both first name and last name have a 0.12% chance of not appearing
 	

@@ -22,7 +22,7 @@ namespace NGen {
             //Remove the comments
             string[] strippedLines = PU.StripComments( lines );
             //process the lines into Gens with names
-            Dictionary<string, Gen> gens = HeaderProcessor( strippedLines );
+            Dictionary<string, SenGen> gens = HeaderProcessor( strippedLines );
 
             //TODO - remap special characters
             //TODO - fix NoRep shuffle function
@@ -34,6 +34,7 @@ namespace NGen {
             //TODO - ??? Glitch ???
             //TODO - ??? add 1 or two default Lists - Numbers, Letters, Alphanumeric, Uppercase Letters
             //TODO - ??? some form of controlling case
+            //TODO - I realise there's a big problem using % for display chance and then NOT expressing it as a percentage - rethink this
 
             //TODO - shoud proxies have output chance switched off when set to once? -- I think  No, but worth thinking about
 
@@ -60,7 +61,7 @@ namespace NGen {
         }
 
 
-        private static Dictionary<string, Gen> HeaderProcessor( string[] lines ) {
+        private static Dictionary<string, SenGen> HeaderProcessor( string[] lines ) {
             /*
              *  receives the comment-stripped lines from the text file
              *  and divides them up into sections - headers and declarations,
@@ -74,7 +75,7 @@ namespace NGen {
             genSettings.Add( new GenSettings() );
 
             //dictionary to store gens in
-            Dictionary<string, Gen> gens = new Dictionary<string, Gen>();
+            Dictionary<string, SenGen> gens = new Dictionary<string, SenGen>();
 
             //loop through all lines slotting them into the correct list
             //once we have a header and a set of declarations, process them
@@ -105,9 +106,9 @@ namespace NGen {
                                 //store the new GenSettings
                                 genSettings.Add( gs );
 
-                                Dictionary<string, Gen> tempGens = LineProcessor( gs, declareLines.ToArray() );
+                                Dictionary<string, SenGen> tempGens = LineProcessor( gs, declareLines.ToArray() );
 
-                                foreach( KeyValuePair<string, Gen> g in tempGens ) {
+                                foreach( KeyValuePair<string, SenGen> g in tempGens ) {
 
                                     if( !gens.ContainsKey( g.Key ) ) {
 
@@ -155,9 +156,9 @@ namespace NGen {
                 //we don't need to store this one as it's the last
                 GenSettings gs = ParseMainHeader( headerString, genSettings[genSettings.Count - 1] );
 
-                Dictionary<string, Gen> tempGens = LineProcessor( gs, declareLines.ToArray() );
+                Dictionary<string, SenGen> tempGens = LineProcessor( gs, declareLines.ToArray() );
 
-                foreach( KeyValuePair<string, Gen> g in tempGens ) {
+                foreach( KeyValuePair<string, SenGen> g in tempGens ) {
                     if( !gens.ContainsKey( g.Key ) ) {
 
                         gens.Add( g.Key, g.Value );
@@ -236,7 +237,7 @@ namespace NGen {
             if( h.Length > 0 ) {
 
                 //DEBUG
-                Console.WriteLine( $"h is: '{h}'" );
+                //Console.WriteLine( $"h is: '{h}'" );
 
                 HP.HeaderShorthandSifter( h, ref gs );
 
@@ -254,7 +255,7 @@ namespace NGen {
             return gs;
         }
 
-        private static Dictionary<string, Gen> LineProcessor( GenSettings gs, string[] lines ) {
+        private static Dictionary<string, SenGen> LineProcessor( GenSettings gs, string[] lines ) {
             /*
              *  receives the comment-stripped lines from the text file
              *  and process them into generator declarations,
@@ -341,9 +342,9 @@ namespace NGen {
             }
 
             //create a dictionary and return it
-            Dictionary<string, Gen> namedDeclarations = new Dictionary<string, Gen>();
+            Dictionary<string, SenGen> namedDeclarations = new Dictionary<string, SenGen>();
             for( int i = 0; i < names.Count; i++ ) {
-                Gen g = GP.SenGenProcessor( declarations[i], settings[i] );
+                SenGen g = GP.SenGenProcessor( declarations[i], settings[i] );
 
                 if( !namedDeclarations.ContainsKey( names[i] ) ) {
 

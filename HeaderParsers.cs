@@ -53,7 +53,7 @@ namespace NGen {
             s = s.Trim();
 
             //DEBUG
-            Console.WriteLine( $"HeaderParser: char: '{c}', string: '{s}'" );
+            //Console.WriteLine( $"HeaderParser: char: '{c}', string: '{s}'" );
 
             switch( c ) {
 
@@ -269,7 +269,7 @@ namespace NGen {
                 } else {
 
                     //otherwise, just use the string
-                    gs.Separator = s;
+                    gs.Separator = s.Trim();
                     gs.UseProxySeparator = false;
 
                 }

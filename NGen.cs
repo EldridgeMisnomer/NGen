@@ -4,14 +4,14 @@ using System.Collections.Generic;
 namespace NGen {
     public class NGen {
 
-        private readonly Dictionary<string, Gen> gens = new Dictionary<string, Gen>();
+        private readonly Dictionary<string, SenGen> gens = new Dictionary<string, SenGen>();
         /*
          *  Top-level holder for all the gens.
          *  This is what will be created from a succesfully parsed Text file
          */
 
 
-        public NGen( Dictionary<string, Gen> namedGens ) {
+        public NGen( Dictionary<string, SenGen> namedGens ) {
             gens = namedGens;
         }
 

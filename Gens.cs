@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Utils;
 
 using PU = NGen.ParserUtils;
@@ -7,33 +8,19 @@ namespace NGen {
 
     public abstract class Gen {
 
-        public string GetTxt() {
-            string s = GetOutput();
-            return s;
+        public abstract GenOutput[] GetOutput();
+
+        public void AddFollower( Gen follower ) {
+            gs.follower = follower;
         }
 
-        protected abstract string PickTxt();
+        protected abstract GenOutput[] PickTxt();
 
         //settings
         protected GenSettings gs;
+       
 
-        protected string AddSeparator( string s ) {
-
-            if( gs.UseProxySeparator ) {
-
-                s += gs.ProxySeparator.GetTxt();
-
-            } else {
-
-                s += gs.Separator;
-
-            }
-
-            return s;
-
-        }
-
-        protected int DoRepeats() {
+        protected int GetRepeatNum() {
             int repeats = 0;
 
             //Choose the number of repeats based on the repeat type
@@ -78,26 +65,6 @@ namespace NGen {
             return repeats;
         }
 
-        protected string GetOutput() {
-
-            string s = "";
-
-            if( gs.OutputChance == 1 || Rand.ChanceTest( gs.OutputChance ) ) {
-
-                int repeats = DoRepeats();
-
-                //get text repeatedly
-                for( int i = 0; i < repeats + 1; i++ ) {
-                    s += PickTxt();
-                    if( i != gs.RepMax ) {
-                        s = AddSeparator( s );
-                    }
-                }
-            }
-
-            return s;
-        }
-
 
         public bool GetNoSepBefore() {
             return gs.NoSepBefore;
@@ -115,14 +82,21 @@ namespace NGen {
         public Wrd( string str, GenSettings genSettings ) {
 
             gs = new GenSettings(genSettings);
-            //stop wrds getting repeats
+            //stop wrds getting repeats and separators
             gs.Reset();
+
             wrd = PU.StripEscapes(str.Trim());
         }
 
-        protected override string PickTxt() {
-            return wrd;
+        protected override GenOutput[] PickTxt() {
+            GenOutput[] newGOs = new GenOutput[] { new GenOutput( wrd ) };
+            return newGOs;
         }
+
+        public override GenOutput[] GetOutput() {
+            return PickTxt();
+        }
+
     }
 
     public class ProxyGen : Gen {
@@ -134,10 +108,10 @@ namespace NGen {
          *          and after that it alawys returns the same text
          */
 
-        private Gen gen;
+        private SenGen gen;
         private readonly string genName;
 
-        private string onceText = null;
+        private GenOutput[] onceText = null;
 
         public ProxyGen( string name, GenSettings genSettings ) {
             genName = name;
@@ -145,10 +119,10 @@ namespace NGen {
             gs = genSettings;
         }
 
-        protected override string PickTxt() {
+        protected override GenOutput[] PickTxt() {
             if( gen == null ) {
 
-                return $"**{genName}**";
+                return null;
 
             } else {
 
@@ -156,24 +130,60 @@ namespace NGen {
 
                     if( onceText == null ) {
 
-                        onceText = gen.GetTxt();
+                        onceText = gen.GetOutput();
 
                     }
                     return onceText;
 
                 } else {
 
-                    return gen.GetTxt();
+                    return gen.GetOutput();
                 }
             }
         }
 
-        public void SetGen( Gen g ) {
+        public override GenOutput[] GetOutput() {
+
+            if( gs.OutputChance == 1 || Rand.ChanceTest( gs.OutputChance ) ) {
+
+                //Get Number of repeats, GetTxt that number of times and make GenOutputs from it, return the GenOutputs
+                int repeats = GetRepeatNum();
+                List<GenOutput> gens = new List<GenOutput>();
+                for( int r = 0; r < repeats + 1; r++ ) {
+                    GenOutput[] newGOs = PickTxt();
+                    foreach( GenOutput go in newGOs ) {
+                        gens.Add( go );
+                    }
+                }
+
+                //check if there's a follower, if there is add it to the list
+                if( gs.follower != null ) {
+                    GenOutput[] newGOs = gs.follower.GetOutput();
+                    newGOs[0].SepBefore = false;
+                    foreach( GenOutput go in newGOs ) {
+                        gens.Add( go );
+                    }
+                }
+
+                return gens.ToArray();
+
+            } else {
+
+                return null;
+
+            }
+        }
+
+        public void SetGen( SenGen g ) {
             gen = g;
         }
 
         public string GetName() {
             return genName;
+        }
+
+        public string GetProxyTxt() {
+            return gen.GetTxt();
         }
 
 
@@ -315,10 +325,10 @@ namespace NGen {
             }
         }
 
-        protected override string PickTxt() {
+        protected override GenOutput[] PickTxt() {
 
             if( wrds.Length == 1 ) {
-                return wrds[0].GetTxt();
+                return wrds[0].GetOutput();
             } else {
 
                 switch(gs.PickType) {
@@ -327,16 +337,16 @@ namespace NGen {
 
                         if( gs.AllowRepeats ) {
 
-                            return Rand.RandFromArray( wrds ).GetTxt();
+                            return Rand.RandFromArray( wrds ).GetOutput();
 
                         } else {
 
-                            return Rand.NonRepeatingRandFromArray( wrds, ref lastWrd ).GetTxt();
+                            return Rand.NonRepeatingRandFromArray( wrds, ref lastWrd ).GetOutput();
 
                         }
 
                     case PickType.shuffle:
-                        string output = wrds[nextWrd].GetTxt();
+                        GenOutput[] output = wrds[nextWrd].GetOutput();
 
                         nextWrd++;
                         if( nextWrd >= ( wrds.Length * gs.ShufflePoint ) ) {
@@ -357,22 +367,42 @@ namespace NGen {
                     
                     case PickType.cycle:
 
-                        output = wrds[nextWrd].GetTxt();
+                        output = wrds[nextWrd].GetOutput();
 
                         nextWrd = ( nextWrd + 1 + gs.Skip ) % wrds.Length;
                         return output;
 
                     case PickType.weighted:
 
-                        return wrds[Rand.RandomDoubleWeightedInt( gs.PickWeights )].GetTxt();
+                        return wrds[Rand.RandomDoubleWeightedInt( gs.PickWeights )].GetOutput();
 
                     default:
 
-                        return Rand.RandFromArray( wrds ).GetTxt();
+                        return Rand.RandFromArray( wrds ).GetOutput();
 
                 }
             }
         }
+
+        public override GenOutput[] GetOutput() {
+
+            if( gs.OutputChance == 1 || Rand.ChanceTest( gs.OutputChance ) ) {
+
+                //Get Number of repeats, GetTxt that number of times and make GenOutputs from it, return the GenOutputs
+                int repeats = GetRepeatNum();
+                List<GenOutput> gens = new List<GenOutput>();
+                for( int r = 0; r < repeats + 1; r++ ) {
+                    GenOutput[] newGOs = PickTxt();
+                    foreach( GenOutput go in newGOs ) {
+                        gens.Add( go );
+                    }
+                }
+                return gens.ToArray();
+            } else {
+                return null;
+            }
+        }
+
     }
 
     public class SenGen : Gen {
@@ -389,25 +419,67 @@ namespace NGen {
             wrds = gens;
         }
 
-        protected override string PickTxt() {
+        public string GetTxt() {
 
-            string s = "";
+            GenOutput[] outputs = PickTxt();
+            string outputString = "";
 
-            for( int i = 0; i < wrds.Length; i++ ) {
-
-                s += wrds[i].GetTxt();
-
-                if( i != wrds.Length - 1 ) {
-
-                    if( !wrds[i + 1].GetNoSepBefore() ) {
-
-                        s = AddSeparator( s );
+            for( int i = 0; i < outputs.Length; i++ ) {
+                outputString += outputs[i].Txt;
+                if( i < outputs.Length - 1 ) {
+                    if( outputs[i].SepAfter && outputs[i+1].SepBefore ) {
+                        outputString += GetSeparator();
                     }
+
 
                 }
             }
 
-            return s;
+            return outputString;
+
+        }
+
+        private string GetSeparator() {
+
+            if( gs.UseSeparator ) {
+
+                if( gs.UseProxySeparator ) {
+
+                    return gs.ProxySeparator.GetProxyTxt();
+
+                } else {
+
+                    return gs.Separator;
+
+                }
+            }
+
+            return "";
+
+        }
+
+        public override GenOutput[] GetOutput() {
+
+            string os = GetTxt();
+            GenOutput go = new GenOutput( os );
+            return new GenOutput[] { go };
+
+        }
+
+        protected override GenOutput[] PickTxt() {
+
+            List<GenOutput> gens = new List<GenOutput>();
+
+            for( int i = 0; i < wrds.Length; i++ ) {
+
+                GenOutput[] newGOs = wrds[i].GetOutput();
+                foreach( GenOutput go in newGOs ) {
+                    gens.Add( go );
+
+                }
+            }
+
+            return gens.ToArray();
 
         }
     }

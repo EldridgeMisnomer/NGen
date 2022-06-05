@@ -46,6 +46,7 @@
     <Compile Include="DataGetter.cs" />
     <Compile Include="EnumHelpers.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="GenOutput.cs" />
     <Compile Include="GenProcessors.cs" />
     <Compile Include="GenSettings.cs" />
     <Compile Include="Gens.cs" />
