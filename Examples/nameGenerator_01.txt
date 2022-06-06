@@ -1,9 +1,25 @@
+#The following is a name generator ported from my game 'Excuses Galore!' ( https://eldridge-misnomer.itch.io/excuses-galore )
+#The original name generator was writen in C# and worked well, although it was very bespoke,
+#when I came to try and use it for other projects I found it wasn't very versatile
+
+#The generators below almost exactly mimic the original generator:
+#	all of the content is the same
+#	the probabilities are pretty close but not exactly the same
+#	the original generator had a few edge-cases where it produced unusable output
+#		I patched these holes with a bunch of conditionals on the end
+#			- none of which are duplicated here
+
+
+
+#honorifics will appear at the beginning of the name, no special options here, just a Don't Allow Repeats
 honorific ~! = [
 	Sir, Captain, Master, Reverend, Her Royal Highness, Lady, Ms, Dame, Rt Hon,
 	Dr, Mr, His Worshipfulness, The Right Honourable, Lord, Duke, Marquess, Duchess, Marchioness, Countess,
 	Viscount, Baron, Monsieur, Don, Madame, Doña, Herr, Frau, Prince, Professor, Canon
 ]
 
+#first names - set up to repeat following the weights I used in my original code
+#I think these were just arrived at by trial and error
 firstname &w17-4-1-1 ~! = [
 	Jason, Spatch, Crystal, Caro, Amyas, Leopold, Bernadette, Eustace, Clarissa, Timothé, Firmin,
 	Marguerite, Asun, Concepción, Eurydice, Clarence, Gladys, Hubert,Gloria, Angelina, Zerubbabel, Philippa,
@@ -33,6 +49,8 @@ firstname &w17-4-1-1 ~! = [
 	Good, Martha, Priscilla, Wilmot, Hestor, Percy, Nathaniel
 ]
 
+#nicknames. Sometimes these replace the first name, and sometimes they are inserted in the middle of the name
+#no special options here except Don't Allow Repeats
 nickname ~! = [
 	The Inept, Crash, Pickle, Hallucinator, Kidney Bean, Sprog, Choucroute, Lepton, Lerp, Clanger,
 	Zipline, Slipshod, Mollusc, Plonk, Burple, Vertiginous, Collapse, Splotch, Spock, Spork,
@@ -56,8 +74,9 @@ nickname ~! = [
 	Brunch-muncher, 8bit, Rhinoplasty, The Worst, Crank, Crumble, Delt, Dyspepsia, Blunderbuss, Turpentine,
 	Sprocket, The Altogetherer
 ]
-	
 
+#surnames - set up to repeat following the weights I used in my original code
+#I think these were just arrived at by trial and error
 surname &w17-4-1-1 _- ~! = [
 	Veldt, McNorish, Gingham, Dingle, Henkd, Lawrence, Bletchley, Macgruggle, Spratt, Stroganov,
 	Hurlington, Babbington, Firkin, Smithington, Bladdley, Schopenhauer, Lebondieu, Clowes, Smithly, Legrand,
@@ -91,14 +110,7 @@ surname &w17-4-1-1 _- ~! = [
 	Basset, Proctor, Pudeator, Toothaker, Whipple, Ramanujan
 ]
 
-initial = [
-	A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
-]
-	
-initials _. &w7-4-1 ~! = $initial <.
-
-medialnickname = "> $nickname <"
-
+#letters which will come after the name, no special options here except Don't Allow Repeats
 postNom ~! = [
 	BSc, Esquire, QC, Esq, MD, DPhil, VC, Bt, GBE, CB,
 	OBE, MBE, RRC, DSC, SGM, QHP, QHDS, SCJ, MP, MPE,
@@ -109,11 +121,28 @@ postNom ~! = [
 	MIOS, MITAI, FRSTMH, MCIWM, AWS, FZS, Jr
 ]
 
-postNomPlus = <, $postNom
-	
-fnamelname = $firstname $surname
+#letters to be used for initials
+letters = [ A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z ]
 
-fnameinit = ?w9-1[$firstname,$initials]
-	
-# 1 % chance of a nickname instead of a combo
-name ?w1-100 = %0.06$honorific  [$nickname, $fnameinit %0.09$medialnickname $surname] %0.037$postNomPlus
+#initials - sometimes these will replace the first name,
+#set up to repeat following the weights I used in my original code
+#I think these were just arrived at by trial and error
+#There is a '.' separator, and a final dot added afterwards
+initials _. &w0-7-4-1 ~! = $letters <.
+
+#when a nickname goes in the middle of the name, surround it with quotation marks
+medialnickname = "> $nickname <"
+
+#if we add letters after the name, prefix it with a comma ','
+postNomPlus = <, $postNom
+
+#choose between either a first name or initials
+fnameinit = ?w9-1[ $firstname, $initials ]
+
+#the full name - without honorific, post nominals, or nickname
+fullname = $fnameinit %0.09$medialnickname $surname
+
+#the final name - this was the original output of the name generator
+#a very small chance of adding an honorific and post nominals
+#a 1% chance of replacing the full name with just a nickname
+name = %0.06$honorific ?w1-100[ $nickname, $fullname ] %0.037$postNomPlus

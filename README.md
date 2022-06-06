@@ -630,6 +630,8 @@ Here is a table of all Special Characters in NGen:
 | ,			| separates List elements			|
 | $			| denotes a Proxy				    |
 | /			| denotes the end of a Proxy name   |
+| >			| indicates no separator between this and the following element |
+| <			| indicates no separator between this and the preceding element |
 
 ### Table of Shorthand Characters
 
@@ -643,8 +645,8 @@ Here's a table showing all the codes used in shorthand Settings:
 | %			| Output Chance		|					|
 | _			| Separator			|					|
 | *			| Once				|					|
-| >			| Allow Duplicates  |					|
-| !			| Switch Off		| *!, >!			|
+| ~			| Allow Duplicates  |					|
+| !			| Switch Off		| *!, ~!			|
 
 ## Error Messages
 
@@ -652,11 +654,11 @@ Having a problem with your NGen file? NGen will try to always give you an error 
 
 ### Generator Reference Error
 
-##### Full Text:
+#### Full Text:
 
 *"Generator Reference Error: '\{name\}' has not been created"*
 
-##### Explanation:
+#### Explanation:
 
 Generator References allow the output of one Generator to be put into another generator, like so:
 
@@ -667,7 +669,7 @@ gen2 = [ $gen1, d, e, f ]
 
 In this case, NGen has not been able to find a Generator with the name given in the Reference.
 
-##### Example:
+#### Example:
 
 ```
 #This is INCORRECT code
@@ -675,7 +677,7 @@ gen1 = [ a, b, c ]
 gen2 = [ $gem1, d, e, f ]
 ```
 
-##### Possible Solution:
+#### Possible Solution:
 
 The most likely cause is the misspelling of one or other of the names, either the Generator name or the name in the Reference, as above. To solve it, correct the spelling of one or the other, the above code should read:
 
@@ -686,15 +688,15 @@ gen2 = [ $gen1, d, e, f ]
 
 ### Duplicate Generator Name Error
 
-##### Full Text:
+#### Full Text:
 
 *"Duplicate Generator Name Error: Only the first generator with the name '\{name\}' has been added."*
 
-##### Explanation:
+#### Explanation:
 
 All Generators must have unique names. If two or more generators share a name, then only the first one will be added by NGen, any subsequent ones will be ignored.
 
-##### Example:
+#### Example:
 
 ```
 #This is INCORRECT code
@@ -702,22 +704,22 @@ gen = [ a, b, c ]
 gen = [ d, e, f ]
 ```
 
-##### Possible Solution:
+#### Possible Solution:
 
 Rename all generators with duplicate names.
 
 
 ### Line Processor Error
 
-##### Full Text:
+#### Full Text:
 
 *"Line Processor Error: the number of names (\{names.Count\}) did not match the number of generator declarations (\{declarations.Count\})"*
 
-##### Explanation:
+#### Explanation:
 
 All Generators consist of a name and a declaration - some text to output. This error occurs when NGen identifies either a name without a declaration or a declaration without a name.
 
-##### Example:
+#### Example:
 
 ```
 #This is INCORRECT code
@@ -725,7 +727,7 @@ gen =
 = [ d, e, f ]
 ```
 
-##### Possible Solution:
+#### Possible Solution:
 
 The most likely cause for this problem is a stray `=` which hasn't been escaped, try searching your document for `=` and escaping any which are not part of declarations, like this: `\=`.
 
