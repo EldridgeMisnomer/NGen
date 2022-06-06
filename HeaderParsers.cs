@@ -14,7 +14,7 @@ namespace NGen {
              *      Repeat, Output Chance, AllowRepeats, Pick, Separator, Once
              */
 
-            List<char> charList = new List<char> { '&', '%', '>', '?', '_', '*' };
+            List<char> charList = new List<char> { '&', '%', '~', '?', '_', '*' };
 
             char lastChar = 'x';
             string lastString = "";
@@ -67,7 +67,7 @@ namespace NGen {
                     HeaderOutputChanceParser( s, ref gs );
                     break;
 
-                case '>':
+                case '~':
 
                     HeaderNoRepParser( s, ref gs );
                     break;

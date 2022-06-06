@@ -6,7 +6,7 @@ using PU = NGen.ParserUtils;
 
 namespace NGen {
 
-    public abstract class Gen {
+    public abstract class Gen { 
 
         public abstract GenOutput[] GetOutput();
 
@@ -17,8 +17,7 @@ namespace NGen {
         protected abstract GenOutput[] PickTxt();
 
         //settings
-        protected GenSettings gs;
-       
+        protected GenSettings gs;  
 
         protected int GetRepeatNum() {
             int repeats = 0;
@@ -69,6 +68,10 @@ namespace NGen {
         public bool GetNoSepBefore() {
             return gs.NoSepBefore;
         }
+
+        public bool GetNoSepAfter() {
+            return gs.NoSepAfter;
+        }
     }
 
     public class Wrd : Gen {
@@ -83,13 +86,13 @@ namespace NGen {
 
             gs = new GenSettings(genSettings);
             //stop wrds getting repeats and separators
-            gs.Reset();
+            //gs.Reset();
 
             wrd = PU.StripEscapes(str.Trim());
         }
 
         protected override GenOutput[] PickTxt() {
-            GenOutput[] newGOs = new GenOutput[] { new GenOutput( wrd ) };
+            GenOutput[] newGOs = new GenOutput[] { new GenOutput( wrd, gs ) };
             return newGOs;
         }
 
@@ -426,11 +429,15 @@ namespace NGen {
 
             for( int i = 0; i < outputs.Length; i++ ) {
                 outputString += outputs[i].Txt;
+                //DEBUG
+                //Console.WriteLine( $"sengen txt: output {i} is: '{outputs[i].Txt}', sepBefore: {outputs[i].SepBefore}, speAfter: {outputs[i].SepAfter}" );
                 if( i < outputs.Length - 1 ) {
+
+                    //DEBUG
+
                     if( outputs[i].SepAfter && outputs[i+1].SepBefore ) {
                         outputString += GetSeparator();
                     }
-
 
                 }
             }
@@ -461,7 +468,14 @@ namespace NGen {
         public override GenOutput[] GetOutput() {
 
             string os = GetTxt();
-            GenOutput go = new GenOutput( os );
+
+            GenOutput go = new GenOutput( os, gs );
+
+            //Check first and last gens to see if they want separators or not
+            GenOutput[] gens = PickTxt();
+            go.SepBefore = gens[0].SepBefore;
+            go.SepAfter = gens[gens.Length - 1].SepAfter;
+
             return new GenOutput[] { go };
 
         }

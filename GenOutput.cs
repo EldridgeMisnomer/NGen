@@ -5,10 +5,10 @@
         public bool SepBefore;
         public bool SepAfter;
 
-        public GenOutput( string t ) {
+        public GenOutput( string t, GenSettings gs ) {
             Txt = t;
-            SepBefore = true;
-            SepAfter = true;
+            SepBefore = !gs.NoSepBefore;
+            SepAfter = !gs.NoSepAfter;
         }
     
     }

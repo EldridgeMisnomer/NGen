@@ -37,6 +37,7 @@
         public ProxyGen ProxySeparator { get; set; }
         public bool UseProxySeparator { get; set; }
         public bool NoSepBefore { get; set; }
+        public bool NoSepAfter { get; set; }
 
         //once behaviour (only for proxies)
         public bool Once { get; set; }
@@ -84,6 +85,7 @@
             ProxySeparator = gs.ProxySeparator;
             UseProxySeparator = gs.UseProxySeparator;
             NoSepBefore = gs.NoSepBefore;
+            NoSepAfter = gs.NoSepAfter;
 
             //once
             Once = gs.Once; 
@@ -130,6 +132,7 @@
             double[] defaultPickWeights = new double [0];
             PickWeights = defaultPickWeights;
             NoSepBefore = false;
+            NoSepAfter = false;
 
             //once
             Once = false;
