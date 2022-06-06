@@ -10,15 +10,28 @@ namespace NGen {
             string[] genNames = nGen.GetGenNames();
 
             //Test Code
-            int numTestToRunPerName = 12;
+            int numTestToRunPerName = 120;
+            bool runAllGens = false;
+            string[] selectNames = { "name" };
+            
+            
+            string[] gensToRun;
 
-            foreach( string s in genNames ) {
+            if( runAllGens ) {
+                gensToRun = genNames;
+            } else {
+                gensToRun = selectNames;
+            }
+                
+
+            foreach( string s in gensToRun ) {
                 Console.WriteLine( $"{s}:" );
                 for( int i = 0; i < numTestToRunPerName; i++ ) {
-                    Console.WriteLine( "\t" + nGen.GenTxt(s) );
+                    Console.WriteLine( "\t" + nGen.GenTxt( s ) );
                 }
                 Console.WriteLine( "" );
             }
+
 
 
 /*            string test = "0";

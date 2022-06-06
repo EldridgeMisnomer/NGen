@@ -454,7 +454,7 @@ namespace NGen {
                 sepAfter = outputs[outputs.Length - 1].SepAfter;
             }
 
-            return outputString;
+            return outputString.Trim();
 
         }
 

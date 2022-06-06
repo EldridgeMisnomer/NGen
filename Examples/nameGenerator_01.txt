@@ -1,120 +1,119 @@
-	honorific %0.06 = [
-		Sir, Captain, Master, Reverend, Her Royal Highness, Lady, Ms, Dame, Rt Hon,
-		Dr, Mr, His Worshipfulness, The Right Honourable, Lord, Duke, Marquess, Duchess, Marchioness, Countess,
-		Viscount, Baron, Monsieur, Don, Madame, Doña, Herr, Frau, Prince, Professor, Canon
-	]
+honorific ~! = [
+	Sir, Captain, Master, Reverend, Her Royal Highness, Lady, Ms, Dame, Rt Hon,
+	Dr, Mr, His Worshipfulness, The Right Honourable, Lord, Duke, Marquess, Duchess, Marchioness, Countess,
+	Viscount, Baron, Monsieur, Don, Madame, Doña, Herr, Frau, Prince, Professor, Canon
+]
 
-	firstname &17-4-1-1 = [
-		Jason, Spatch, Crystal, Caro, Amyas, Leopold, Bernadette, Eustace, Clarissa, Timothé, Firmin,
-		Marguerite, Asun, Concepción, Eurydice, Clarence, Gladys, Hubert,Gloria, Angelina, Zerubbabel, Philippa,
-		Bruce, Spatchcock, Methuselah, Boaz, Trish, Yarrow, Rose, Willow, Meredith, Venn,
-		Janice, Trudy, Aura, Layne, Peyton, Sid, Tyne, Lyle, Kesh, Anders,
-		Elias, Sampo, Joukah, Aino, Teal, Norma, Aspic, Victor, Dirk, Klee,
-		Nancy, Peter, Nate,Wilma, Pearl, Clay, Carl, Clayton, Patrick, Pansy, Nid,
-		Vince, Bianca, Brooke, Natalia, Nathan, Liam, Hal, Tabitha, Anthony, Vladimir,
-		Jacques, Stanislav, Ward, Ole, Kirk, Bartolomeo, Toshitada, Myra, Dawn, Prudence,
-		Shaun, Clarissa, Lorna, Erin, Winn, Castor, Hans, Luke, Thomas, Biddy,
-		Plaice, Antigone, Rupert, Robert, Earle, Drew, Virginia, Gilberto, Albina, Rosalind,
-		Cándido, Clotilde, Marcelina, Lucia, Isidore, Jacinto, Soledad, Filbert, Gregorio, Eduardo,
-		Dolores, Apolonia, Carlota, Lucrecia, Emilia, Ramona, Beatrice, Jethro, Marsh, Shoby, Jan,
-		Philippe, Fanny, Malcolm, Ottorino, Ethel, Sofia, Tullio, Cornelis, Myra, Muhammad,
-		Enrico, Abbas, Bucky, Temple, Otto, Gunther, Ruthie, Beverley, Ruby, Jude,
-		Ross, Ibn, Zénobe, Théophile, Beulah, Daisy, Lasse, Erma, Ali, Imura,
-		Ub, Moritz, Marjorie, Joy, Jamshīd, Margaret, Rudolf, Gleb, Ellie, Charles,
-		Ham, Andrea, Nebuchadnezzar, Wilhelm, Elisha, Algernon, Spede, Olivia, Tadeus, Ida,
-		Lilian, Aurélie, Esther, Kia, Evelyn, Cynthia, Dorcas, Prudence, Eloise, Dulcie, Eileen,
-		Hiram, Genevieve, Hector, Austen, Flossie, Mabel, Gilmour, Lenox, Mirelle, Oswald,
-		Clement, Raymond, Emily, Bobby, Moira, Angela, Oliver, Milly, Ariadne, Amabelle, Tressilian,
-		Walter, Bridget, Honoria, Philip, Georgina, Gerda, Rosamund, Quentin, Mona, Caleb, Maud,
-		Camilla, Midge, Henrietta, Veronica, Beryl, Zenenia, Patience, Grace, Darling, Rosaleen,
-		Jeremy, Magda, Brenda, Letitia, Dora, Sheelagh, Rex, Ginger, Zachariah, Obadiah, Sybil,
-		Thomasina, Millicent, Edward, Bessy, Derek, Joyce, Elspeth, Ermintrude, Griselda, Shirley,
-		Gwenda, Edith, Arthur, Belshazzar, Daniel, Beat, Hope, Temerity, Goody, Abigail, Tituba,
-		Good, Martha, Priscilla, Wilmot, Hestor, Percy, Nathaniel
-	]
+firstname &w17-4-1-1 ~! = [
+	Jason, Spatch, Crystal, Caro, Amyas, Leopold, Bernadette, Eustace, Clarissa, Timothé, Firmin,
+	Marguerite, Asun, Concepción, Eurydice, Clarence, Gladys, Hubert,Gloria, Angelina, Zerubbabel, Philippa,
+	Bruce, Spatchcock, Methuselah, Boaz, Trish, Yarrow, Rose, Willow, Meredith, Venn,
+	Janice, Trudy, Aura, Layne, Peyton, Sid, Tyne, Lyle, Kesh, Anders,
+	Elias, Sampo, Joukah, Aino, Teal, Norma, Aspic, Victor, Dirk, Klee,
+	Nancy, Peter, Nate, Wilma, Pearl, Clay, Carl, Clayton, Patrick, Pansy, Nid,
+	Vince, Bianca, Brooke, Natalia, Nathan, Liam, Hal, Tabitha, Anthony, Vladimir,
+	Jacques, Stanislav, Ward, Ole, Kirk, Bartolomeo, Toshitada, Myra, Dawn, Prudence,
+	Shaun, Clarissa, Lorna, Erin, Winn, Castor, Hans, Luke, Thomas, Biddy,
+	Plaice, Antigone, Rupert, Robert, Earle, Drew, Virginia, Gilberto, Albina, Rosalind,
+	Cándido, Clotilde, Marcelina, Lucia, Isidore, Jacinto, Soledad, Filbert, Gregorio, Eduardo,
+	Dolores, Apolonia, Carlota, Lucrecia, Emilia, Ramona, Beatrice, Jethro, Marsh, Shoby, Jan,
+	Philippe, Fanny, Malcolm, Ottorino, Ethel, Sofia, Tullio, Cornelis, Myra, Muhammad,
+	Enrico, Abbas, Bucky, Temple, Otto, Gunther, Ruthie, Beverley, Ruby, Jude,
+	Ross, Ibn, Zénobe, Théophile, Beulah, Daisy, Lasse, Erma, Ali, Imura,
+	Ub, Moritz, Marjorie, Joy, Jamshīd, Margaret, Rudolf, Gleb, Ellie, Charles,
+	Ham, Andrea, Nebuchadnezzar, Wilhelm, Elisha, Algernon, Spede, Olivia, Tadeus, Ida,
+	Lilian, Aurélie, Esther, Kia, Evelyn, Cynthia, Dorcas, Prudence, Eloise, Dulcie, Eileen,
+	Hiram, Genevieve, Hector, Austen, Flossie, Mabel, Gilmour, Lenox, Mirelle, Oswald,
+	Clement, Raymond, Emily, Bobby, Moira, Angela, Oliver, Milly, Ariadne, Amabelle, Tressilian,
+	Walter, Bridget, Honoria, Philip, Georgina, Gerda, Rosamund, Quentin, Mona, Caleb, Maud,
+	Camilla, Midge, Henrietta, Veronica, Beryl, Zenenia, Patience, Grace, Darling, Rosaleen,
+	Jeremy, Magda, Brenda, Letitia, Dora, Sheelagh, Rex, Ginger, Zachariah, Obadiah, Sybil,
+	Thomasina, Millicent, Edward, Bessy, Derek, Joyce, Elspeth, Ermintrude, Griselda, Shirley,
+	Gwenda, Edith, Arthur, Belshazzar, Daniel, Beat, Hope, Temerity, Goody, Abigail, Tituba,
+	Good, Martha, Priscilla, Wilmot, Hestor, Percy, Nathaniel
+]
 
-	nickname = [
-		The Inept, Crash, Pickle, Halucinator, Kidney bean, Sprog, Choucroute, Lepton, Lerp, Clanger,
-		Zipline,Slipshod, Mollusc, Plonk, Burple, Vertiginous, Collapse, Splotch, Spock, Spork,
-		Tingle, Pert, Splurge, Lurch, Whorl, Pipple, Dire, Thesp, Syrup,
-		The Slip, Clang, Nape, Yurt, Asuder, Terrapin,  Dangle, Nude, Dry, Dunder,
-		Mingle, Cripsy, Noise, Vom, The Womble, Lawnmonger, Maple, Goose, Glimmer, Snuggles,
-		Yo-yo, Terrorizer, Tingle, Yap yap, Pinky, Wallop, Crash, Tenfold, The Rush, Rusk magnet,
-		The Tolerant, Yelp, Bevel, Brisk, Bloop, Snow, Slush, Scrunch, The Dipper, Brittle,
-		Battler, Unbungled, Liquorice, Velouté, Marmalade, Raspberry, Jam, Knuckled, Crimson, Crimpin',
-		Tattle-tale, 2 by 4, Tornado, The Tumeric, Cilantro, Paid in full, Crimson, Kalashnikov, Cucumbered, Density missive,
-		Squelch, Timbuktu, Tajikistan, Tarmac, Granite, Soapstone, The Ripple, Wendigo, The Culminator, Glint,
-		Frenzy, Tripple threat, Ting, Plink, Bling-buddy, The Machinator, AZERTY, Teflon, Bomber, Mint,
-		Tossed caber, 360 no-scope, So retro, Blamegame, Tub wrecker, Coin-Op, OP, BSoDed, Blue, Shockjock,
-		Bundle, Socks, Slippers, Punnet o' greens, Interloper, Polearm, Fauchard, Brandistock, Egg,
-		Sausage, Beans, Purple, Tumble, Trundle, Clamour, Undone, Penumbra, Niggle, Miffle, Muffle,
-		Mug-tree, Ananas, Smooth, Smoocher, Unready, Plum, Custard, Lingo, Sting-in-the-tail, Miffed,
-		French toast, Buttered crumpet, Silk stocking, Shock-adoodle-dandy, Weasle, Stink, The Mink,
-		Halibut, Spline reticulator, Bunch, Brunch, Mouse, Musty, Shoulder pads, Gin fizz, Jiggles,
-		Jingles, Scarab, Beetle, Millipede, Defunct, Drastic, Chew, Pie chart, Bar graph, Thumbelina,
-		Royal Doulton, Marsh-wiggle, Arachnid, Treehugger, Made for TV, Pannikin of soup, Soap lover, Soup-a-holic,
-		Brunch-muncher, 8bit, Rhinoplasty, The Worst, Crank, Crumble, Delt, Dyspepsia, Blunderbuss, Turpentine,
-		Sprocket, The Altogetherer
-	]
+nickname ~! = [
+	The Inept, Crash, Pickle, Hallucinator, Kidney Bean, Sprog, Choucroute, Lepton, Lerp, Clanger,
+	Zipline, Slipshod, Mollusc, Plonk, Burple, Vertiginous, Collapse, Splotch, Spock, Spork,
+	Tingle, Pert, Splurge, Lurch, Whorl, Pipple, Dire, Thesp, Syrup,
+	The Slip, Clang, Nape, Yurt, Asuder, Terrapin,  Dangle, Nude, Dry, Dunder,
+	Mingle, Cripsy, Noise, Vom, The Womble, Lawnmonger, Maple, Goose, Glimmer, Snuggles,
+	Yo-yo, Terrorizer, Tingle, Yap Yap, Pinky, Wallop, Crash, Tenfold, The Rush, Rusk Magnet,
+	The Tolerant, Yelp, Bevel, Brisk, Bloop, Snow, Slush, Scrunch, The Dipper, Brittle,
+	Battler, Unbungled, Liquorice, Velouté, Marmalade, Raspberry, Jam, Knuckled, Crimson, Crimpin',
+	Tattle-tale, 2 by 4, Tornado, The Tumeric, Cilantro, Paid In Full, Crimson, Kalashnikov, Cucumbered, Density Missive,
+	Squelch, Timbuktu, Tajikistan, Tarmac, Granite, Soapstone, The Ripple, Wendigo, The Culminator, Glint,
+	Frenzy, Triple Threat, Ting, Plink, Bling-buddy, The Machinator, AZERTY, Teflon, Bomber, Mint,
+	Tossed Caber, 360 No-Scoped, So Retro, Blamegame, Tub Wrecker, Coin-Op, OP, BSoDed, Blue, Shockjock,
+	Bundle, Socks, Slippers, Punnet O' Greens, Interloper, Polearm, Fauchard, Brandistock, Egg,
+	Sausage, Beans, Purple, Tumble, Trundle, Clamour, Undone, Penumbra, Niggle, Miffle, Muffle,
+	Mug-tree, Ananas, Smooth, Smoocher, Unready, Plum, Custard, Lingo, Sting-in-the-tail, Miffed,
+	French Toast, Buttered Crumpet, Silk Stocking, Shock-adoodle-dandy, Weasel, Stink, The Mink,
+	Halibut, Spline, Bunch, Brunch, Mouse, Musty, Shoulder Pads, Gin fizz, Jiggles,
+	Jingles, Scarab, Beetle, Millipede, Defunct, Drastic, Chew, Pie Chart, Bar Graph, Thumbelina,
+	Royal Doulton, Marsh-wiggle, Arachnid, Treehugger, Made For TV, Pannikin, Soap lover, Soup-a-holic,
+	Brunch-muncher, 8bit, Rhinoplasty, The Worst, Crank, Crumble, Delt, Dyspepsia, Blunderbuss, Turpentine,
+	Sprocket, The Altogetherer
+]
 	
-	medialnickname = '$nickname/'
 
-	surname &17-4-1-1 _- = [
-		Veldt, McNorish, Gingham, Dingle, Henkd, Lawrence, Bletchley, Macgruggle, Spratt, Stroganov,
-		Hurlington, Babbington, Firkin, Smithington, Bladdley, Schopenhauer, Lebondieu, Clowes, Smithly, Legrand,
-		Monvoisin, Parlebas, Eccles, Dimchurch, Crapaud, Crake, Ost, Zenith, Japesworth, Lexington,
-		Carmichael, Wesley, Lamprey, Loosely, Trypp, Pankerton, Walters, Scrouse, Drumlin, Locklorley,
-		Karimba, Cloche, Humber, Humboldt, Merchant, Cappstone, Thistle, Merryweather, Wendle, Souza,
-		Borreal, Borkum, Ritinmore, Ilsted, Savinelli, Briarwold, Chonowitsch, McClelland, Fogg, Lane,
-		Cotton, Sherman, Newminster, Nording, Wessex, Tull, Arkwright, Babbage, Maxwell, Oppenheimer,
-		Knutsson, Beasley, Bliss, Bjørklund, Brandenberger, Brannock, Caprottily,Cumberbunder, Chamberlaine,
-		Cochrane, Krump, DeWinters, Toshitada, Dobrolovski, Presper, Edwardson, Elmqvist, Hurley, Spruce,
-		Stirling, Mackerel, Kegel, Kruger, Hoggarth, Momofuku, Pinkly, Snoring, Pucklechurch, Barton,
-		Plumpton, Override, Crimpling, Diddling, Crudwell, Puddleson, Brantsplatter, Buckerly, Picklescott, Gibbon,
-		Blubberhouse, Preamble, Tedstrong, Thrumptingly, Pending, Wetwolde, Papplewigger, Snorlingly, Roussel, Zelenka,
-		Mendelssohn, Stockhausen, Finzi, Korngold, Smyth, Xenakis, Panufnik, Russolo, Bossi, Corneliszoon,
-		Constantinescu, Fabry, Evinrude, Horstman, Florine, Fossum, Fresnel, Genko, Chesterwold, Hammingly,
-		Hammond, Hargreaves, Hasselblad, Gramme, Hutchingson, Huygens, Maudsley, Iwerks, Kompfner, LeTourneau,
-		Metchnikoff, Mangango, Lomonosov, Macintosh, Litisyn, Lik, Macintosh, Muybridge, Nessler, Pantridge,
-		Papanikolu, Quetelet, Weltch, Sung, Rickenbacker, Romanov, Shockley, Shrapnel, Prustwick, Starkweather,
-		Wedgewold, Whitcomb, Theremin, Inglethorp, Whittington, Eardsley, Brun, McGrath, Lomax, Eversleigh, Bagworthy,
-		Lemoine, Wynwood, Ragalan, Melrose, Ackroyd, Folliott, Ling, Combeau, Knightlington, Bateman, Primshandy,
-		Coot, Coates, Davinitry, O'Rourke, Eberhard, Protheroe, Lestrange, Wetherby, Kirkwood, Dodd, Bassington,
-		Rushbadger, Millray, Drower, Tanios, Peasebody, Boynton, Westholdover, Sudgely, Sugden, Horbury, Annstruther,
-		Waynflete, Humbleby, Dowder, Ossuary, Blore, Horlicks, Bishop, Mayhew, Partridge, Symmington, Woddell,
-		Ginch, Calthorpe, MacWhirter, Christow, Tressel, Crabappletree, Marchmont, Leadbatterer, Leonides,
-		Havalass, Blodstock, Blacklocke, Bunting, Swettenham, Hinchcliffe, Craddock, Legg, Summerhayes, Marshwidget,
-		Entwhile, Bernsdorff, Ramsbuttock, Hash, Scrubb, Needheim, Hobhauser, Crackenthorpe, Farnsworth, Dollop,
-		Kramble, Bland, Blank, Blunk, Palgrieve, Polegrove, Gorridge, Wayfarther, Hock, Gobb, Stuyvesant, Hornsea,
-		Wazeberry, Goodbody, Erskine, Blundle, Blunder, Hawse, Ridley, Witherling, Hartnell, Green, Grebb, Cram,
-		Haydock, Clack, Tippet, Redrust, Mead, Kimble, Abbott, Manning, Fane, Erskly, Banting, Adelaide, Diremouth,
-		Glenshire, Clitering, Glossington, Conway, Greaves, Somerset, Pye, Pyre, Easterbroke, Fletcher, Cloyce,
-		Basset, Proctor, Pudeator, Toothaker, Whipple, Ramanujan
-	]
+surname &w17-4-1-1 _- ~! = [
+	Veldt, McNorish, Gingham, Dingle, Henkd, Lawrence, Bletchley, Macgruggle, Spratt, Stroganov,
+	Hurlington, Babbington, Firkin, Smithington, Bladdley, Schopenhauer, Lebondieu, Clowes, Smithly, Legrand,
+	Monvoisin, Parlebas, Eccles, Dimchurch, Crapaud, Crake, Ost, Zenith, Japesworth, Lexington,
+	Carmichael, Wesley, Lamprey, Loosely, Trypp, Pankerton, Walters, Scrouse, Drumlin, Locklorley,
+	Karimba, Cloche, Humber, Humboldt, Merchant, Cappstone, Thistle, Merryweather, Wendle, Souza,
+	Borreal, Borkum, Ritinmore, Ilsted, Savinelli, Briarwold, Chonowitsch, McClelland, Fogg, Lane,
+	Cotton, Sherman, Newminster, Nording, Wessex, Tull, Arkwright, Babbage, Maxwell, Oppenheimer,
+	Knutsson, Beasley, Bliss, Bjørklund, Brandenberger, Brannock, Caprottily,Cumberbunder, Chamberlaine,
+	Cochrane, Krump, DeWinters, Toshitada, Dobrolovski, Presper, Edwardson, Elmqvist, Hurley, Spruce,
+	Stirling, Mackerel, Kegel, Kruger, Hoggarth, Momofuku, Pinkly, Snoring, Pucklechurch, Barton,
+	Plumpton, Override, Crimpling, Diddling, Crudwell, Puddleson, Brantsplatter, Buckerly, Picklescott, Gibbon,
+	Blubberhouse, Preamble, Tedstrong, Thrumptingly, Pending, Wetwolde, Papplewigger, Snorlingly, Roussel, Zelenka,
+	Mendelssohn, Stockhausen, Finzi, Korngold, Smyth, Xenakis, Panufnik, Russolo, Bossi, Corneliszoon,
+	Constantinescu, Fabry, Evinrude, Horstman, Florine, Fossum, Fresnel, Genko, Chesterwold, Hammingly,
+	Hammond, Hargreaves, Hasselblad, Gramme, Hutchingson, Huygens, Maudsley, Iwerks, Kompfner, LeTourneau,
+	Metchnikoff, Mangango, Lomonosov, Macintosh, Litisyn, Lik, Macintosh, Muybridge, Nessler, Pantridge,
+	Papanikolu, Quetelet, Weltch, Sung, Rickenbacker, Romanov, Shockley, Shrapnel, Prustwick, Starkweather,
+	Wedgewold, Whitcomb, Theremin, Inglethorp, Whittington, Eardsley, Brun, McGrath, Lomax, Eversleigh, Bagworthy,
+	Lemoine, Wynwood, Ragalan, Melrose, Ackroyd, Folliott, Ling, Combeau, Knightlington, Bateman, Primshandy,
+	Coot, Coates, Davinitry, O'Rourke, Eberhard, Protheroe, Lestrange, Wetherby, Kirkwood, Dodd, Bassington,
+	Rushbadger, Millray, Drower, Tanios, Peasebody, Boynton, Westholdover, Sudgely, Sugden, Horbury, Annstruther,
+	Waynflete, Humbleby, Dowder, Ossuary, Blore, Horlicks, Bishop, Mayhew, Partridge, Symmington, Woddell,
+	Ginch, Calthorpe, MacWhirter, Christow, Tressel, Crabappletree, Marchmont, Leadbatterer, Leonides,
+	Havalass, Blodstock, Blacklocke, Bunting, Swettenham, Hinchcliffe, Craddock, Legg, Summerhayes, Marshwidget,
+	Entwhile, Bernsdorff, Ramsbuttock, Hash, Scrubb, Needheim, Hobhauser, Crackenthorpe, Farnsworth, Dollop,
+	Kramble, Bland, Blank, Blunk, Palgrieve, Polegrove, Gorridge, Wayfarther, Hock, Gobb, Stuyvesant, Hornsea,
+	Wazeberry, Goodbody, Erskine, Blundle, Blunder, Hawse, Ridley, Witherling, Hartnell, Green, Grebb, Cram,
+	Haydock, Clack, Tippet, Redrust, Mead, Kimble, Abbott, Manning, Fane, Erskly, Banting, Adelaide, Diremouth,
+	Glenshire, Clitering, Glossington, Conway, Greaves, Somerset, Pye, Pyre, Easterbroke, Fletcher, Cloyce,
+	Basset, Proctor, Pudeator, Toothaker, Whipple, Ramanujan
+]
 
-	#returm up to 4 Initials (number is weighted), no duplicates allowed, separator is .
-	initial _. &w7-4-1 >! = [
-		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
-	]
+initial = [
+	A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
+]
 	
-	#include final .
-	initials = $initial/.
+initials _. &w7-4-1 ~! = $initial <.
 
-	postNom >! %0.037 = [
-		BSc, Esquire, QC, Esq, MD, DPhil, VC, Bt, GBE, CB,
-		OBE, MBE, RRC, DSC, SGM, QHP, QHDS, SCJ, MP, MPE,
-		BA, MA, MSc, MBA, PhD, HNC, AfCGI, OFM Cap., BAc, FRCA,
-		FRCN, FRSRH, ARA, MRI, FRS, FMAAT, AMIAP, FSA Scot, PCIfA, MSPB(Acc),
-		LCIBSE, FICFor, MICPEM, MBDA, FBDO, FSDC, Hon.FRES, FIExpE, MBKS, ACLIP,
-		MMC, HonFIIMS, MW, GradIOSH, MCPara, MRPSL, QIS LRPS, PPRP, FInstR, FInstSSECOF,
-		MIOS, MITAI, FRSTMH, MCIWM, AWS, FZS, Jr
-	]
+medialnickname = "> $nickname <"
+
+postNom ~! = [
+	BSc, Esquire, QC, Esq, MD, DPhil, VC, Bt, GBE, CB,
+	OBE, MBE, RRC, DSC, SGM, QHP, QHDS, SCJ, MP, MPE,
+	BA, MA, MSc, MBA, PhD, HNC, AfCGI, OFM Cap., BAc, FRCA,
+	FRCN, FRSRH, ARA, MRI, FRS, FMAAT, AMIAP, FSA Scot, PCIfA, MSPB(Acc),
+	LCIBSE, FICFor, MICPEM, MBDA, FBDO, FSDC, Hon.FRES, FIExpE, MBKS, ACLIP,
+	MMC, HonFIIMS, MW, GradIOSH, MCPara, MRPSL, QIS LRPS, PPRP, FInstR, FInstSSECOF,
+	MIOS, MITAI, FRSTMH, MCIWM, AWS, FZS, Jr
+]
+
+postNomPlus = <, $postNom
 	
-	fnamelname = $firstname $lastname
+fnamelname = $firstname $surname
+
+fnameinit = ?w9-1[$firstname,$initials]
 	
-	# 1 % chance of a nickname instead of a first name + a last name
-	nicknor = ?w1-100 = $honorific  [ $nickname, $fnamelname ] $postNom
-	
-	# both first name and last name have a 0.12% chance of not appearing
-	
-	
+# 1 % chance of a nickname instead of a combo
+name ?w1-100 = %0.06$honorific  [$nickname, $fnameinit %0.09$medialnickname $surname] %0.037$postNomPlus
