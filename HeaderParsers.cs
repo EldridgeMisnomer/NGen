@@ -14,7 +14,7 @@ namespace NGen {
              *      Repeat, Output Chance, AllowRepeats, Pick, Separator, Once
              */
 
-            List<char> charList = new List<char> { '&', '%', '>', '?', '_', '*' };
+            List<char> charList = new List<char> { '&', '%', '~', '?', '_', '*' };
 
             char lastChar = 'x';
             string lastString = "";
@@ -53,7 +53,7 @@ namespace NGen {
             s = s.Trim();
 
             //DEBUG
-            Console.WriteLine( $"HeaderParser: char: '{c}', string: '{s}'" );
+            //Console.WriteLine( $"HeaderParser: char: '{c}', string: '{s}'" );
 
             switch( c ) {
 
@@ -67,7 +67,7 @@ namespace NGen {
                     HeaderOutputChanceParser( s, ref gs );
                     break;
 
-                case '>':
+                case '~':
 
                     HeaderNoRepParser( s, ref gs );
                     break;
@@ -269,7 +269,7 @@ namespace NGen {
                 } else {
 
                     //otherwise, just use the string
-                    gs.Separator = s;
+                    gs.Separator = s.Trim();
                     gs.UseProxySeparator = false;
 
                 }

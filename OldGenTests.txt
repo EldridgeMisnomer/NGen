@@ -1,4 +1,43 @@
 ﻿#This is a comment
+# -?? rename noRep - allow repeats
+# > = allowRepeats on
+# >! = allowRepeats off
+# ! is off for a setting
+#
+#	*  = once on (for a proxy)
+#	*! = once off
+
+#gen &n = &f2[wiry, mild, disconcerted, ready]
+
+#items = [wallet, keys, left shoe]
+#lostitem * = %0.4$items
+#s1 = Yesterday I lost my $lostitem/. I was so sad, I loved my $lostitem so much, I didn't know what I'd do without my $lostitem
+
+#testm = [ a, b, c, d, e, f, g, h, i, j, k, l, m, n ]
+cyclename = &f1[ one, two, three, four, five, six, seven, eight, nine, ten ]
+#difpicktypes = [ ?r[ words, picked randomly ], ?s[ words, picked, with, non-repeating, shuffle ] ]
+
+multilineVeg =  [
+				artichoke, beetroot, carrot, cauliflower, celery, 
+				endive, kale, leek, marrow, pea, 
+				potato, pumpkin, spinach, squash, yarrow
+			    ]
+
+#sep = [ _, *, x ]
+#one _$sep =  [ a, b, c, d, e, f, g, h ] [ alpha, beta, zeta, whateva ]
+#two %0.5 ?c1 = [ 1, 2, 3, 4, 5, 6, 7, 8 ]
+
+#weighted ?w = [ once, twice, three times, a, lady ]
+#weighted2 ?w10-2-2-1-1 = [ aaa, bbb, ccc, ddd, eee ]
+#weighted2b ?w10-2-1-1 = [ aaa, bbb, ccc, ddd, eee ]
+#weighted3 ?w0.75 = [ air, bat, car, dog, egg, fox, god ]
+#weighted4 ?w1-15 = [ air, bat, car, dog, egg, fox, god, hat, ice, jog, kol, log, mum, nag, oop, poo ]
+
+obj = [ jug, top hat, syringe, alligator ]
+agen = what a [lovely, marvellous, gorgeous, suculent] $obj you have. That is a nice $obj/.
+
+
+#This is a comment
 #for the moment names must be on one line - we'll fix this later
 
 #tname = [[\$Arppic, \$Thloat], [Flobber, Bib, [Zinger, Flinger]], [Bob, Shmob], Scrabber, Nib]x

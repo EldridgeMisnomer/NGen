@@ -38,43 +38,12 @@ namespace NGen {
 
                     if( PU.StringContainsProxy( w ) ) {
 
-                        int refIndex = w.IndexOf( PU.CharMap( CharType.reference ) );
+                        ProxyGen pg = ProxyProcessor( w, headerSettings );
 
-                        string name = w.Substring( refIndex + 1, w.Length - refIndex - 1 );
-
-                        GenSettings gs = new GenSettings( headerSettings );
-
-                        if( refIndex > 0 ) {
-                            string proxyHeaderString = w.Substring( 0, refIndex );
-                            HeaderParsers.HeaderShorthandSifter( proxyHeaderString, ref gs );
-                            Console.WriteLine( $"ProxyHeader is: '{proxyHeaderString}'" );
-                        }
-
-                        //This name may contain punctuation
-                        int proxyEnd = name.IndexOf( PU.CharMap( CharType.proxyEnd ) );
-                        string excess = null;
-                        if( proxyEnd > 0 ) {
-                            if( proxyEnd < name.Length - 1 ) {
-                                excess = name.Substring( proxyEnd + 1 );
-                                name = name.Substring( 0, proxyEnd );
-                            } else {
-                                name = name.Substring( 0, name.Length - 1 );
-                            }
-                        }
-                        ProxyGen pg = ProxyProcessor( name, gs );
                         gens.Add( pg );
 
-                        if( excess != null ) {
-
-                            GenSettings gs2 = new GenSettings( headerSettings );
-                            gs2.NoSepBefore = true;
-
-                            Wrd wrd = new Wrd( excess, gs2);
-                            gens.Add( wrd );
-                        }
-
                     } else {
-                        Wrd wrd = new Wrd( w, headerSettings );
+                        Wrd wrd = WrdSeparatorProcessor( w, headerSettings );
                         gens.Add( wrd );
                     }
                 }
@@ -83,17 +52,82 @@ namespace NGen {
                 return sg;
 
             } else {
-                return new Wrd( s, headerSettings );
+                return WrdSeparatorProcessor( s, headerSettings );
             }
+
+        }
+
+        public static Wrd WrdSeparatorProcessor( string w, GenSettings genSettings ) {
+
+
+            w = w.Trim();
+            GenSettings gs = new GenSettings( genSettings );
+
+            if( w[0] == PU.CharMap( CharType.noSepBefore ) ) {
+                //DEBUG
+                //Console.WriteLine( $"Wrd Separator Processor, wrd is: {w}" );
+                gs.NoSepBefore = true;
+                w = w.Substring( 1 );
+            }
+
+            if( w[w.Length-1] == PU.CharMap( CharType.noSepAfter ) ) {
+                //DEBUG
+                //Console.WriteLine( $"Wrd Separator Processor, wrd is: {w}" );
+                gs.NoSepAfter = true;
+                w = w.Substring( 0, w.Length - 1 );
+            }
+
+
+            //DEBUG
+            //Console.WriteLine( $"wrd: '{w}', gs.noSepB: {gs.NoSepBefore}, gs.noSepA: {gs.NoSepAfter}" );
+
+            return new Wrd( w, gs );
 
         }
 
         public static ProxyGen ProxyProcessor( string s, GenSettings genSettings ) {
 
-            //We need to check the string s for punctuation
+            int refIndex = s.IndexOf( PU.CharMap( CharType.reference ) );
 
-            ProxyGen pg = new ProxyGen( s.Trim(), genSettings );
+            string name = s.Substring( refIndex + 1, s.Length - refIndex - 1 );
+
+            GenSettings gs = new GenSettings( genSettings );
+
+            if( refIndex > 0 ) {
+                string proxyHeaderString = s.Substring( 0, refIndex );
+                HeaderParsers.HeaderShorthandSifter( proxyHeaderString, ref gs );
+                //DEBUG
+                //Console.WriteLine( $"ProxyHeader is: '{proxyHeaderString}'" );
+            }
+
+            //DEBUG
+            //Console.WriteLine( $"ProxyProcessor, output chance is: {gs.OutputChance}" );
+
+
+            //This name may contain punctuation
+            int proxyEnd = name.IndexOf( PU.CharMap( CharType.proxyEnd ) );
+            string excess = null;
+            if( proxyEnd > 0 ) {
+                if( proxyEnd < name.Length - 1 ) {
+                    excess = name.Substring( proxyEnd + 1 );
+                    name = name.Substring( 0, proxyEnd );
+                } else {
+                    name = name.Substring( 0, name.Length - 1 );
+                }
+            }
+
+            ProxyGen pg = new ProxyGen( name.Trim(), gs );
             //add to the ProxyGen list for connecting up later
+
+            if( excess != null ) {
+
+                GenSettings gs2 = new GenSettings();
+                Wrd wrd = new Wrd( excess, gs2 );
+                //DEBUG
+                //Console.WriteLine( $"Follower GetTxt is: '{wrd.GetTxt()}'" );
+                pg.AddFollower( wrd );
+            }
+
             proxyGens.Add( pg );
             return pg;
 
@@ -160,7 +194,7 @@ namespace NGen {
             return wg;
         }
 
-        public static Gen SenGenProcessor( string s, GenSettings headerSettings ) {
+        public static SenGen SenGenProcessor( string s, GenSettings headerSettings ) {
             /*
              * This will take a string and turn it into a SenGen,
              * although, if it is a simple sentence it may return
@@ -180,8 +214,8 @@ namespace NGen {
                 string postBracketStart = PU.GetBracketsStart( s, out preBracketStart, out bracketsHeaderString );
 
                 //DEBUG
-                Console.WriteLine( $"preBracket text is: '{preBracketStart}'" );
-                Console.WriteLine( $"bracketsHeader text is: '{bracketsHeaderString}'" );
+                //Console.WriteLine( $"preBracket text is: '{preBracketStart}'" );
+                //Console.WriteLine( $"bracketsHeader text is: '{bracketsHeaderString}'" );
 
                 //If there is any text in the preBrackets string
                 //we can treat it as just a Wrd, because we know it can't contain a list
@@ -235,18 +269,13 @@ namespace NGen {
 
             }
 
-            //if only one gen has been created, return it,
-            //otherwise create a SenGen and return that
-            if( gens.Count == 1 ) {
+            SenGen sg = new SenGen( gens.ToArray(), headerSettings );
 
-                return gens[0];
+            //DEBUG
+            //Console.WriteLine( $"new SenGen. gs.NoSepB: {sg.GetNoSepBefore()}, gs.NoSepA: {sg.GetNoSepAfter()} " );
 
-            } else {
+            return sg;
 
-                SenGen sg = new SenGen( gens.ToArray(), headerSettings );
-                return sg;
-
-            }
         }
     }
 }
