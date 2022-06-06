@@ -120,6 +120,9 @@ namespace NGen {
             genName = name;
 
             gs = genSettings;
+
+            //DEBUG
+            //Console.WriteLine( $"Create ProxyGen, outputChance = {gs.OutputChance}" );
         }
 
         protected override GenOutput[] PickTxt() {
@@ -422,27 +425,42 @@ namespace NGen {
             wrds = gens;
         }
 
-        public string GetTxt() {
+        public string GetTxt( out bool sepBefore, out bool sepAfter ) {
 
             GenOutput[] outputs = PickTxt();
             string outputString = "";
 
-            for( int i = 0; i < outputs.Length; i++ ) {
-                outputString += outputs[i].Txt;
-                //DEBUG
-                //Console.WriteLine( $"sengen txt: output {i} is: '{outputs[i].Txt}', sepBefore: {outputs[i].SepBefore}, speAfter: {outputs[i].SepAfter}" );
-                if( i < outputs.Length - 1 ) {
+            sepBefore = true;
+            sepAfter = true;
 
+            if( outputs != null ) {
+
+                for( int i = 0; i < outputs.Length; i++ ) {
+                    outputString += outputs[i].Txt;
                     //DEBUG
+                    //Console.WriteLine( $"sengen txt: output {i} is: '{outputs[i].Txt}', sepBefore: {outputs[i].SepBefore}, speAfter: {outputs[i].SepAfter}" );
+                    if( i < outputs.Length - 1 ) {
 
-                    if( outputs[i].SepAfter && outputs[i+1].SepBefore ) {
-                        outputString += GetSeparator();
+                        //DEBUG
+
+                        if( outputs[i].SepAfter && outputs[i + 1].SepBefore ) {
+                            outputString += GetSeparator();
+                        }
+
                     }
-
                 }
+
+                sepBefore = outputs[0].SepBefore;
+                sepAfter = outputs[outputs.Length - 1].SepAfter;
             }
 
             return outputString;
+
+        }
+
+        public string GetTxt( ) {
+
+            return GetTxt( out bool discard1, out bool discard2 );
 
         }
 
@@ -467,14 +485,12 @@ namespace NGen {
 
         public override GenOutput[] GetOutput() {
 
-            string os = GetTxt();
-
+            bool sepBefore;
+            bool sepAfter;
+            string os = GetTxt( out sepBefore, out sepAfter );
             GenOutput go = new GenOutput( os, gs );
-
-            //Check first and last gens to see if they want separators or not
-            GenOutput[] gens = PickTxt();
-            go.SepBefore = gens[0].SepBefore;
-            go.SepAfter = gens[gens.Length - 1].SepAfter;
+            go.SepBefore = sepBefore;
+            go.SepAfter = sepAfter; 
 
             return new GenOutput[] { go };
 
@@ -487,13 +503,28 @@ namespace NGen {
             for( int i = 0; i < wrds.Length; i++ ) {
 
                 GenOutput[] newGOs = wrds[i].GetOutput();
-                foreach( GenOutput go in newGOs ) {
-                    gens.Add( go );
 
+                if( newGOs != null ) {
+
+                    foreach( GenOutput go in newGOs ) {
+                        gens.Add( go );
+
+                    }
                 }
             }
 
-            return gens.ToArray();
+            //DEBUG
+            //Console.WriteLine( $"SenGen PickTxt, number of wrds: {wrds.Length}, number of gens: {gens.Count}." );
+
+            if( gens.Count > 0 ) {
+
+                return gens.ToArray();
+
+            } else {
+
+                return null;
+
+            }
 
         }
     }

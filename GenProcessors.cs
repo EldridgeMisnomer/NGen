@@ -100,6 +100,10 @@ namespace NGen {
                 //Console.WriteLine( $"ProxyHeader is: '{proxyHeaderString}'" );
             }
 
+            //DEBUG
+            //Console.WriteLine( $"ProxyProcessor, output chance is: {gs.OutputChance}" );
+
+
             //This name may contain punctuation
             int proxyEnd = name.IndexOf( PU.CharMap( CharType.proxyEnd ) );
             string excess = null;
@@ -112,7 +116,7 @@ namespace NGen {
                 }
             }
 
-            ProxyGen pg = new ProxyGen( name.Trim(), genSettings );
+            ProxyGen pg = new ProxyGen( name.Trim(), gs );
             //add to the ProxyGen list for connecting up later
 
             if( excess != null ) {
