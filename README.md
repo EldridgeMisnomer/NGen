@@ -107,19 +107,32 @@ etc
 
 ### Settings in Generators
 
-As we will see later, the components of Generators (Lists, Sentences, and Proxies) have Behaviours which can be changed with Settings.
+As we will see later, the Components of Generators (Lists, Sentences, and Proxies) have Settings which can be changed.
 
-Settings in Generators are written in a kind of shorthand between the Generator Name and the `=` sign, for example:
+While each component can have its Settings changed individually, it is also possible to apply Settings to *all* of the components in a Generator by doing it at the Generator level.
+
+Care must be taken when doing so, however, because unexpected results may arise.
+
+Settings in Generators are written in exactly the same way as they are on individual Components but are placed the Generator Name and the `=` sign, for example:
 
 ```
 gen1 %0.7 _- &f4 = [ one, two, three, four ]
 ```
 
-These will be covered in detail below
+They are separated from the generator name by a space and may be written together in one block or separated themselves (`?w0.7&n` or `?w0.7 &n` are both acceptable).
 
-TODO - link to relevant sections once they exist
+Settings will be applied to only the Components for which they are relevant (ie. you can't set a Separator on a Proxie, or a Once on a Sentence); Settings will be applied to all the Components for which they are relevant (ie. Repeat will be set on both a List and a Proxy).
 
-**Note:** The space between the Generator Name and the Settings is important, without it the Settings will be ignored and will be included in the Name.
+Here's an example of where this can cause trouble:
+
+```
+proxy = three
+trickygen &f2 = [ one, $proxy, two ]
+```
+
+In the above a Fixed Repeat 2 is set at the Generator level of `trickygen`, this means that elements which can Repeat (Lists and Proxies) will repeat their output twice. However, `trickygen` contains both a Proxy inside a List. If only 'one' or 'two' is selected from the List then the output might be "two one one", but if the proxy is selected it will perform its repeat twice, and the output could be "two three three three three three three". If this is what's expected then fine, if it's not then a solution is to set the Repeats on individual Components, either: `trickygen  = &f2[ one, $proxy, two ]`, or `trickygen  = [ one, &f2$proxy, two ]`
+
+For more information about specific Settings, see [Component Settings](#component-settings)
 
 ## Generator Components
 
@@ -196,8 +209,7 @@ Lists have Settings in the following categories:
 
 * [Pick](#pick-settings)
 * Repeat
-* Output
-* Separator
+* [Output Chance](#output-chance-setting)
 * Allow Duplicates - TODO *think of a better name for this*
 
 Settings are normally changed using shorthand codes written either after the Generator Name or immediately before the List:
@@ -270,7 +282,7 @@ When all the elements have been picked, the List is shuffled again and picking s
 This mostly avoids the same element being picked twice in a row (it can still happen directly after a shuffle), and ensures that all elements from the list are seen given enough picks.
 
 ```
-shufflegen ?s = [bee, spider, caterpillar, beetle]
+shufflegen = ?s[bee, spider, caterpillar, beetle]
 ```
 In the above example, the list might be reordered to `[spider, beetle, caterpillar, bee]` and will then output first 'spider', then 'beetle', then 'caterpillar'. Once 'bee' has been picked the list is shuffled again.
 
@@ -303,7 +315,7 @@ I'm not sure why this might be useful, but it is possible.
 The `weighted` Pick method is the most versatile, but also the most verbose to set, and a little tricky to understand. It allows you to apply individual weights to each element in the List to control the probability of it being picked. These weights can be set manually or interpolated using a coupld of different methods.
 
 ```
-weightedgen ?w = [ azalea, begonia, carnation, dahlia, erigeron ]
+weightedgen = ?w[ azalea, begonia, carnation, dahlia, erigeron ]
 ```
 
 In the above example the first element in the List ('azalea') is the most likely to be picked, the second element is slightly less likely to be picked, and the third even less likely. The last element in the List ('erigeron') will be picked extremely rarely, less than one time in 100.
@@ -329,7 +341,7 @@ There are four different elements in the above List, the first ('one') has a wei
 Note that if you specify more than 2 weights, but not enough for all elements in the list, then linear interpolation will again be used to fill in the missing weights, for example:
 
 ```
-missingweightsgen ?w7-5-2 = [ one, two, three, four ]
+missingweightsgen = ?w7-5-2[ one, two, three, four ]
 ```
 
 In the above Generator three weights have been specified but there are four elements in the List, in cases like these the final weight specified is assumed to be for the final element in the List, and the remaining weights are applied to the other elements, starting from the beginning of the List. In this case the weights are `7-5-?-2`, the third weight is missing and will be interpolated as `3.5`, half way between `5` and `2`, giving weights of: `7-5-3.2-2`. This demonstrates that weights don't have to be whole numbers.
@@ -337,14 +349,14 @@ In the above Generator three weights have been specified but there are four elem
 Note that if the weights before and after the missing weights are the same, then all missing weights will be the same, for example:
 
 ```
-missingweightgen ?w5-3-1-1 = [ one, two, three, four, five, six, seven]
+missingweightgen = ?w5-3-1-1[ one, two, three, four, five, six, seven]
 ```
 Here there are four weights and seven elements, the last two weights given are both `1` so *all* the missing weights will also be `1`, the final interpolated set of weights here will be: `5-3-1-1-1-1-1`.
 
 The third and final way of setting Pick weights, is also the default, and the simplest, but it is also the most abstract which is why it has been left to last; it is just to set a multiplication factor by putting a single number (which can be a decimal) after the `w`, like so:
 
 ```
-factorweightgen = ?w0.6 = [ one, two, three, four ]
+factorweightgen = ?w0.6[ one, two, three, four ]
 ```
 
 In the above example, because the factor is less than 1, each element will be less likely than the last. Internally NGen sets the first element's weight to an arbitrary high number, for example 10, and then each subsequent weight is calculated by multiplying the previous weight by the factor. Here we would get weights of `10-6-3.6-2.16`. This provides a kine of exponential interpolation.
@@ -352,13 +364,27 @@ In the above example, because the factor is less than 1, each element will be le
 If the factor is greater than 1, then each element will be more likely to be picked than the last. Internally the first weight is set to an arbitrary low number, and then each subsequent weight is again calculated by multiplying the previous weight by the factor, for example:
 
 ```
-factorweightgen ?w2 = [ one, two, three, four ]
+factorweightgen = ?w2[ one, two, three, four ]
 ```
 Here the weights would be calculted as `1-2-4-8`, the final element is the most likely to be picked (about 53% of the time).
 
 Be careful about setting a high factor, particularly with long lists, as you might end up with only the last element being picked most of the time, and the first elements never being picked. For example, with a factor of 3 and a list 10 elements long the last element will be picked about 67% of the time, and the first element will only be picked about 0.003% of the time.
 
 The default factor is `0.8`, and this can be set just by writing `?w`.
+
+#### Output Chance Setting
+
+Lists will normally provide an output every time a Generator will run, however they can be given a chance not to do so.
+
+The Output Chance is set using the `%` symbol followed by a number between 0 and 100, a percentage chance for the List to provide an output, for example `%60` gives the List a 60% chance to provide an output, conversely, 40% of the time the List will output nothing.
+
+```
+sometimesnothinggen = %90[ one, two, three ]
+```
+
+Ten percent of the time, the generator above will not output any text at all.
+
+Proxies can also have an Output Chance.
 
 
 
@@ -368,7 +394,12 @@ Sentences only have one Setting - Separator.
 
 ### Proxy Settings
 
-Proixes have a single setting, called Once.
+Proxies have a number of Settings, most of which are shared with Lists
+Proixes have a single setting that is unique to them, called Once.
+
+* [Once](#once-setting)
+* Repeat
+* [Output Chance](#output-chance)
 
 #### Once Setting
 
@@ -400,7 +431,7 @@ This is done by setting the Repeat Type.
 There are 4 different  Repeat Types: `fixed`, `uniform`, `normal`, and `weighted`.
 The default Repeat Type is `fixed`, but the number of repeats are set to zero, so Lists don't, by default, repeat themselves.
 
-**Note:** All numbers here refer to the number of *repetitions* not the number of instances; so 0 repetitions, still mean that a list will output once. To add the possibility of a list not outputting at all, you'll have to wait, because it hasn't been implemented yet.
+**Note:** All numbers here refer to the number of *repetitions* not the number of instances; so 0 repetitions, still mean that a list will output once. To add the possibility of a list not outputting at all, you have to set the [Output Chance Setting](#output-chance-setting).
 
 Repetition can be set in generators or in the header, see [Setting Repeat Type in the Generator](#setting-repeat-type-in-the-generator) or [Setting Repeat Type in the Header](#setting-repeat-type-in-the-header) for more information.
 

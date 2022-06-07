@@ -140,9 +140,9 @@ postNomPlus = <, $postNom
 fnameinit = ?w9-1[ $firstname, $initials ]
 
 #the full name - without honorific, post nominals, or nickname
-fullname = $fnameinit %0.09$medialnickname $surname
+fullname = $fnameinit %9$medialnickname $surname
 
 #the final name - this was the original output of the name generator
 #a very small chance of adding an honorific and post nominals
 #a 1% chance of replacing the full name with just a nickname
-name = %0.06$honorific ?w1-100[ $nickname, $fullname ] %0.037$postNomPlus
+name = %6$honorific ?w1-100[ $nickname, $fullname ] %3.7$postNomPlus

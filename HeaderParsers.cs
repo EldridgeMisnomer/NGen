@@ -428,11 +428,15 @@ namespace NGen {
 
                 if( double.TryParse( s, out d ) ) {
 
-                    if( d > 1 ) {
-                        d /= 100;
+                    if( d > 100 ) {
+                        d = 100;
                     }
 
-                    gs.OutputChance = d;
+                    if( d < 0 ) {
+                        d = 0;
+                    }
+
+                    gs.OutputChance = d/100;
 
                 } else {
                     //TODO document
