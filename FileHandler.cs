@@ -70,7 +70,7 @@ namespace NGen {
             //Remove the comments
             string[] strippedLines = ParserUtils.StripComments( lines );
             //process the lines into Gens with names
-            Dictionary<string, SenGen> gens = DataGetter.HeaderProcessor( strippedLines );
+            Dictionary<string, SenGen> gens = DataGetter.SplitHeadersAndGenerators( strippedLines );
 
             //get a list of all the proxygens for checking
             List<ProxyGen> proxyGens = GenProcessors.GetProxyGens();

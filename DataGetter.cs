@@ -15,7 +15,6 @@ namespace NGen {
         //TODO - fix NoRep shuffle function
         //TODO - check what happens if no header, or no header at beginning but yes one later
         //TODO - better optimise WrdProcessor
-        //TODO - check for matching brackets
         //TODO - ??? Glitch ???
         //TODO - ??? add 1 or two default Lists - Numbers, Letters, Alphanumeric, Uppercase Letters
         //TODO - ??? some form of controlling case
@@ -24,18 +23,18 @@ namespace NGen {
 
 
 
-        public static Dictionary<string, SenGen> HeaderProcessor( string[] lines ) {
+        public static Dictionary<string, SenGen> SplitHeadersAndGenerators( string[] lines ) {
             /*
              *  receives the comment-stripped lines from the text file
-             *  and divides them up into sections - headers and declarations,
+             *  and divides them up into sections - headers and generator declarations,
              *  sending declarations along with their matching headers on to the LineProcessor
              */
 
             string headerString = "";
             List<string> declareLines = new List<string>();
-            bool inHeader = false;
             List<GenSettings> genSettings = new List<GenSettings>();
             genSettings.Add( new GenSettings() );
+            bool inHeader = false;
 
             //dictionary to store gens in
             Dictionary<string, SenGen> gens = new Dictionary<string, SenGen>();
@@ -146,6 +145,7 @@ namespace NGen {
 
             GenSettings gs;
 
+            //Reset or not
             if( h.Contains( "reset" ) ) {
                 gs = new GenSettings();
             } else {
@@ -156,14 +156,12 @@ namespace NGen {
             if( h.Length > 0 ) {
 
                 //Pick Type
-
                 PickType pt = gs.PickType;
 
                 EnumHelpers.StringToEnum<PickType>( h, "pick", ref pt );
                 gs.PickType = pt;
 
                 //Repeat Type
-
                 RepeatType rt = gs.RepType;
 
                 EnumHelpers.StringToEnum<RepeatType>( h, "repeat", ref rt );
@@ -179,46 +177,7 @@ namespace NGen {
             return gs;
         }
 
-        private static GenSettings ParseHeader( string h, GenSettings oldSettings ) {
-
-            /*
-             *  This receives a string that may have come from a header, 
-             *  or, in fact, the codes following a generator name
-             *  (need to come up with a word for this),
-             *  or the code that comes before a list  
-             */
-
-            GenSettings gs = new GenSettings(oldSettings);
-
-            //this bit is case insensitive, so
-            h = h.ToLower();
-
-            //check there's anything here to parse...
-            //i think this should already have been done elsewhere,
-            //but I'm sure something could have slipped through,
-            //better safe than sorry
-            if( h.Length > 0 ) {
-
-                //DEBUG
-                //Console.WriteLine( $"h is: '{h}'" );
-
-                HP.HeaderShorthandSifter( h, ref gs );
-
-                //DEBUG
-/*                string sw = "";
-                foreach( double dw in gs.PickWeights ) {
-                    sw += dw.ToString() + ", ";
-                }
-                Console.WriteLine( $"ParseHeaderEnd, weights are now: {sw}" );
-                Console.WriteLine( $"ParseHeaderEnd, pickType is: {gs.PickType}" );*/
-
-
-            }
-
-            return gs;
-        }
-
-        private static Dictionary<string, SenGen> LineProcessor( GenSettings gs, string[] lines ) {
+        private static Dictionary<string, SenGen> LineProcessor( GenSettings oldSettings, string[] lines ) {
             /*
              *  receives the comment-stripped lines from the text file
              *  and process them into generator declarations,
@@ -246,42 +205,13 @@ namespace NGen {
                         }
 
                         //split the line into the name and (potentially only the start of) the declaration
-                        string name;
-                        string contents;
-                        PU.StringToStringPair( lines[i], out name, out contents );
+                        PU.StringToStringPair( lines[i], out string name, out string contents );
 
-                        //test the name to see if it has a header of its own
-                        //if it does - parse it and store the GenSettings
-                        //if it doesn't - store the header-based GenSettings
-                        char[] separators = { ' ' };
-                        string[] nameSplit = name.Split( separators, StringSplitOptions.RemoveEmptyEntries );
-                        name = nameSplit[0];
+                        //extract the header from the name
+                        GenSettings newGS = HP.GetSettingsFromName( ref name, oldSettings );
 
-                        //settings.Add( gs );
-
-                        if( nameSplit.Length > 1 ) {
-
-                            string headerString = "";
-                            for( int j = 1; j < nameSplit.Length; j++ ) {
-                                headerString += nameSplit[j] + " ";
-                            }
-
-                            GenSettings genGS = ParseHeader( headerString, gs );
-                            settings.Add( genGS );
-                        } else {
-                            settings.Add( gs );
-                        }
-
-                        //DEBUG
-                        /*Console.WriteLine( $"LP. name: '{name}', nameSplitLength: '{nameSplit.Length}', nameSplitContents:" );
-                        foreach( string ns in nameSplit ) {
-                            Console.WriteLine( ns );
-                        }
-                        Console.WriteLine( "" );*/
-
-                                
-
-                        //store the name and declaration
+                        //store the settings, name and declaration
+                        settings.Add( newGS );
                         names.Add( name.Trim() );
                         currentDeclaration = contents.Trim();
 
@@ -309,16 +239,24 @@ namespace NGen {
             for( int i = 0; i < names.Count; i++ ) {
                 SenGen g = GP.SenGenProcessor( declarations[i], settings[i] );
 
-                if( !namedDeclarations.ContainsKey( names[i] ) ) {
+                if( g != null ) {
 
-                    namedDeclarations.Add( names[i], g );
+                    if( !namedDeclarations.ContainsKey( names[i] ) ) {
 
+                        namedDeclarations.Add( names[i], g );
+
+                    } else {
+                        Console.WriteLine( $"Duplicate Generator Name Error: Only the first generator with the name '{names[i]}' has been added." );
+                    }
                 } else {
-                    Console.WriteLine( $"Duplicate Generator Name Error: Only the first generator with the name '{names[i]}' has been added." );
+
+                    Console.WriteLine( $"Generator Creation Error: NGen was not able to correctly process the generator named {names[i]}, it has not been added." );
+
                 }
             }
             return namedDeclarations;
         }
+
 
     }
 }

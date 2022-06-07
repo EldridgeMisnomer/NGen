@@ -7,6 +7,58 @@ namespace NGen {
 
     public static class HeaderParsers {
 
+        public static GenSettings GetSettingsFromName( ref string name, GenSettings oldSettings ) {
+            /*
+             *  Receives a Generator name, everything before the '=', 
+             *  and extracts the settings from it, if there are any
+             */
+
+
+            char[] separators = { ' ' };
+            string[] nameSplit = name.Split( separators, StringSplitOptions.RemoveEmptyEntries );
+            name = nameSplit[0];
+
+            if( nameSplit.Length > 1 ) {
+
+                //recombine split strings into a header string
+                string headerString = "";
+                for( int j = 1; j < nameSplit.Length; j++ ) {
+
+                    headerString += nameSplit[j] + " ";
+
+                }
+
+                GenSettings newGS = HP.ParseHeader( headerString, oldSettings );
+                return newGS;
+
+            } else {
+
+                return new GenSettings( oldSettings );
+
+            }
+        }
+
+        public static GenSettings ParseHeader( string h, GenSettings oldSettings ) {
+
+            /*
+             *  This receives a string that may have come from a component header
+             *  and process it into settings
+             */
+
+            GenSettings gs = new GenSettings( oldSettings );
+
+            //this bit is case insensitive, so
+            h = h.ToLower();
+
+            if( h.Length > 0 ) {
+
+                HP.HeaderShorthandSifter( h, ref gs );
+
+            }
+
+            return gs;
+        }
+
         public static void HeaderShorthandSifter( string s, ref GenSettings gs ) {
 
             /*
@@ -85,8 +137,6 @@ namespace NGen {
                     break;
 
             }
-
-
         }
 
 
@@ -131,13 +181,6 @@ namespace NGen {
 
                         //This should split by '-' but not when the '-' is escaped '\-'
                         string[] sNumParts = ParserUtils.StringSplitOnUnEscapedCharacter( sNum, '-' );
-
-/*                        //DEBUG
-                        string d = "";
-                        foreach( string sd in sNumParts ) {
-                            d += sd + ", ";
-                        }
-                        Console.WriteLine( $"sNumParts: {d}" );*/
 
                         if( gs.PickType == PickType.weighted ) {
 
@@ -185,13 +228,6 @@ namespace NGen {
                                     if( n < 0 ) n = 1;
                                     weights[i] = n;
                                 }
-
-/*                                //DEBUG
-                                string sw = "";
-                                foreach( double dw in weights ) {
-                                    sw += dw.ToString() + ", ";
-                                }
-                                Console.WriteLine( "Calculated weights from header: " + sw );*/
 
                                 gs.PickWeights = weights;
                                 gs.WeightsFromEnds = false;
@@ -447,9 +483,6 @@ namespace NGen {
                 gs.OutputChance = 1;
 
             }
-
         }
-
-
     }
 }

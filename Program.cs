@@ -5,7 +5,7 @@ namespace NGen {
     class Program {
         static void Main( string[] args ) {
 
-            bool loadFromJSON = true;
+            bool loadFromJSON = false;
 
             NGen nGen;
             if( loadFromJSON ) {

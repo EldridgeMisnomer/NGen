@@ -203,6 +203,13 @@ namespace NGen {
             }
         }
 
+        public static int GetCharacterCount( string s, char c ) {
+
+            int count = s.Count( x => x == c );
+            return count;
+
+        }
+
         public static string GetBracketsStart( string s, out string preBrackets, out string bracketsHeaderString ) {
             /*
              * finds the starting point of the brackets and returns the input string
@@ -313,7 +320,9 @@ namespace NGen {
             //go through the string one character at a time
             foreach( char c in s ) {
 
+                //DEBUG
                 //Console.WriteLine( $"char is '{c}'" );
+
                 //if the brackets have already been completed, add the character
                 //to the postBrackets string
                 if( complete ) {
