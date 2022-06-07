@@ -11,57 +11,20 @@ namespace NGen {
 
     public static class DataGetter {
 
-        public static NGen ParseTxtFile( string path ) {
-
-            //settings for new ListGens
-            //GenSettings defaultSettings = new GenSettings();
-            //GenSettings currentSettings;
-
-            //Get the file as an array of lines
-            string[] lines = PU.GetDataFromTxt( path );
-            //Remove the comments
-            string[] strippedLines = PU.StripComments( lines );
-            //process the lines into Gens with names
-            Dictionary<string, SenGen> gens = HeaderProcessor( strippedLines );
-
-            //TODO - remap special characters
-            //TODO - fix NoRep shuffle function
-            //TODO - check what happens if no header, or no header at beginning but yes one later
-            //TODO - better optimise WrdProcessor
-            //TODO - add repeat to ProxyGens
-            //TODO - add headers to ProxyGens
-            //TODO - check for matching brackets
-            //TODO - ??? Glitch ???
-            //TODO - ??? add 1 or two default Lists - Numbers, Letters, Alphanumeric, Uppercase Letters
-            //TODO - ??? some form of controlling case
-            //TODO - I realise there's a big problem using % for display chance and then NOT expressing it as a percentage - rethink this
-
-            //TODO - shoud proxies have output chance switched off when set to once? -- I think  No, but worth thinking about
-
-            List<ProxyGen> proxyGens = GP.GetProxyGens();
-
-            if( proxyGens.Count > 0 ) {
-                for( int i = 0; i < proxyGens.Count; i++ ) {
-                    string name = proxyGens[i].GetName();
-
-                    if( gens.ContainsKey( name ) ) {
-
-                        proxyGens[i].SetGen( gens[name] );
-
-                    } else {
-                        Console.WriteLine( $"Generator Reference Error: '{name}' has not been created" );
-                    }
-                }
-            }
-
-            NGen nGen = new NGen( gens );
-
-            return nGen;
-
-        }
+        //TODO - remap special characters
+        //TODO - fix NoRep shuffle function
+        //TODO - check what happens if no header, or no header at beginning but yes one later
+        //TODO - better optimise WrdProcessor
+        //TODO - check for matching brackets
+        //TODO - ??? Glitch ???
+        //TODO - ??? add 1 or two default Lists - Numbers, Letters, Alphanumeric, Uppercase Letters
+        //TODO - ??? some form of controlling case
+        //TODO - add the possibility to manually define the start of Sentences using |
+        //TODO - fill in missing longhand
 
 
-        private static Dictionary<string, SenGen> HeaderProcessor( string[] lines ) {
+
+        public static Dictionary<string, SenGen> HeaderProcessor( string[] lines ) {
             /*
              *  receives the comment-stripped lines from the text file
              *  and divides them up into sections - headers and declarations,

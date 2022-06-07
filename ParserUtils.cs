@@ -203,25 +203,6 @@ namespace NGen {
             }
         }
 
-        public static string[] GetDataFromTxt( string path ) {
-
-            /*
-             *  Retrieves a text file and returns it as a string array
-             */
-
-            if( File.Exists( path ) ) {
-
-                return File.ReadAllLines( path );
-
-            } else {
-
-                Console.WriteLine( $"Get Data From Text File Failed: path ({path}) is invalid" );
-                return null;
-
-            }
-
-        }
-
         public static string GetBracketsStart( string s, out string preBrackets, out string bracketsHeaderString ) {
             /*
              * finds the starting point of the brackets and returns the input string

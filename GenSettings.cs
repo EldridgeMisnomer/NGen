@@ -3,48 +3,46 @@
     public class GenSettings {
 
         //pick behaviour (only for lists)
-        public PickType PickType { get; set; }
+        public PickType PickType = PickType.random;
 
-        public bool AllowRepeats { get; set; }
-        public double ShufflePoint { get; set; }
-        public int Skip { get; set; }
+        public bool AllowRepeats = true;
+        public double ShufflePoint = 1;
+        public int Skip = 0;
 
         //pick behaviour - weights
-        public double WeightFac { get; set; }
-        public double WeightStart { get; set; }
-        public double WeightEnd { get; set; }
-        public bool WeightsFromFac { get; set; }
-        public bool WeightsFromEnds { get; set; }
-        public double[] PickWeights { get; set; }
+        public double WeightFac = 0.8;
+        public double WeightStart = 1;
+        public double WeightEnd = 10;
+        public bool WeightsFromFac = false;
+        public bool WeightsFromEnds = true;
+        public double[] PickWeights = new double[0];
 
         //repeat behaviour
-        public RepeatType RepType { get; set; }
+        public RepeatType RepType = RepeatType.@fixed;
 
-        public int RepMax { get; set; }
-        public int RepMin { get; set; }
-        public double RepStdDev { get; set; }
-        public int RepMean { get; set; }
-        public bool UseMean { get; set; }
-        public bool UseDev { get; set; }
-        public int[] RepWeights { get; set; }
+        public int RepMax = 0;
+        public int RepMin = 0;
+        public int RepMean = 0;
+        public double RepStdDev = 0;
+        public bool UseMean = false;
+        public bool UseDev = false;
+        public int[] RepWeights = { 3, 4, 2, 1 };
 
         //output chance
-        public double OutputChance { get; set; }
+        public double OutputChance = 1;
 
         //spearator
-        public bool UseSeparator { get; set; }
-        public string Separator { get; set; }
-        public ProxyGen ProxySeparator { get; set; }
-        public bool UseProxySeparator { get; set; }
-        public bool NoSepBefore { get; set; }
-        public bool NoSepAfter { get; set; }
+        public bool UseSeparator = true;
+        public string Separator = " ";
+        public ProxyGen ProxySeparator = null;
+        public bool UseProxySeparator = false;
+        public bool NoSepBefore = false;
+        public bool NoSepAfter = false;
 
         //once behaviour (only for proxies)
-        public bool Once { get; set; }
+        public bool Once = false;
 
-        public GenSettings() {
-            Reset();
-        }
+        public GenSettings() { }
 
         public GenSettings( GenSettings gs ) {
 
@@ -90,49 +88,6 @@
 
         public void SetRepType( RepeatType rt ) {
             RepType = rt;
-        }
-
-        public void Reset() {
-
-            //pick behaviour
-            PickType = PickType.random;
-            AllowRepeats = true;
-            ShufflePoint = 1;
-            Skip = 0;
-
-            //pick weights behaviour
-            WeightFac = 0.8;
-            WeightsFromFac = true;
-            WeightsFromEnds = false;
-            PickWeights = null;
-
-            //repeat behaviour
-            RepType = RepeatType.@fixed;
-            RepMax = 0;
-            RepMin = 0;
-            RepStdDev = 0;
-            RepMean = 0;
-            UseMean = false;
-            UseDev = false;
-            int[] defaultRepWeights = { 3, 4, 2, 1 };
-            RepWeights = defaultRepWeights;
-
-            //output chance
-            OutputChance = 1;
-
-            //separator
-            UseSeparator = true;
-            Separator = " ";
-            ProxySeparator = null;
-            UseProxySeparator = false;
-            double[] defaultPickWeights = new double [0];
-            PickWeights = defaultPickWeights;
-            NoSepBefore = false;
-            NoSepAfter = false;
-
-            //once
-            Once = false;
-
         }
 
         public void SetRepeatDefaults() {
