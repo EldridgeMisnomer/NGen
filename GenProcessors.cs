@@ -103,30 +103,8 @@ namespace NGen {
             //DEBUG
             //Console.WriteLine( $"ProxyProcessor, output chance is: {gs.OutputChance}" );
 
-
-            //This name may contain punctuation
-            int proxyEnd = name.IndexOf( PU.CharMap( CharType.proxyEnd ) );
-            string excess = null;
-            if( proxyEnd > 0 ) {
-                if( proxyEnd < name.Length - 1 ) {
-                    excess = name.Substring( proxyEnd + 1 );
-                    name = name.Substring( 0, proxyEnd );
-                } else {
-                    name = name.Substring( 0, name.Length - 1 );
-                }
-            }
-
             ProxyGen pg = new ProxyGen( name.Trim(), gs );
             //add to the ProxyGen list for connecting up later
-
-            if( excess != null ) {
-
-                GenSettings gs2 = new GenSettings();
-                Wrd wrd = new Wrd( excess, gs2 );
-                //DEBUG
-                //Console.WriteLine( $"Follower GetTxt is: '{wrd.GetTxt()}'" );
-                pg.AddFollower( wrd );
-            }
 
             proxyGens.Add( pg );
             return pg;

@@ -203,12 +203,23 @@ Settings are most important for Lists, but all Component types have different Se
 * [Sentence Settings](#sentence-settings)
 * [Proxy Settings](#proxy-settings)
 
+Normally the settings for a component are written imediately before that component, not separated by a space, eg:
+
+```
+time = [ day, morning, afternoon, evening, saturday ]
+gen = It was a ?s[ lovely, wonderful, delightful, gorgeous ] *$time
+```
+
+In the above example the List has its Pick Setting set to Shuffle, and the Proxy has it's Once Setting set to On.
+
+Settings can also be set [in the Header](#settings-in-the-header) or [in the Generator](#settings-in-generators). See the applicable sections for more information.
+
 ### List Settings
 
 Lists have Settings in the following categories:
 
 * [Pick](#pick-settings)
-* Repeat
+* [Repeat](#repeat-settings)
 * [Output Chance](#output-chance-setting)
 * Allow Duplicates - TODO *think of a better name for this*
 
@@ -226,7 +237,7 @@ gen2 = ?c&f1[ boots, sandles, slippers ]
 
 Settings after a Generator Name are applied to all Lists in the Generator, whereas Settings before a List apply only to that particular List.
 
-Settings after a Generator Name *must* be separated from the Name by a space, and can be written separately or bunched together (ie: either `genname %0.8 &n = ...` or `genname %0.8&n= ...`), on the other hand Settings before a List *cannot* be separated from the List by a space and *must* be written bunched together ( ie: `&w[one, two, three]`).
+Settings after a Generator Name *must* be separated from the Name by a space, and can be written separately or bunched together (ie: either `genname %8 &n = ...` or `genname %8&n= ...`), on the other hand Settings before a List *cannot* be separated from the List by a space and *must* be written bunched together ( ie: `&w[one, two, three]`).
 
 See below for details about how to apply Settings to Lists. TODO - *link this up*
 
@@ -372,6 +383,83 @@ Be careful about setting a high factor, particularly with long lists, as you mig
 
 The default factor is `0.8`, and this can be set just by writing `?w`.
 
+#### Repeat Settings
+
+Using Repeat Settings a List can be told to output more than once, either a fixed number of times, or a random number of times using a couple of different methods. This is useful if, for example, you're generating a person's name and you want to add the possibility of a second or even a third name drawn from the same pool.
+
+```
+firstname = &n[ Ethelred, Sibella, Catriona, Joseph, Lackery, Chiquita, Alfred ]
+lastname = [ Chalfont, D'Ascoyne, Farquharson, MacCodrun, Parkin, Pendlebury ]
+
+name = $firstname $lastname
+```
+
+In the above example, a simple person's name generator, the List in the firstname Generator is set up to repeat up to 4 times, which results in outputs such as: 'Sibella Chalfont', 'Ethelred Alfred Farquharson', 'Alfred Joseph Lackery Ethelred Chalfont', or 'Catriona MacCodrun', however, most of the time it will produce a name with just one first name.
+
+Repeat Settings are set using the `&` symbol, followed by the first letter of the type of Repeat wanted, there are 4 different  Repeat types: `(f)ixed`, `(u)niform`, `(n)ormal`, and `(w)eighted`; this can then be followed by some optional settings, details of which are below. Some example Repeat Settings are: `&f2`, `&n0-10`
+
+
+**Note:** All numbers here refer to the number of *repetitions* not the number of instances; so 0 repetitions, still mean that a list will output once. To add the possibility of a list not outputting at all, you have to set the [Output Chance Setting](#output-chance-setting).
+
+Repetition can be set in generators or in the header, see [Setting Repeat Type in the Generator](#setting-repeat-type-in-the-generator) or [Setting Repeat Type in the Header](#setting-repeat-type-in-the-header) for more information.
+
+##### Fixed Repeat Type
+
+A List with a `fixed` Repeat Type will always output the same number of times. Currently the default number of repetitions is 0, and there is no way to change it, so this Repeat Type isn't at all useful yet.
+
+##### Uniform Repeat Type
+
+A List with a `uniform` Repeat Type will repeat a number of times between its minimum and maximum (both inclusive). The default minimum is 0 and the default maximum is 3. Whenever the List has to output text it will pick a number between its minimum and maximum following a uniform distribution, that is each possibility has an equal chance to occur, 0 is just as likely as 3.
+
+```
+uniformlist &u = [ Henry, Mary, Jane, Louis, Caleb, Martha, Richard, Anna ] 
+```
+
+Example outputs might be:
+	'Mary Louis Louis', 
+	'Henry', 
+	'Richard Caleb'
+And so on.
+
+##### Normal Repeat Type
+
+A `normal` repeat type will repeat a number of times between its minimum and maximum following a normal or gaussian distribution, with the mean equal to the minimum and the standard deviation calculated so that the maximum is possible but very unlikely (somewhere between 0.1 and 0.01%).
+The default minimum is 0 and the default max is 4. This means that 0 is the most likely number of repeats, 1 is less likely than 0, 2 is less likely than 1, 3 is less likely than 2, and 4 is the least likely of all possibilities.
+
+Normal distributions do not typically have a minimum and maximum, however we set them here firstly because negative numbers have no meaning in this context, and secondly to avoid extreme outliers – it is perfectly possible that while 99% of the time there are 0-3 repeats, every so often we'll get 10 repeats, and normally that is not desirable. It is possible however to retain this behaviour by manually setting the standard deviation along with a very high maximum, see below. TODO
+
+**TODO** explain this better when my head is more screwed on, also think of an example below
+
+```
+normallist &n = []
+```
+
+##### Weighted Repeat Type
+
+A `weighted` List will repeat a number of times between zero and a chosen maximum, but allows you to assign weights to each possible number to make it more or less likely.
+The default weights are: `{ 3, 4, 2, 1 }`, the first number in the list representing the chance for zero repeats, the last number in the list representing the chance for the maximum number of repeats (in this example 3), and the nth number in the list representing the chance for that number of repeats.
+
+So, for example, with weights of { 0, 1, 0, 1, 0, 1 } a List will always repeat at least once and it could repeat either 1, 3, or 5 times, with each of those numbers having an equal probability.
+
+Or, another example, the weights: { 1, 2, 1 } allow a list to repeat either 0, 1, or 2 times, but once is twice as likely as the other two possibilities.
+
+This Repeat Type gives the greatest flexibility in assigning probabilities to number of repeats, but it is also the most verbose and the fiddliest to use.
+
+**Note:** Currently there is no way to change the weights. This will be amended in future.
+
+```
+weightedgen &w = I was [ very ] happy.
+```
+In the above example there is only one list and it only contains one word, "happy", because the list is weighted it can repeat up to 3 times, to produce one of the following sentences:
+
+	I was very happy.
+	I was very very happy.
+	I was very very very happy.
+	I was very very very very happy.
+
+However, the second sentence is the most likely, the first is slightly less like, the third is half as likely as the second, and the fourth is the least likey - 4 times less likely than the second.
+
+
 #### Output Chance Setting
 
 Lists will normally provide an output every time a Generator will run, however they can be given a chance not to do so.
@@ -423,71 +511,6 @@ Once can be switched on by typing the symbol `*`, or off by typing `*!`.
 
 
 
-#### Repeats
-
-Lists can be told to repeat themselves a fixed or random number of times using several different methods for picking the number of repetitions. This is useful if, for example, you're generating a person's name and you want to add the possibility of a second or even a third name drawn from the same pool.
-
-This is done by setting the Repeat Type.
-There are 4 different  Repeat Types: `fixed`, `uniform`, `normal`, and `weighted`.
-The default Repeat Type is `fixed`, but the number of repeats are set to zero, so Lists don't, by default, repeat themselves.
-
-**Note:** All numbers here refer to the number of *repetitions* not the number of instances; so 0 repetitions, still mean that a list will output once. To add the possibility of a list not outputting at all, you have to set the [Output Chance Setting](#output-chance-setting).
-
-Repetition can be set in generators or in the header, see [Setting Repeat Type in the Generator](#setting-repeat-type-in-the-generator) or [Setting Repeat Type in the Header](#setting-repeat-type-in-the-header) for more information.
-
-##### Fixed Repeat Type
-
-A List with a `fixed` Repeat Type will always output the same number of times. Currently the default number of repetitions is 0, and there is no way to change it, so this Repeat Type isn't at all useful yet.
-
-##### Uniform Repeat Type
-
-A List with a `uniform` Repeat Type will repeat a number of times between its minimum and maximum (both inclusive). The default minimum is 0 and the default maximum is 3. Whenever the List has to output text it will pick a number between its minimum and maximum following a uniform distribution, that is each possibility has an equal chance to occur, 0 is just as likely as 3.
-
-```
-uniformlist &u = [ Henry, Mary, Jane, Louis, Caleb, Martha, Richard, Anna ] 
-```
-
-Example outputs might be:
-	"Mary Louis Louis", 
-	"Henry", 
-	"Richard Caleb"
-And so on.
-
-##### Normal Repeat Type
-
-A `normal` repeat type will repeat a number of times between its minimum and maximum following a normal or gaussian distribution, with the mean equal to the minimum and the standard deviation calculated so that the maximum is possible but very unlikely (somewhere between 0.1 and 0.01%).
-The default min is 0 and the default max is 4. This means that 0 is the most likely number of repeats, 1 is less likely than 0, 2 is less likely than 1, 3 is less likely than 2, and 4 is the least likely of all possibilities.
-
-**TODO** explain this better when my head is more screwed on, also think of an example below
-
-```
-normallist &n = []
-```
-
-##### Weighted Repeat Type
-
-A `weighted` List will repeat a number of times between zero and a chosen maximum, but allows you to assign weights to each possible number to make it more or less likely.
-The default weights are: `{ 3, 4, 2, 1 }`, the first number in the list representing the chance for zero repeats, the last number in the list representing the chance for the maximum number of repeats (in this example 3), and the nth number in the list representing the chance for that number of repeats.
-
-So, for example, with weights of { 0, 1, 0, 1, 0, 1 } a List will always repeat at least once and it could repeat either 1, 3, or 5 times, with each of those numbers having an equal probability.
-
-Or, another example, the weights: { 1, 2, 1 } allow a list to repeat either 0, 1, or 2 times, but once is twice as likely as the other two possibilities.
-
-This Repeat Type gives the greatest flexibility in assigning probabilities to number of repeats, but it is also the most verbose and the fiddliest to use.
-
-**Note:** Currently there is no way to change the weights. This will be amended in future.
-
-```
-weightedgen &w = I was [ very ] happy.
-```
-In the above example there is only one list and it only contains one word, "happy", because the list is weighted it can repeat up to 3 times, to produce one of the following sentences:
-
-	I was very happy.
-	I was very very happy.
-	I was very very very happy.
-	I was very very very very happy.
-
-However, the second sentence is the most likely, the first is slightly less like, the third is half as likely as the second, and the fourth is the least likey - 4 times less likely than the second.
 
 
 
@@ -522,7 +545,7 @@ gen2 = I [came back from, went to] [Tipperary, Anglesey, the pub]
 gen3 = [umple, bumple, jigget, splinch]
 ```
 
-### Setting Behaviours in the Header
+### Settings in the Header
 
 The primary use for the header is to set the behaviour of all generators which follow it.
 Currently Pick Type, Repeat Type and No Repeat behaviour can be set, there is also a `reset` command which will switch everything back to its defaults.
@@ -660,7 +683,7 @@ Here is a table of all Special Characters in NGen:
 | ]			| end List							|
 | ,			| separates List elements			|
 | $			| denotes a Proxy				    |
-| /			| denotes the end of a Proxy name   |
+| \|		| marks the beginning of a new Sentence |
 | >			| indicates no separator between this and the following element |
 | <			| indicates no separator between this and the preceding element |
 

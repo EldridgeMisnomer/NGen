@@ -42,10 +42,6 @@
         //once behaviour (only for proxies)
         public bool Once { get; set; }
 
-        //follower (only for proxies)
-        public Gen follower = null;
-
-
         public GenSettings() {
             Reset();
         }

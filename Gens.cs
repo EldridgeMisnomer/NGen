@@ -10,10 +10,6 @@ namespace NGen {
 
         public abstract GenOutput[] GetOutput();
 
-        public void AddFollower( Gen follower ) {
-            gs.follower = follower;
-        }
-
         protected abstract GenOutput[] PickTxt();
 
         //settings
@@ -157,15 +153,6 @@ namespace NGen {
                 List<GenOutput> gens = new List<GenOutput>();
                 for( int r = 0; r < repeats + 1; r++ ) {
                     GenOutput[] newGOs = PickTxt();
-                    foreach( GenOutput go in newGOs ) {
-                        gens.Add( go );
-                    }
-                }
-
-                //check if there's a follower, if there is add it to the list
-                if( gs.follower != null ) {
-                    GenOutput[] newGOs = gs.follower.GetOutput();
-                    newGOs[0].SepBefore = false;
                     foreach( GenOutput go in newGOs ) {
                         gens.Add( go );
                     }

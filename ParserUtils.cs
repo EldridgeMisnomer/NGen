@@ -37,7 +37,6 @@ namespace NGen {
                     { CharType.listSeparator, ',' },
                     { CharType.reference, '$' },
                     { CharType.header, '^' },
-                    { CharType.proxyEnd, '/' },
                     { CharType.noSepBefore, '<' },
                     { CharType.noSepAfter, '>' }
                 };
