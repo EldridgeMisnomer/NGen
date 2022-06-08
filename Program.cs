@@ -5,31 +5,51 @@ namespace NGen {
     class Program {
         static void Main( string[] args ) {
 
-            NGen nGen = DataGetter.ParseTxtFile( "data/names_01.txt" );
+            bool loadFromJSON = false;
+
+            NGen nGen;
+            if( loadFromJSON ) {
+
+                string path = "JSON output/names_01.json";
+                nGen = FileHandler.JSONToNGen( path );
+
+            } else {
+
+                nGen = FileHandler.TxtFileToNGen( "data/names_01.txt" );
+
+            }
 
             string[] genNames = nGen.GetGenNames();
 
-            //Test Code
-            int numTestToRunPerName = 30;
-            bool runAllGens = false;
-            string[] selectNames = { "name" };
-            
-            
-            string[] gensToRun;
+            bool testJSON = false;
 
-            if( runAllGens ) {
-                gensToRun = genNames;
+            if( testJSON ) {
+
+                nGen.TurnIntoJSON();
+
             } else {
-                gensToRun = selectNames;
-            }
-                
 
-            foreach( string s in gensToRun ) {
-                Console.WriteLine( $"{s}:" );
-                for( int i = 0; i < numTestToRunPerName; i++ ) {
-                    Console.WriteLine( "\t" + nGen.GenTxt( s ) );
+                int numTestToRunPerName = 30;
+                bool runAllGens = false;
+                string[] selectNames = { "name" };
+
+
+                string[] gensToRun;
+
+                if( runAllGens ) {
+                    gensToRun = genNames;
+                } else {
+                    gensToRun = selectNames;
                 }
-                Console.WriteLine( "" );
+
+
+                foreach( string s in gensToRun ) {
+                    Console.WriteLine( $"{s}:" );
+                    for( int i = 0; i < numTestToRunPerName; i++ ) {
+                        Console.WriteLine( "\t" + nGen.GenTxt( s ) );
+                    }
+                    Console.WriteLine( "" );
+                }
             }
 
 

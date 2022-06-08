@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace NGen {
     public class NGen {
 
-        private readonly Dictionary<string, SenGen> gens = new Dictionary<string, SenGen>();
+        public readonly Dictionary<string, SenGen> gens = new Dictionary<string, SenGen>();
         /*
          *  Top-level holder for all the gens.
          *  This is what will be created from a succesfully parsed Text file
@@ -14,6 +14,8 @@ namespace NGen {
         public NGen( Dictionary<string, SenGen> namedGens ) {
             gens = namedGens;
         }
+
+        public NGen() { }
 
         public string GenTxt( string name ) {
 
@@ -31,6 +33,12 @@ namespace NGen {
         public string[] GetGenNames() {
 
             return new List<string>(gens.Keys).ToArray();
+
+        }
+
+        public void TurnIntoJSON() {
+
+            FileHandler.NGenToJSON( this );
 
         }
 

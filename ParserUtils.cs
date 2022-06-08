@@ -203,23 +203,31 @@ namespace NGen {
             }
         }
 
-        public static string[] GetDataFromTxt( string path ) {
-
+        public static int GetCharacterCount( string s, char c ) {
             /*
-             *  Retrieves a text file and returns it as a string array
+             *  Will count unescaped instances of a character
              */
 
-            if( File.Exists( path ) ) {
+            int cCount = 0;
+            if( s.Contains( c ) ) {
 
-                return File.ReadAllLines( path );
+                //collect all the indexes of the given character in the string
+                int[] charIndexes = GetAllCharacterIndexes( s, c );
+
+                //go through all of the indexes, and count them
+                //only if the previous character was NOT an escape character
+                for( int i = 0; i < charIndexes.Length; i++ ) {
+                    int prevIndex = charIndexes[i] - 1;
+                    if( prevIndex < 0 || s[prevIndex] != '\\' ) {
+                        cCount++;
+                    }
+                }
+
+                return cCount;
 
             } else {
-
-                Console.WriteLine( $"Get Data From Text File Failed: path ({path}) is invalid" );
-                return null;
-
+                return 0;
             }
-
         }
 
         public static string GetBracketsStart( string s, out string preBrackets, out string bracketsHeaderString ) {
@@ -332,7 +340,9 @@ namespace NGen {
             //go through the string one character at a time
             foreach( char c in s ) {
 
+                //DEBUG
                 //Console.WriteLine( $"char is '{c}'" );
+
                 //if the brackets have already been completed, add the character
                 //to the postBrackets string
                 if( complete ) {

@@ -214,7 +214,7 @@ In the above example the List has its Pick Setting set to Shuffle, and the Proxy
 
 Settings can also be set [in the Header](#settings-in-the-header) or [in the Generator](#settings-in-generators). See the applicable sections for more information.
 
-### List Settings
+## List Settings
 
 Lists have Settings in the following categories:
 
@@ -242,7 +242,7 @@ Settings after a Generator Name *must* be separated from the Name by a space, an
 See below for details about how to apply Settings to Lists. TODO - *link this up*
 
 
-#### Pick Settings
+### Pick Settings
 
 Lists always output one element, normally chosen at random; exactly how this word is picked can be changed by modifying a List's Pick Settings.
 
@@ -268,7 +268,7 @@ For more about what the different symbols mean and how to change Settings, see t
 * [Cycle](#cycle-pick)
 * [Weighted](#weighted-pick)
 
-##### Random Pick
+#### Random Pick
 
 The default Pick method is `random` - one of the elements from the list will be selected at random each time, every element has an equal probability of being picked each time.
 
@@ -285,7 +285,7 @@ You can set a List to `random` with just the `?` symbol, or by writing `?r`, eg:
 gen = ?r[ alpha, beta, gamma, delta, epsilon, zeta ]
 ```
 
-##### Shuffle Pick
+#### Shuffle Pick
 
 When Pick is set to `shuffle`, List elements are still picked randomly, but instead of picking a random one each time, the whole list is reordered randomly before the generator is ever run, and then the elements are picked in order, one at a time. 
 
@@ -303,7 +303,7 @@ You can set a List to `shuffle` by writing the Pick symbol `?` followed by the l
 
 For example, ` ?s0.5[ one, two, three, four, five, six ]` this List will be shuffled after half the elements have been output from it (in this case 3).
 
-##### Cycle Pick
+#### Cycle Pick
 
 When Pick is set to `cycle`, elements are not picked randomly at all, but instead in the order they were written in. Once the last element is reached the first will be picked next.
 
@@ -321,9 +321,9 @@ If the above example were set to Skip 1, like this `cyclegen = ?c1[shrub, bush, 
 
 I'm not sure why this might be useful, but it is possible.
 
-##### Weighted Pick
+#### Weighted Pick
 
-The `weighted` Pick method is the most versatile, but also the most verbose to set, and a little tricky to understand. It allows you to apply individual weights to each element in the List to control the probability of it being picked. These weights can be set manually or interpolated using a coupld of different methods.
+The `weighted` Pick method is the most versatile, but also the most verbose to set, and a little tricky to understand. It allows you to apply individual weights to each element in the List to control the probability of it being picked. These weights can be set manually or interpolated using a couple of different methods.
 
 ```
 weightedgen = ?w[ azalea, begonia, carnation, dahlia, erigeron ]
@@ -333,13 +333,26 @@ In the above example the first element in the List ('azalea') is the most likely
 
 You can set a List to `weighted` by writing the Pick symbol `?` followed by the letter `w`, as above.
 
-There are a three different ways to set the weights, the most transparent of which is to set the weights for each individual element by writing a series of numbers separated by dashes `-`, for example:
+##### Setting Weights
+
+There are a three different ways to set the weights:
+* [By setting each weight manually](#setting-weights-manually)
+* [By setting the first and last weights](#setting-end-weights)
+* [By setting a multiplication factor](#setting-a-factor)
+
+###### Setting Weights Manually
+
+The first method of setting weights, by manually setting a weight for each individual element of the list, is the most precise, and also the most transparent; however, it's also the most verbose, and is inconvenient for long lists.
+
+Weights are set by writing a number for each element in the list, separating numbers with a dash `-`, for example:
 
 ```
 individualweightsgen = ?w1-2-4-8[ one, two, three, four ]
 ```
 
 There are four different elements in the above List, and four weights have been set ( `1-2-4-8` ), this means that each weight applies to a single element in the list. In this case the first element is the least likely to be picked, the second is twice as likely as that to be picked, and so on, the fourth element is the most likely to be picked, it will be output 8 times out of 15 or about 53% of the time.
+
+###### Setting End Weights
 
 The second way to specify the weights is to set just the first and last weight, and let NGen interpolate all the others. You do this as above, but only setting 2 numbers, separated by a dash (`-`), the first number is the weight of the first element and the second is the weight of the last element, eg:
 
@@ -364,20 +377,22 @@ missingweightgen = ?w5-3-1-1[ one, two, three, four, five, six, seven]
 ```
 Here there are four weights and seven elements, the last two weights given are both `1` so *all* the missing weights will also be `1`, the final interpolated set of weights here will be: `5-3-1-1-1-1-1`.
 
+###### Setting A Factor
+
 The third and final way of setting Pick weights, is also the default, and the simplest, but it is also the most abstract which is why it has been left to last; it is just to set a multiplication factor by putting a single number (which can be a decimal) after the `w`, like so:
 
 ```
 factorweightgen = ?w0.6[ one, two, three, four ]
 ```
 
-In the above example, because the factor is less than 1, each element will be less likely than the last. Internally NGen sets the first element's weight to an arbitrary high number, for example 10, and then each subsequent weight is calculated by multiplying the previous weight by the factor. Here we would get weights of `10-6-3.6-2.16`. This provides a kine of exponential interpolation.
+In the above example, because the factor is less than 1, each element will be less likely than the last. Internally NGen sets the first element's weight to an arbitrary high number, for example 10, and then each subsequent weight is calculated by multiplying the previous weight by the factor. Here we would get weights of `10-6-3.6-2.16`. This provides a kind of exponential interpolation.
 
 If the factor is greater than 1, then each element will be more likely to be picked than the last. Internally the first weight is set to an arbitrary low number, and then each subsequent weight is again calculated by multiplying the previous weight by the factor, for example:
 
 ```
 factorweightgen = ?w2[ one, two, three, four ]
 ```
-Here the weights would be calculted as `1-2-4-8`, the final element is the most likely to be picked (about 53% of the time).
+Here the weights would be calculated as `1-2-4-8`, the final element is the most likely to be picked (about 53% of the time).
 
 Be careful about setting a high factor, particularly with long lists, as you might end up with only the last element being picked most of the time, and the first elements never being picked. For example, with a factor of 3 and a list 10 elements long the last element will be picked about 67% of the time, and the first element will only be picked about 0.003% of the time.
 

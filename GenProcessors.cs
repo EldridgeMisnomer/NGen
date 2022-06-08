@@ -179,6 +179,23 @@ namespace NGen {
              * either a ListGen or a Wrd instead
              */
 
+            //first check to see if all lists are closed
+            //TODO document
+            int openBracketsCount = PU.GetCharacterCount( s, PU.CharMap( CharType.openList ) );
+            int closeBracketsCount = PU.GetCharacterCount( s, PU.CharMap( CharType.closeList ) );
+
+            if( openBracketsCount != closeBracketsCount ) {
+
+                string endS = "closed with ']'";
+                if( openBracketsCount < closeBracketsCount ) {
+                    endS = "opened with '[";
+                }
+
+                Console.WriteLine( $"List Error: not all Lists were {endS}." );
+                return null;
+
+            }
+
             //Create a list to contain gens, this will eventually be turned into the SenGen
             List<Gen> gens = new List<Gen>();
 
