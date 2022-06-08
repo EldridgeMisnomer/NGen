@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using PU = NGen.ParserUtils;
-using HP = NGen.HeaderParsers;
 
 namespace NGen {
 
@@ -30,7 +29,7 @@ namespace NGen {
 
                 }
 
-                GenSettings newGS = HP.ParseHeader( headerString, oldSettings );
+                GenSettings newGS = ParseHeader( headerString, oldSettings );
                 return newGS;
 
             } else {
@@ -54,7 +53,7 @@ namespace NGen {
 
             if( h.Length > 0 ) {
 
-                HP.HeaderShorthandSifter( h, ref gs );
+                HeaderShorthandSifter( h, ref gs );
 
             }
 

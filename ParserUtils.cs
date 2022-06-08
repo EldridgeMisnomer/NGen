@@ -204,10 +204,30 @@ namespace NGen {
         }
 
         public static int GetCharacterCount( string s, char c ) {
+            /*
+             *  Will count unescaped instances of a character
+             */
 
-            int count = s.Count( x => x == c );
-            return count;
+            int cCount = 0;
+            if( s.Contains( c ) ) {
 
+                //collect all the indexes of the given character in the string
+                int[] charIndexes = GetAllCharacterIndexes( s, c );
+
+                //go through all of the indexes, and count them
+                //only if the previous character was NOT an escape character
+                for( int i = 0; i < charIndexes.Length; i++ ) {
+                    int prevIndex = charIndexes[i] - 1;
+                    if( prevIndex < 0 || s[prevIndex] != '\\' ) {
+                        cCount++;
+                    }
+                }
+
+                return cCount;
+
+            } else {
+                return 0;
+            }
         }
 
         public static string GetBracketsStart( string s, out string preBrackets, out string bracketsHeaderString ) {
