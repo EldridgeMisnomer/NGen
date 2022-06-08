@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using PU = NGen.ParserUtils;
+using HP = NGen.HeaderParsers;
 
 namespace NGen {
 

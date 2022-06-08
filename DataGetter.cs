@@ -153,6 +153,23 @@ namespace NGen {
             }
 
 
+            /*
+             *  I need to rethink a bit how this is done.
+             *  
+             *  3 types of setting
+             *  
+             *  EnumType = EnumType.value
+             *  BoolType = On / Off
+             *  Number = Number / Array of Numbers
+             *  
+             *  We need to split it up by =
+             *      Then 0 will contain a name, 
+             *      1 will contain the value, & the next name, 
+             *      2 the value & the next name, 
+             *      etc.
+             */
+
+
             if( h.Length > 0 ) {
 
                 //Pick Type
