@@ -19,6 +19,7 @@ An NGen file can contain multiple Generators with complex constructions for retu
     * [Sentences](#sentence-settings)
     * [Proxies](#proxy-settings)
 * [Headers](#headers)
+* [Tags](#tags)
 * [Comments](#comments)
 * [Escaping characters](#escaping-characters)
 * [Error Messages](#error-messages)
@@ -52,7 +53,9 @@ There are three diferent components which Generators can contain:
 
 A Generator Name must be unique – no two Generators can have the same Name; it can contain any characters with a few exceptions, and no whitespace. 
 
-Generator Names cannot contain these characters: `$`, `[`, `]`, `/`
+Generator Names cannot contain these characters: `=`, `$`, `[`, `]`, `(`, `)`, `,`
+
+//TODO - check if this is true - there may be other characters I haven't thought of - especially when it comes to proxies
 
 Names are case insensitive, that is 'Name' is the same as 'name' is the same as 'NAME'.
 
@@ -679,11 +682,84 @@ dwelling (poor) = [ hovel, hut, bedsit ]
 
 Here, we have just one generator, defined twice with different tags, when you access the output of 'dwelling' it will provide either a posh or a poor place to live, however you can also provide tags when you access generators, which will limit the possibilities to either posh or poor, you do this in the same way as with the `GenTxt( name )` method, but add additional tags: `GenTxt( name, tag1, tag2, tag3 )`. You can add as many tags as you like, although in the above example only two will have any effect: `GenTxt( "dwelling", "posh")` will output a posh place to live, and `GenTxt( "dwelling", "poor")` will output a poor place to live.
 
-Ok, but what's the point?
+Let's look at a more complicated example to see how Tags can be useful, we'll write a name generator with two separate variables - male/female and posh/poor, first without tags:
 
-Goood question, I don't have an answer...
+```
+firstnamefemaleposh = [ Dorothea, Elisabeth, Lucinda, Julliette ]
+firstnamemaleposh = [ Clarence, Richard, Edwin, Augustus ]
+firstnamefemalepoor = [ Dot, Liz, Lucy, Jill ]
+firstnamemalepoor = [ Clive, Dick, Ed, Alf ]
 
-yet...
+lastnamepoor = [ Dubbins, Smith, Lapper, Boff ]
+lastnamepoor = [ Ellington-Dukesbury, Wently-Lefferdale, Dinglington-Bradley, Carlington-Dash ]
+
+femalename = [ $firstnamefemaleposh $lastnameposh, $firstnamefemalepoor $lastnamepoor ]
+malename = [ $firstnamemaleposh $lastnameposh, $firstnamemalepoor $lastnamepoor ]
+
+name = [ $femalename, $malename ]
+```
+
+And now let's write the same thing but with tags:
+
+```
+firstname (female) (posh) = [ Dorothea, Elisabeth, Lucinda, Julliette ]
+firstname (male) (posh) = [ Clarence, Richard, Edwin, Augustus ]
+firstname (female) (poor) = [ Dot, Liz, Lucy, Jill ]
+firstname (male) (poor) = [ Clive, Dick, Ed, Alf ]
+
+lastname (poor) = [ Dubbins, Smith, Lapper, Boff ]
+lastname (posh) = [ Ellington-Dukesbury, Wently-Lefferdale, Dinglington-Bradley, Carlington-Dash ]
+
+name = $firstname $lastname
+```
+
+It should be clear that the second version has some advantages: it is more readable for a start, and it requires less intermediate generators without sacrificing the possibility of retrieving the results of those intermetiate generators (we can call `GenTxt( "name", "female" )` and get the equivalent of calling `GenTxt( "femalename" )` in the first example).
+
+And there's a less clear advantage, what if we wanted to retreive a posh name, without regard for gender? With tags we can call `GenTxt( "name", "posh" )`, but in the first example we would have to write two new Generators:
+
+```
+poorname = [ $firstnamefemalepoor, $firstnamemalepoor ] $lastnamepoor
+poshname = [ $firstnamefemaleposh, $firstnamemaleposh ] $lastnameposh
+```
+
+The more complicated the example the greate value tags can have, imagine if we wanted to add names in another language to the above example, with tags we would just have to add some new generators for the new language, while tagging our existing generators with `(english)` or similar, without tags it would require a much more complicated construction.
+
+For a more extensive example of how tags can be used, see the Placename Generator in the Examples folder (*TODO - doesn't exist yet* ).
+
+### How do Tags actually work?
+
+Any Generator can be assigned Tags by writing them after the Generator Name and before the `=` symbol, surrounded by brackets `( )`, like so: `generator name (tag) = [ one, two, three ]`, the same [rules which apply to Generator names](#generator-names) also apply to the characters you can use in a tag.
+
+Generators can be given multiple tags, and there are two ways to write these, either: `(tag1, tag2, tag3)` or `(tag1) (tag2) (tag3)`. The second version is prefered, because normally commas `,` in NGen suggest mutually exlusive options in a List, but the first version is offered as a possibility because it is less verbose.
+
+One Generator with Tags on its own doesn't do anything, for Tags to work you need to have at least two Generators with the same Name and different tags, for example:
+
+```
+numbers (arabic) = [ 1, 2, 3, 4, 5 ]
+numbers (roman) = [ I, II, III, IV, V ]
+```
+
+These two identically named Generators will, internally be combined into one Generator, and when the 'numbers' Generator is run it will output randomly from one or the other.
+
+*TODO - think about if we need to add all the Pick options from Lists to Tags*
+
+This in itself is not particularly useful, however we can also specify a Tag (or Tags) when we access a Generator and get the corresponding result.
+
+The standard way to access a Generator in NGen is to use the `GenTxt( generatorname )` method, to specify Tags when we access a Generator we can include the Tag names after the Generator Name, like so: `GenTxt( "numbers", "roman" )`.
+
+Whenever we access a Generator with Tags it will attempt to provide us with output from a Generator which contains all the Tags we have specified, so if we access the numbers Generator with `GenTxt( "numbers", "arabic" )` we'll receive an output from the list `[ 1, 2, 3, 4, 5 ]`.
+
+If a Generator can't be found with the correct tags, for example if we access `GenTxt( "numbers", "words" )` then Output will be given from one of the available Generators chosen at random.
+
+If we access a Generator with conflicting Tags, for example: `GenTxt( "numbers", "roman", "arabic" )`, then the first Generator we specify which is available will give its output, in this case 'roman'.
+
+If some of the Tags we specify are available and other aren't then the Generator will do its best, for example: `GenTxt( "numbers", "arabic", "big" ) will still give us output from the `arabic` Generator.
+
+#### Tags and Proxies
+
+All of the above refers to accessing Generators directly, but what happens when Generators are accessed indirectly (via a Proxy)?
+
+*TODO...*
 
 ## Comments
 
