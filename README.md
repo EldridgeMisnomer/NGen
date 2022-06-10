@@ -655,6 +655,35 @@ The location of `reset` in the header is not important.`
 
 A header can contain just the word `reset` in order to change everything back to their defaults without setting any other behaviours.
 
+## Tags
+
+Tags provide another way of organising your generators, at their simplest they don't provide any additional functionality, but they can be more versatile and provide an easier way to access varied output.
+
+Consider this example (without tags):
+
+```
+poshdwelling = [ mansion, villa, country house ]
+poordwelling = [ hovel, hut, bedsit ]
+
+dwelling = [ $poshdwelling, $poordwelling ]
+```
+
+In the above example there are three Generators: 'poshdwelling', which will output an example of a posh place to live, 'poordwelling', which will output a poor place to live, and 'dwelling' which, when you get its output will provide either a poor or a posh place to live.
+
+The same effect can be achieved using tags. Tags allow you to give two or more generators the same name, so long as they have different tags:
+
+```
+dwelling (posh) = [ mansion, villa, country house ]
+dwelling (poor) = [ hovel, hut, bedsit ]
+```
+
+Here, we have just one generator, defined twice with different tags, when you access the output of 'dwelling' it will provide either a posh or a poor place to live, however you can also provide tags when you access generators, which will limit the possibilities to either posh or poor, you do this in the same way as with the `GenTxt( name )` method, but add additional tags: `GenTxt( name, tag1, tag2, tag3 )`. You can add as many tags as you like, although in the above example only two will have any effect: `GenTxt( "dwelling", "posh")` will output a posh place to live, and `GenTxt( "dwelling", "poor")` will output a poor place to live.
+
+Ok, but what's the point?
+
+Goood question, I don't have an answer...
+
+yet...
 
 ## Comments
 

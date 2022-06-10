@@ -299,9 +299,6 @@ namespace NGen {
             int firstBracket = name.IndexOf( '(' );
             int lastBracket = name.IndexOf( ')' );
 
-            //"0(2345)7"
-            //(f)
-
             if( firstBracket >= 0 && lastBracket >= 0 ) {
 
                 string bracketText = name.Substring( firstBracket, lastBracket - firstBracket + 1 );
@@ -356,8 +353,8 @@ namespace NGen {
                 }
 
                 //DEBUG
-                Console.WriteLine( $"Trying to split tag, '(' index is: '{nextOpenBracket}', ')' index is: '{nextCloseBracket}'" );
-                Console.WriteLine( $"Will substring with: '{nextOpenBracket + 1}', '{nextCloseBracket - nextOpenBracket - 1}'" );
+                //Console.WriteLine( $"Trying to split tag, '(' index is: '{nextOpenBracket}', ')' index is: '{nextCloseBracket}'" );
+                //Console.WriteLine( $"Will substring with: '{nextOpenBracket + 1}', '{nextCloseBracket - nextOpenBracket - 1}'" );
 
                 if( nextOpenBracket >= 0 && nextCloseBracket >= 0 ) {
 
@@ -386,15 +383,16 @@ namespace NGen {
                 tags = bracketedText;
             }
 
-            //DEBUG
 
+/*          
+            //DEBUG
             string ds = "";
             foreach( string t in tags ) {
                 ds += t + ' ';
             }
 
             Console.WriteLine( $"tags are: {ds} " );
-
+*/
 
             return tags.ToArray();
 

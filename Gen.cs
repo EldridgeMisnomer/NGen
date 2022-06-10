@@ -71,6 +71,12 @@ namespace NGen {
 
         public abstract string GetTxt(  out bool sepBefore, out bool sepAfter );
 
+        public abstract void AddGen( SenGen sg );
+
+        public string GetTxt() {
+            return GetTxt( out _, out _ );
+        }
+
     }
 }
 

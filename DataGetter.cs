@@ -194,7 +194,7 @@ namespace NGen {
             return gs;
         }
 
-        private static Dictionary<string, SenGen> LineProcessor( GenSettings oldSettings, string[] lines ) {
+        private static Dictionary<string, OutputGen> LineProcessor( GenSettings oldSettings, string[] lines ) {
             /*
              *  receives the comment-stripped lines from the text file
              *  and process them into generator declarations,
@@ -226,7 +226,7 @@ namespace NGen {
                         PU.StringToStringPair( lines[i], out string name, out string contents );
 
                         //DEBUG
-                        Console.WriteLine( $"Getting tags from: '{name}'" );
+                        //Console.WriteLine( $"Getting tags from: '{name}'" );
 
                         //get the tags from the name
                         string[] thesetags = PU.ExtractTagsFromName( ref name );
@@ -260,11 +260,24 @@ namespace NGen {
             }
 
             //create a dictionary and return it
-            Dictionary<string, SenGen> namedDeclarations = new Dictionary<string, SenGen>();
+            Dictionary<string, OutputGen> namedDeclarations = new Dictionary<string, OutputGen>();
+
             for( int i = 0; i < names.Count; i++ ) {
+
                 SenGen g = GP.SenGenProcessor( declarations[i], settings[i], tags[i] );
 
                 if( g != null ) {
+
+                    if( g.tags != null && g.tags.Length > 0 ) {
+
+                        if( namedDeclarations.ContainsKey( names[i] ) ) {
+                            namedDeclarations[names[i]].AddGen( g );
+                        }
+
+
+
+                    }
+
 
                     if( !namedDeclarations.ContainsKey( names[i] ) ) {
 
@@ -273,6 +286,7 @@ namespace NGen {
                     } else {
                         Console.WriteLine( $"Duplicate Generator Name Error: Only the first generator with the name '{names[i]}' has been added." );
                     }
+
                 } else {
 
                     Console.WriteLine( $"Generator Creation Error: NGen was not able to correctly process the generator named {names[i]}, it has not been added." );

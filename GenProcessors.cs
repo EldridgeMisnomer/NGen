@@ -266,6 +266,13 @@ namespace NGen {
 
             SenGen sg = new SenGen( gens.ToArray(), headerSettings );
 
+            if( tags != null && tags.Length > 0 ) {
+
+                sg.tags = tags;
+
+            }
+
+
             //DEBUG
             //Console.WriteLine( $"new SenGen. gs.NoSepB: {sg.GetNoSepBefore()}, gs.NoSepA: {sg.GetNoSepAfter()} " );
 

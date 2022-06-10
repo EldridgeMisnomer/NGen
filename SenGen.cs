@@ -1,24 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NGen {
-
-    public class TagGen : OutputGen {
-
-        List<SenGen> gens = new List<SenGen>();
-
-        public override GenOutput[] GetOutput() {
-            throw new System.NotImplementedException();
-        }
-
-        public override string GetTxt( out bool sepBefore, out bool sepAfter ) {
-            throw new System.NotImplementedException();
-        }
-
-        protected override GenOutput[] PickTxt() {
-            throw new System.NotImplementedException();
-        }
-
-    }
 
     public class SenGen : OutputGen {
 
@@ -33,6 +16,8 @@ namespace NGen {
             gs = genSettings;
             wrds = gens;
         }
+
+        public string[] tags = null;
 
         public SenGen() { }
 
@@ -67,10 +52,6 @@ namespace NGen {
 
             return outputString.Trim();
 
-        }
-
-        public string GetTxt( ) {
-            return GetTxt( out _, out _ );
         }
 
         private string GetSeparator() {
@@ -134,6 +115,13 @@ namespace NGen {
                 return null;
 
             }
+
+        }
+
+        public override void AddGen( SenGen sg ) {
+
+            //TODO document
+            Console.WriteLine( $"SenGen Error: Tried to add a SenGen here, should only be added to TagGens" );
 
         }
     }
