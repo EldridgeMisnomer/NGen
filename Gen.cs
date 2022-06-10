@@ -1,4 +1,5 @@
-﻿using Utils;
+﻿using System.Collections.Generic;
+using Utils;
 
 namespace NGen {
 
@@ -65,4 +66,13 @@ namespace NGen {
             return gs.NoSepAfter;
         }
     }
+
+    public abstract class OutputGen : Gen {
+
+        public abstract string GetTxt(  out bool sepBefore, out bool sepAfter );
+
+    }
 }
+
+
+

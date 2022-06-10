@@ -20,6 +20,16 @@ namespace NGen {
             }
 
             string[] genNames = nGen.GetGenNames();
+            bool displayGenNames = true;
+
+            if( displayGenNames ) {
+                string s = "";
+                foreach( string gn in genNames ) {
+                    s += $"'{gn}', ";
+                }
+                Console.WriteLine( s );
+            }
+
 
             bool testJSON = false;
 

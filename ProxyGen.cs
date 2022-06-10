@@ -59,8 +59,12 @@ namespace NGen {
                 List<GenOutput> gens = new List<GenOutput>();
                 for( int r = 0; r < repeats + 1; r++ ) {
                     GenOutput[] newGOs = PickTxt();
-                    foreach( GenOutput go in newGOs ) {
-                        gens.Add( go );
+
+                    if( newGOs != null && newGOs.Length > 0 ) {
+
+                        foreach( GenOutput go in newGOs ) {
+                            gens.Add( go );
+                        }
                     }
                 }
 

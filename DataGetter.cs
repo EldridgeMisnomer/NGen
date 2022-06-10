@@ -205,7 +205,8 @@ namespace NGen {
 
             List<string> names = new List<string>();
             List<string> declarations = new List<string>();
-            List<GenSettings> settings = new List<GenSettings>(); 
+            List<GenSettings> settings = new List<GenSettings>();
+            List<string[]> tags = new List<string[]>();
 
             string currentDeclaration = "";
 
@@ -223,6 +224,13 @@ namespace NGen {
 
                         //split the line into the name and (potentially only the start of) the declaration
                         PU.StringToStringPair( lines[i], out string name, out string contents );
+
+                        //DEBUG
+                        Console.WriteLine( $"Getting tags from: '{name}'" );
+
+                        //get the tags from the name
+                        string[] thesetags = PU.ExtractTagsFromName( ref name );
+                        tags.Add( thesetags );
 
                         //extract the header from the name
                         GenSettings newGS = HP.GetSettingsFromName( ref name, oldSettings );
@@ -254,7 +262,7 @@ namespace NGen {
             //create a dictionary and return it
             Dictionary<string, SenGen> namedDeclarations = new Dictionary<string, SenGen>();
             for( int i = 0; i < names.Count; i++ ) {
-                SenGen g = GP.SenGenProcessor( declarations[i], settings[i] );
+                SenGen g = GP.SenGenProcessor( declarations[i], settings[i], tags[i] );
 
                 if( g != null ) {
 

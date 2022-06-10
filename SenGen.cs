@@ -1,7 +1,26 @@
 ﻿using System.Collections.Generic;
 
 namespace NGen {
-    public class SenGen : Gen {
+
+    public class TagGen : OutputGen {
+
+        List<SenGen> gens = new List<SenGen>();
+
+        public override GenOutput[] GetOutput() {
+            throw new System.NotImplementedException();
+        }
+
+        public override string GetTxt( out bool sepBefore, out bool sepAfter ) {
+            throw new System.NotImplementedException();
+        }
+
+        protected override GenOutput[] PickTxt() {
+            throw new System.NotImplementedException();
+        }
+
+    }
+
+    public class SenGen : OutputGen {
 
         /*
          * A container for word choices
@@ -14,10 +33,10 @@ namespace NGen {
             gs = genSettings;
             wrds = gens;
         }
-        public SenGen
-() { }
 
-        public string GetTxt( out bool sepBefore, out bool sepAfter ) {
+        public SenGen() { }
+
+        public override string GetTxt( out bool sepBefore, out bool sepAfter ) {
 
             GenOutput[] outputs = PickTxt();
             string outputString = "";

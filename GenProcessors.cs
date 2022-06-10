@@ -172,7 +172,7 @@ namespace NGen {
             return wg;
         }
 
-        public static SenGen SenGenProcessor( string s, GenSettings headerSettings ) {
+        public static SenGen SenGenProcessor( string s, GenSettings headerSettings, string[] tags = null ) {
             /*
              * This will take a string and turn it into a SenGen,
              * although, if it is a simple sentence it may return
