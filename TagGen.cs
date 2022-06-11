@@ -1,26 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NGen {
     public class TagGen : OutputGen {
 
-        List<SenGen> gens = new List<SenGen>();
+        public List<OutputGen> gens = new List<OutputGen>();
 
-        public override void AddGen( SenGen sg ) {
-            gens.Add( sg );
+        public TagGen() {
+            gs = new GenSettings();
         }
 
-        public override GenOutput[] GetOutput() {
-            throw new System.NotImplementedException();
+        public override void AddGen( OutputGen og ) {
+            gens.Add( og );
         }
 
         public override string GetTxt( out bool sepBefore, out bool sepAfter ) {
+
             int choice = Utils.Rand.RandomRangeInt( 0, gens.Count );
-            return gens[choice].GetTxt();
+
+            //DEBUG
+            //Console.WriteLine( $"TagGen GetTxt. num gens: '{gens.Count}', choice: '{choice}'" );
+            return gens[choice].GetTxt( out sepBefore, out sepAfter );
+
         }
 
         protected override GenOutput[] PickTxt() {
-            throw new System.NotImplementedException();
+            
+            int choice = Utils.Rand.RandomRangeInt( 0, gens.Count );
+
+            //DEBUG
+            //Console.WriteLine( $"TagGen GetOut. num gens: '{gens.Count}', choice: '{choice}'" );
+
+            return gens[choice].GetOutput();
+
         }
 
+        public override bool IsTagGen() {
+            return true;
+        }
     }
 }

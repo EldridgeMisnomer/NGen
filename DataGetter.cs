@@ -22,8 +22,11 @@ namespace NGen {
         //TODO - fill in missing longhand
 
 
+        //TODO maybe - add possibility to tag Generators as importand - so they are
+        //              highlighted when viewing all Generators
 
-        public static Dictionary<string, SenGen> SplitHeadersAndGenerators( string[] lines ) {
+
+        public static Dictionary<string, OutputGen> SplitHeadersAndGenerators( string[] lines ) {
             /*
              *  receives the comment-stripped lines from the text file
              *  and divides them up into sections - headers and generator declarations,
@@ -37,7 +40,7 @@ namespace NGen {
             bool inHeader = false;
 
             //dictionary to store gens in
-            Dictionary<string, SenGen> gens = new Dictionary<string, SenGen>();
+            Dictionary<string, OutputGen> gens = new Dictionary<string, OutputGen>();
 
             //loop through all lines slotting them into the correct list
             //once we have a header and a set of declarations, process them
@@ -68,9 +71,9 @@ namespace NGen {
                                 //store the new GenSettings
                                 genSettings.Add( gs );
 
-                                Dictionary<string, SenGen> tempGens = LineProcessor( gs, declareLines.ToArray() );
+                                Dictionary<string, OutputGen> tempGens = LineProcessor( gs, declareLines.ToArray() );
 
-                                foreach( KeyValuePair<string, SenGen> g in tempGens ) {
+                                foreach( KeyValuePair<string, OutputGen> g in tempGens ) {
 
                                     if( !gens.ContainsKey( g.Key ) ) {
 
@@ -118,9 +121,9 @@ namespace NGen {
                 //we don't need to store this one as it's the last
                 GenSettings gs = ParseMainHeader( headerString, genSettings[genSettings.Count - 1] );
 
-                Dictionary<string, SenGen> tempGens = LineProcessor( gs, declareLines.ToArray() );
+                Dictionary<string, OutputGen> tempGens = LineProcessor( gs, declareLines.ToArray() );
 
-                foreach( KeyValuePair<string, SenGen> g in tempGens ) {
+                foreach( KeyValuePair<string, OutputGen> g in tempGens ) {
                     if( !gens.ContainsKey( g.Key ) ) {
 
                         gens.Add( g.Key, g.Value );
@@ -264,38 +267,57 @@ namespace NGen {
 
             for( int i = 0; i < names.Count; i++ ) {
 
+                //Create the SenGen
                 SenGen g = GP.SenGenProcessor( declarations[i], settings[i], tags[i] );
 
+                //If that worked, put it somewhere
                 if( g != null ) {
 
-                    if( g.tags != null && g.tags.Length > 0 ) {
 
-                        if( namedDeclarations.ContainsKey( names[i] ) ) {
+                    //If there's already a gen with that name
+                    if( namedDeclarations.ContainsKey( names[i] ) ) {
+
+                        //DEBUG
+                        Console.WriteLine( $"There is already a gen named '{names[i]}'" );
+
+                        //if that gen is already a TagGen, add it
+
+                        if( namedDeclarations[names[i]].IsTagGen()  ) {
+
+                            //DEBUG
+                            Console.WriteLine( $" '{names[i]}' is a TagGen, adding new gen to it" );
+
                             namedDeclarations[names[i]].AddGen( g );
+
+                        } else {
+
+                            //DEBUG
+                            Console.WriteLine( $"'{names[i]}' is a SenGen, Creating a TagGen and putting stuff in it" );
+
+                            //otherwise create a TagGen, put old and new Gens in it,
+                            //add it to dictionary
+                            TagGen tg = new TagGen();
+                            tg.AddGen( namedDeclarations[names[i]] );
+                            tg.AddGen( g );
+                            namedDeclarations[names[i]] = tg;
+
                         }
 
+                    } else {
 
-
-                    }
-
-
-                    if( !namedDeclarations.ContainsKey( names[i] ) ) {
-
+                        //otherwise, add it to the dictionary
                         namedDeclarations.Add( names[i], g );
 
-                    } else {
-                        Console.WriteLine( $"Duplicate Generator Name Error: Only the first generator with the name '{names[i]}' has been added." );
                     }
-
                 } else {
 
                     Console.WriteLine( $"Generator Creation Error: NGen was not able to correctly process the generator named {names[i]}, it has not been added." );
 
                 }
             }
+
             return namedDeclarations;
+
         }
-
-
     }
 }

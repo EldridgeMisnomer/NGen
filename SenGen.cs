@@ -73,19 +73,6 @@ namespace NGen {
 
         }
 
-        public override GenOutput[] GetOutput() {
-
-            bool sepBefore;
-            bool sepAfter;
-            string os = GetTxt( out sepBefore, out sepAfter );
-            GenOutput go = new GenOutput( os, gs );
-            go.SepBefore = sepBefore;
-            go.SepAfter = sepAfter; 
-
-            return new GenOutput[] { go };
-
-        }
-
         protected override GenOutput[] PickTxt() {
 
             List<GenOutput> gens = new List<GenOutput>();
@@ -103,9 +90,6 @@ namespace NGen {
                 }
             }
 
-            //DEBUG
-            //Console.WriteLine( $"SenGen PickTxt, number of wrds: {wrds.Length}, number of gens: {gens.Count}." );
-
             if( gens.Count > 0 ) {
 
                 return gens.ToArray();
@@ -118,11 +102,15 @@ namespace NGen {
 
         }
 
-        public override void AddGen( SenGen sg ) {
+        public override void AddGen( OutputGen og ) {
 
             //TODO document
             Console.WriteLine( $"SenGen Error: Tried to add a SenGen here, should only be added to TagGens" );
 
+        }
+
+        public override bool IsTagGen() {
+            return false;
         }
     }
 }

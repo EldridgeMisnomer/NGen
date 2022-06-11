@@ -10,6 +10,5 @@
             SepBefore = !gs.NoSepBefore;
             SepAfter = !gs.NoSepAfter;
         }
-    
     }
 }

@@ -11,7 +11,7 @@ namespace NGen {
          *          and after that it alawys returns the same text
          */
 
-        public SenGen gen;
+        public OutputGen gen;
         public string genName;
 
         public GenOutput[] onceText = null;
@@ -77,7 +77,7 @@ namespace NGen {
             }
         }
 
-        public void SetGen( SenGen g ) {
+        public void SetGen( OutputGen g ) {
             gen = g;
         }
 
@@ -86,6 +86,7 @@ namespace NGen {
         }
 
         public string GetProxyTxt() {
+            //This is just used in the context of separators
             return gen.GetTxt();
         }
 
