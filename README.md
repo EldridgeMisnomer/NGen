@@ -1,9 +1,22 @@
 # NGen
 A simple scripting language for creating procedural text generators with a focus on the creation of short texts - like names.
 
-Text generators are written in simple text files. At their simplest they consist of a single named Generator, for example:
+---
+***Note***:
 
-`hi = Hello World`
+NGen is in active development but is not ready for use, in particular there is no way yet to load your own text files into NGen.
+
+NGen is initially being developed as a console application, but will eventually by a Unity component.
+
+Below you will find documentation for NGen; it is, however, incomplete, erroneous, rambling, and badly organised. This will be fixed, eventually.
+
+---
+
+Text Generators are written in simple text files. At their most basic they consist of a single named Generator (`name = generator`), for example:
+
+```
+hi = Hello World
+```
 
 An NGen file can contain multiple Generators with complex constructions for returning text.
 
@@ -26,9 +39,7 @@ An NGen file can contain multiple Generators with complex constructions for retu
 
 </details>
 
-
 ---
-
 
 ## Generators
 
@@ -57,32 +68,76 @@ Generator Names cannot contain these characters: `=`, `$`, `[`, `]`, `(`, `)`, `
 
 //TODO - check if this is true - there may be other characters I haven't thought of - especially when it comes to proxies
 
-Names are case insensitive, that is 'Name' is the same as 'name' is the same as 'NAME'.
+Names are case insensitive, that is 'Name' is the same as 'name' is the same as 'NAME' is the same as 'nAmE'.
 
-Some example good and bad names:
+Some example functional and nonfunctional names:
 
 ```
-#these names are all good
+# these names are all good:
+
 adj = [ short, wiry, blue ]
 PANIC = [ argh, wraaaagh, oof, erk, eeeep ]
 so_slow = [ slowly, very slowly, inch by inch, oh so slow]
 *!&xx??** = [ !#**, #@!!, @@x!*, !!! ]
-#although the last one is perhaps not the most sensible name for a generator
 
-#these names won't work
-#'adj' has already been used, names must be unique so this won't work
+# although the last one is perhaps not the most sensible name for a generator
+
+# the following names won't work:
+
+# 'adj' has already been used, names must be unique so this won't work:
 adj = [ wobbly, worried, slick ]
-#names are case insensitve, and 'adj' has already been used, so this won't work
+
+# names are case insensitve, and 'adj' has already been used, so this won't work:
 Adj = [ stinky, smelly, shrieking ]
-#this won't work because it has prohibited characters in it
+
+# this won't work because it has prohibited characters in it:
 *!&$$??** = [ !#**, #@!!, @@x!*, !!! ]
-#this won't work because names cannot contain spaces
+
+# this won't work because names cannot contain spaces:
 long gen = once upon a time in the land of the jolly blue mermen...
-#(actually, it will work - but the name of the generator will be 'long' and the 'gen' will be discarded...
-#...this can be dangerous however, as we will see later, there is a chance that it won't be discarded 
-#and will affect the behaviour of the generator
+# actually, it will work... 
+#	but the name of the generator will be 'long' and the 'gen' will be discarded...
 
 ```
+### Running Generators
+
+Once an NGen has been created from a text file you can generate text with it by running one of the Generators it contains with the `GenTxt( generatorName )` method which run the Generator and return its output as a string:
+
+```
+NGen nGen = ???
+string output = nGen.GenTxt( "generatorName" );
+```
+
+You can get an array containing all the Generator Names using the `GetGenNames()` method:
+
+```
+string[] genNames = nGen.GetGenNames();
+```
+
+You can get multiple output texts from the same Generator by using the `GenTxt( generatorName, numberOfOutputs )` method, which will return a string array:
+
+```
+string[] outputs = nGen.genTxt( "generatorName", 10 );
+```
+
+You can get a Generator output using Tags by using the `GenTxt( "generatorName", "tags" )` method, where "tags" can either be a string array of Tag names, or Tags as separate arguments, eg:
+
+*TODO - write this better*
+
+```
+string[] tags = { "tag1", "tag2", "tag3" };
+string output = nGen.GenTxt( "generatorName", tags );
+
+//Or:
+
+string output = nGen.GenTxt( "generatorName", "tag1", "tag2", tag3" );
+```
+
+See [below](#tags) for more about Tags.
+
+#### Indirectly running Generators
+
+*TODO*
 
 ### Multiline Generators
 
@@ -110,7 +165,7 @@ etc
 
 ### Settings in Generators
 
-As we will see later, the Components of Generators (Lists, Sentences, and Proxies) have Settings which can be changed.
+As we will see later, the Components of Generators ([Lists](#lists), [Sentences](#sentences), and [Proxies](#proxies)) have [Settings](#component-settings) which can be changed.
 
 While each component can have its Settings changed individually, it is also possible to apply Settings to *all* of the components in a Generator by doing it at the Generator level.
 
@@ -133,7 +188,9 @@ proxy = three
 trickygen &f2 = [ one, $proxy, two ]
 ```
 
-In the above a Fixed Repeat 2 is set at the Generator level of `trickygen`, this means that elements which can Repeat (Lists and Proxies) will repeat their output twice. However, `trickygen` contains both a Proxy inside a List. If only 'one' or 'two' is selected from the List then the output might be "two one one", but if the proxy is selected it will perform its repeat twice, and the output could be "two three three three three three three". If this is what's expected then fine, if it's not then a solution is to set the Repeats on individual Components, either: `trickygen  = &f2[ one, $proxy, two ]`, or `trickygen  = [ one, &f2$proxy, two ]`
+In the above a Fixed Repeat 2 is set at the Generator level of `trickygen`, this means that elements which can Repeat (Lists and Proxies) will repeat their output twice. However, `trickygen` contains a Proxy inside a List, both of which will repeat.
+
+If only 'one' or 'two' is selected from the List then the output might be "two one one", but if the proxy is selected it will perform its repeat twice, and the output could be "two three three three three three three". If this is what's expected then fine, if it's not then a solution is to set the Repeats on individual Components, either: `trickygen  = &f2[ one, $proxy, two ]`, or `trickygen  = [ one, &f2$proxy, two ]`
 
 For more information about specific Settings, see [Component Settings](#component-settings)
 

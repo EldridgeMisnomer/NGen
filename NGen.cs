@@ -38,6 +38,18 @@ namespace NGen {
 
         }
 
+        public string[] GenTxt( string name, int number ) {
+
+            string[] output = new string[number];
+
+            for( int i = 0; i < number; i++ ) {
+                output[i] = GenTxt( name );
+            }
+
+            return output;
+
+        }
+
 
         public string[] GetGenNames() {
 
