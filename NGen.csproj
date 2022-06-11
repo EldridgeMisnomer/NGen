@@ -91,6 +91,7 @@
     <Compile Include="ProxyGen.cs" />
     <Compile Include="SenGen.cs" />
     <Compile Include="TagGen.cs" />
+    <Compile Include="TagWrangler.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Wrd.cs" />
   </ItemGroup>

@@ -232,7 +232,7 @@ namespace NGen {
                         //Console.WriteLine( $"Getting tags from: '{name}'" );
 
                         //get the tags from the name
-                        string[] thesetags = PU.ExtractTagsFromName( ref name );
+                        string[] thesetags = TagWrangler.ExtractTagsFromName( ref name );
                         tags.Add( thesetags );
 
                         //extract the header from the name
@@ -262,8 +262,9 @@ namespace NGen {
                 Console.WriteLine( $"Line Processor Error: the number of names ({names.Count}) did not match the number of generator declarations ({declarations.Count})" );
             }
 
-            //create a dictionary and return it
-            Dictionary<string, OutputGen> namedDeclarations = new Dictionary<string, OutputGen>();
+            Dictionary<string, SenGen> senGens = new Dictionary<string, SenGen>();
+            Dictionary<string, TagGen> tagGens = new Dictionary<string, TagGen>();
+
 
             for( int i = 0; i < names.Count; i++ ) {
 
@@ -273,45 +274,59 @@ namespace NGen {
                 //If that worked, put it somewhere
                 if( g != null ) {
 
-
-                    //If there's already a gen with that name
-                    if( namedDeclarations.ContainsKey( names[i] ) ) {
+                    //If there's already a sengen with that name
+                    if( senGens.ContainsKey( names[i] ) ) {
 
                         //DEBUG
-                        Console.WriteLine( $"There is already a gen named '{names[i]}'" );
+                        Console.WriteLine( $"There is already a gen named '{names[i]}', Creating a TagGen and putting stuff in it" );
 
-                        //if that gen is already a TagGen, add it
-
-                        if( namedDeclarations[names[i]].IsTagGen()  ) {
-
-                            //DEBUG
-                            Console.WriteLine( $" '{names[i]}' is a TagGen, adding new gen to it" );
-
-                            namedDeclarations[names[i]].AddGen( g );
-
-                        } else {
-
-                            //DEBUG
-                            Console.WriteLine( $"'{names[i]}' is a SenGen, Creating a TagGen and putting stuff in it" );
-
-                            //otherwise create a TagGen, put old and new Gens in it,
-                            //add it to dictionary
-                            TagGen tg = new TagGen();
-                            tg.AddGen( namedDeclarations[names[i]] );
-                            tg.AddGen( g );
-                            namedDeclarations[names[i]] = tg;
-
-                        }
+                        //create a TagGen, put old and new Gens in it,
+                        //add it to the tagGen dictionary and remove the old Gen from the senGen Dictionary
+                        TagGen tg = new TagGen();
+                        tg.AddGen( senGens[names[i]] );
+                        tg.AddGen( g );
+                        tagGens.Add( names[i], tg );
+                        senGens.Remove(  names[i] );
 
                     } else {
 
-                        //otherwise, add it to the dictionary
-                        namedDeclarations.Add( names[i], g );
+                        //If there's already a TagGen with this name, add the new SenGen to it
+                        if( tagGens.ContainsKey( names[i] ) ) {
+
+                            tagGens[names[i]].AddGen( g );
+
+                        } else {
+
+                            //otherwise, add it to the SenGen dictionary
+                            senGens.Add( names[i], g );
+
+                        }
 
                     }
                 } else {
 
                     Console.WriteLine( $"Generator Creation Error: NGen was not able to correctly process the generator named {names[i]}, it has not been added." );
+
+                }
+            }
+
+            //Now, combine the two dictionaries and return it
+            Dictionary<string, OutputGen> namedDeclarations = new Dictionary<string, OutputGen>();
+
+            if( senGens.Count > 0 ) {
+
+                foreach( KeyValuePair<string,SenGen> sg in senGens ) {
+
+                    namedDeclarations.Add( sg.Key, sg.Value );
+
+                }
+            }
+
+            if( tagGens.Count > 0 ) {
+
+                foreach( KeyValuePair<string, TagGen> tg in tagGens ) {
+
+                    namedDeclarations.Add( tg.Key, tg.Value );
 
                 }
             }

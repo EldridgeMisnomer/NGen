@@ -785,9 +785,13 @@ For a more extensive example of how tags can be used, see the Placename Generato
 
 ### How do Tags actually work?
 
-Any Generator can be assigned Tags by writing them after the Generator Name and before the `=` symbol, surrounded by brackets `( )`, like so: `generator name (tag) = [ one, two, three ]`, the same [rules which apply to Generator names](#generator-names) also apply to the characters you can use in a tag.
+Any Generator can be assigned Tags by writing them after the Generator Name and before the `=` symbol, surrounded by brackets `( )`, like so: `generator name (tag) = [ one, two, three ]`. 
+
+The same [rules which apply to Generator names](#generator-names) also apply to tags (including the fact that they are case-insensitive).
 
 Generators can be given multiple tags, and there are two ways to write these, either: `(tag1, tag2, tag3)` or `(tag1) (tag2) (tag3)`. The second version is prefered, because normally commas `,` in NGen suggest mutually exlusive options in a List, but the first version is offered as a possibility because it is less verbose.
+
+*TODO - decide about this, because the first option would be easier to add a header to*
 
 One Generator with Tags on its own doesn't do anything, for Tags to work you need to have at least two Generators with the same Name and different tags, for example:
 

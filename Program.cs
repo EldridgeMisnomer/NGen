@@ -5,7 +5,15 @@ namespace NGen {
     class Program {
         static void Main( string[] args ) {
 
+            //Testing Switches and Parameters
+
             bool loadFromJSON = false;
+            bool testJSON = false;
+            bool displayGenNames = true;
+            bool runAllGens = false;
+
+            string[] gensToDisplay = { "fname" };
+            int numTestToRunPerName = 30;
 
             NGen nGen;
             if( loadFromJSON ) {
@@ -15,23 +23,20 @@ namespace NGen {
 
             } else {
 
-                nGen = FileHandler.TxtFileToNGen( "data/names_01.txt" );
+                string path = "data/names_01.txt";
+                nGen = FileHandler.TxtFileToNGen( path );
 
             }
 
             string[] genNames = nGen.GetGenNames();
-            bool displayGenNames = true;
 
             if( displayGenNames ) {
                 string s = "";
                 foreach( string gn in genNames ) {
                     s += $"'{gn}', ";
                 }
-                Console.WriteLine( s );
+                Console.WriteLine( $"gen names are: {s}" );
             }
-
-
-            bool testJSON = false;
 
             if( testJSON ) {
 
@@ -39,62 +44,62 @@ namespace NGen {
 
             } else {
 
-                int numTestToRunPerName = 30;
-                bool runAllGens = false;
-                string[] selectNames = { "name" };
-
-
                 string[] gensToRun;
 
                 if( runAllGens ) {
                     gensToRun = genNames;
                 } else {
-                    gensToRun = selectNames;
+                    gensToRun = gensToDisplay;
                 }
 
-
                 foreach( string s in gensToRun ) {
+
                     Console.WriteLine( $"{s}:" );
+
                     for( int i = 0; i < numTestToRunPerName; i++ ) {
-                        Console.WriteLine( "\t" + nGen.GenTxt( s ) );
+
+                        Console.WriteLine( "\t" + nGen.GenTxt( s, "f" ) );
+
                     }
+
                     Console.WriteLine( "" );
+
                 }
             }
 
 
 
-/*            string test = "0";
-            string[] testSplit = test.Split( '-' );
-            Console.WriteLine( $"length of testSplit is:{testSplit.Length}" );
-*/
-/*            int dif = 3;
+            /*            string test = "0";
+                        string[] testSplit = test.Split( '-' );
+                        Console.WriteLine( $"length of testSplit is:{testSplit.Length}" );
+            */
+            /*            int dif = 3;
 
-            double[] weights = { 1, 2, 3, 5, 5 };
-            double lastWeight = weights[weights.Length - 1];
-            double penultimateWeight = weights[weights.Length - 2];
+                        double[] weights = { 1, 2, 3, 5, 5 };
+                        double lastWeight = weights[weights.Length - 1];
+                        double penultimateWeight = weights[weights.Length - 2];
 
-            double min = Math.Min( lastWeight, penultimateWeight );
-            double max = Math.Max( lastWeight, penultimateWeight );
+                        double min = Math.Min( lastWeight, penultimateWeight );
+                        double max = Math.Max( lastWeight, penultimateWeight );
 
-            //note - missing weights include penultimate and last weights
-            double[] missingWeights = Utils.CalculateLinearWeightsFromMinMax( min, max, dif + 2, penultimateWeight > lastWeight );
+                        //note - missing weights include penultimate and last weights
+                        double[] missingWeights = Utils.CalculateLinearWeightsFromMinMax( min, max, dif + 2, penultimateWeight > lastWeight );
 
-            double[] newWeights = new double[ weights.Length + dif ];
+                        double[] newWeights = new double[ weights.Length + dif ];
 
-            for( int i = 0; i < newWeights.Length; i++ ) {
+                        for( int i = 0; i < newWeights.Length; i++ ) {
 
-                if( i < weights.Length - 2 ) {
+                            if( i < weights.Length - 2 ) {
 
-                    newWeights[i] = weights[i];
+                                newWeights[i] = weights[i];
 
-                } else {
-                    // 3, 4, 5  -> 0, 1, 3
-                    newWeights[i] = missingWeights[i - weights.Length + 2 ];
+                            } else {
+                                // 3, 4, 5  -> 0, 1, 3
+                                newWeights[i] = missingWeights[i - weights.Length + 2 ];
 
-                }
-                Console.WriteLine( $"{i}: {newWeights[i]}" );
-            }*/
+                            }
+                            Console.WriteLine( $"{i}: {newWeights[i]}" );
+                        }*/
 
 
 
@@ -160,7 +165,4 @@ namespace NGen {
 
         }
     }
-
-  
-
 }

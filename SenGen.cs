@@ -21,7 +21,7 @@ namespace NGen {
 
         public SenGen() { }
 
-        public override string GetTxt( out bool sepBefore, out bool sepAfter ) {
+        public override string GetTxt( out bool sepBefore, out bool sepAfter, params string[] tags ) {
 
             GenOutput[] outputs = PickTxt();
             string outputString = "";
@@ -102,15 +102,11 @@ namespace NGen {
 
         }
 
-        public override void AddGen( OutputGen og ) {
+        public void AddGen( OutputGen og ) {
 
             //TODO document
             Console.WriteLine( $"SenGen Error: Tried to add a SenGen here, should only be added to TagGens" );
 
-        }
-
-        public override bool IsTagGen() {
-            return false;
         }
     }
 }

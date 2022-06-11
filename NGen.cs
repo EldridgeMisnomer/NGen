@@ -19,10 +19,15 @@ namespace NGen {
 
         public string GenTxt( string name, params string[] tags ) {
 
-            //TODO handle tags
+            if( gens.ContainsKey( name ) ) {
 
-            return GenTxt( name );
-            
+                return gens[name].GetTxt( tags );
+
+            } else {
+                Console.WriteLine( $"NGen Error: This NGen did not have a Gen named {name} in it" );
+                return "";
+            }
+
         }
 
         public string GenTxt( string name ) {

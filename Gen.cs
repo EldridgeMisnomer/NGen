@@ -69,22 +69,23 @@ namespace NGen {
 
     public abstract class OutputGen : Gen {
 
-        public abstract string GetTxt(  out bool sepBefore, out bool sepAfter );
+        public abstract string GetTxt(  out bool sepBefore, out bool sepAfter, params string[] tags );
+
+        public string GetTxt( params string[] tags ) {
+            return GetTxt( out _, out _, tags );
+        }
 
         public string GetTxt() {
             return GetTxt( out _, out _ );
         }
 
-        public abstract void AddGen( OutputGen og );
-
-        public abstract bool IsTagGen();
-
         public override GenOutput[] GetOutput() {
 
             string os = GetTxt( out bool sepBefore, out bool sepAfter );
-            GenOutput go = new GenOutput( os, gs );
-            go.SepBefore = sepBefore;
-            go.SepAfter = sepAfter;
+            GenOutput go = new GenOutput( os, gs ) {
+                SepBefore = sepBefore,
+                SepAfter = sepAfter
+            };
 
             return new GenOutput[] { go };
 
