@@ -21,13 +21,13 @@ namespace NGen {
 
         public Wrd() { }
 
-        protected override GenOutput[] PickTxt() {
+        protected override GenOutput[] PickTxt( params string[] tags ) {
             GenOutput[] newGOs = new GenOutput[] { new GenOutput( wrd, gs ) };
             return newGOs;
         }
 
-        public override GenOutput[] GetOutput() {
-            return PickTxt();
+        public override GenOutput[] GetOutput( params string[] tags ) {
+            return PickTxt( tags );
         }
 
     }

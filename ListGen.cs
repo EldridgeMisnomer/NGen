@@ -143,10 +143,10 @@ namespace NGen {
             }
         }
 
-        protected override GenOutput[] PickTxt() {
+        protected override GenOutput[] PickTxt( params string[] tags ) {
 
             if( wrds.Length == 1 ) {
-                return wrds[0].GetOutput();
+                return wrds[0].GetOutput( tags );
             } else {
 
                 switch(gs.PickType) {
@@ -155,16 +155,16 @@ namespace NGen {
 
                         if( gs.AllowRepeats ) {
 
-                            return Rand.RandFromArray( wrds ).GetOutput();
+                            return Rand.RandFromArray( wrds ).GetOutput( tags );
 
                         } else {
 
-                            return Rand.NonRepeatingRandFromArray( wrds, ref lastWrd ).GetOutput();
+                            return Rand.NonRepeatingRandFromArray( wrds, ref lastWrd ).GetOutput( tags );
 
                         }
 
                     case PickType.shuffle:
-                        GenOutput[] output = wrds[nextWrd].GetOutput();
+                        GenOutput[] output = wrds[nextWrd].GetOutput( tags );
 
                         nextWrd++;
                         if( nextWrd >= ( wrds.Length * gs.ShufflePoint ) ) {
@@ -185,24 +185,24 @@ namespace NGen {
                     
                     case PickType.cycle:
 
-                        output = wrds[nextWrd].GetOutput();
+                        output = wrds[nextWrd].GetOutput( tags );
 
                         nextWrd = ( nextWrd + 1 + gs.Skip ) % wrds.Length;
                         return output;
 
                     case PickType.weighted:
 
-                        return wrds[Rand.RandomDoubleWeightedInt( gs.PickWeights )].GetOutput();
+                        return wrds[Rand.RandomDoubleWeightedInt( gs.PickWeights )].GetOutput( tags );
 
                     default:
 
-                        return Rand.RandFromArray( wrds ).GetOutput();
+                        return Rand.RandFromArray( wrds ).GetOutput( tags );
 
                 }
             }
         }
 
-        public override GenOutput[] GetOutput() {
+        public override GenOutput[] GetOutput( params string[] tags ) {
 
             if( gs.OutputChance == 1 || Rand.ChanceTest( gs.OutputChance ) ) {
 
@@ -210,7 +210,7 @@ namespace NGen {
                 int repeats = GetRepeatNum();
                 List<GenOutput> gens = new List<GenOutput>();
                 for( int r = 0; r < repeats + 1; r++ ) {
-                    GenOutput[] newGOs = PickTxt();
+                    GenOutput[] newGOs = PickTxt( tags );
                     foreach( GenOutput go in newGOs ) {
                         gens.Add( go );
                     }

@@ -6,7 +6,7 @@ using PU = NGen.ParserUtils;
 
 namespace NGen {
 
-    public static class HeaderParsers {
+    public static class HeaderWrangler {
 
         public static GenSettings GetSettingsFromName( ref string name, GenSettings oldSettings ) {
             /*

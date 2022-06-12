@@ -30,7 +30,7 @@ namespace NGen {
                 int[] scores = new int[gens.Count];
                 for( int i = 0; i < gens.Count; i++ ) {
 
-                    scores[i] = TagWrangler.ScoreTags( tags, gens[i].tags );
+                    scores[i] = TagWrangler.ScoreTags( tags, gens[i].ownTags );
 
                 }
 
@@ -39,7 +39,7 @@ namespace NGen {
                 //if there are no matching tags, just return a random one
                 if( maxScore == 0 ) {
 
-                    return GetRandomTxt( out sepBefore, out sepAfter );
+                    return GetRandomTxt( out sepBefore, out sepAfter, tags );
 
                 } else {
 
@@ -48,34 +48,30 @@ namespace NGen {
 
                     //pick one at random to output
                     int choice = Rand.RandomRangeInt( 0, genIndexes.Length );
-                    return gens[choice].GetTxt( out sepBefore, out sepAfter );
+                    return gens[choice].GetTxt( out sepBefore, out sepAfter, tags );
 
                 }
 
             } else {
 
-                return GetRandomTxt( out sepBefore, out sepAfter );
+                return GetRandomTxt( out sepBefore, out sepAfter, tags );
 
             }
         }
 
-        private string GetRandomTxt( out bool sepBefore, out bool sepAfter ) {
+        private string GetRandomTxt( out bool sepBefore, out bool sepAfter, params string[] tags ) {
             //If there are no tags given, then pick a random Gen to return
             int choice = Rand.RandomRangeInt( 0, gens.Count );
 
             //DEBUG
             //Console.WriteLine( $"TagGen GetTxt. num gens: '{gens.Count}', choice: '{choice}'" );
-            return gens[choice].GetTxt( out sepBefore, out sepAfter );
+            return gens[choice].GetTxt( out sepBefore, out sepAfter, tags );
         }
 
-        protected override GenOutput[] PickTxt() {
+        protected override GenOutput[] PickTxt( params string[] tags  ) {
             
             int choice = Rand.RandomRangeInt( 0, gens.Count );
-
-            //DEBUG
-            //Console.WriteLine( $"TagGen GetOut. num gens: '{gens.Count}', choice: '{choice}'" );
-
-            return gens[choice].GetOutput();
+            return gens[choice].GetOutput( tags );
 
         }
     }

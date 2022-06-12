@@ -17,13 +17,29 @@ namespace NGen {
             wrds = gens;
         }
 
-        public string[] tags = null;
+        public string[] ownTags = null;
 
         public SenGen() { }
 
         public override string GetTxt( out bool sepBefore, out bool sepAfter, params string[] tags ) {
+            /*
+            //DEBUG
+            string s1 = "nada";
+            string s2 = "nada";
+            if( ownTags != null ) s1 = ownTags[0];
+            if( tags.Length > 0 ) s2 = tags[0];
+            Console.WriteLine( $"SenGen: ownTag[0] is: '{s1}', tags[0] is: '{s2}'" );
+            */
+            string[] pickTags = tags;
+            if( ownTags != null && tags.Length == 0 ) {
+                pickTags = ownTags;
+            }
 
-            GenOutput[] outputs = PickTxt();
+            GenOutput[] outputs = PickTxt(pickTags);
+            //choose which tags to use
+            //user tags (incoming tags) always trump own tags
+            //TODO - think about this more - do we want to combine the too???
+
             string outputString = "";
 
             sepBefore = true;
@@ -32,9 +48,9 @@ namespace NGen {
             if( outputs != null ) {
 
                 for( int i = 0; i < outputs.Length; i++ ) {
+
                     outputString += outputs[i].Txt;
-                    //DEBUG
-                    //Console.WriteLine( $"sengen txt: output {i} is: '{outputs[i].Txt}', sepBefore: {outputs[i].SepBefore}, speAfter: {outputs[i].SepAfter}" );
+
                     if( i < outputs.Length - 1 ) {
 
                         //DEBUG
@@ -42,7 +58,6 @@ namespace NGen {
                         if( outputs[i].SepAfter && outputs[i + 1].SepBefore ) {
                             outputString += GetSeparator();
                         }
-
                     }
                 }
 
@@ -73,13 +88,13 @@ namespace NGen {
 
         }
 
-        protected override GenOutput[] PickTxt() {
+        protected override GenOutput[] PickTxt( params string[] tags  ) {
 
             List<GenOutput> gens = new List<GenOutput>();
 
             for( int i = 0; i < wrds.Length; i++ ) {
 
-                GenOutput[] newGOs = wrds[i].GetOutput();
+                GenOutput[] newGOs = wrds[i].GetOutput( tags );
 
                 if( newGOs != null ) {
 
@@ -99,13 +114,6 @@ namespace NGen {
                 return null;
 
             }
-
-        }
-
-        public void AddGen( OutputGen og ) {
-
-            //TODO document
-            Console.WriteLine( $"SenGen Error: Tried to add a SenGen here, should only be added to TagGens" );
 
         }
     }

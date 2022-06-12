@@ -5,7 +5,7 @@ using System.Linq;
 namespace NGen {
     public static class TagWrangler {
 
-        public static string[] ExtractTagsFromName( ref string name ) {
+        public static string[] GetTagsFromName( ref string name ) {
 
             int firstBracket = name.IndexOf( '(' );
             int lastBracket = name.IndexOf( ')' );

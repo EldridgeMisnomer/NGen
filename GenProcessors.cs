@@ -95,7 +95,7 @@ namespace NGen {
 
             if( refIndex > 0 ) {
                 string proxyHeaderString = s.Substring( 0, refIndex );
-                HeaderParsers.HeaderShorthandSifter( proxyHeaderString, ref gs );
+                HeaderWrangler.HeaderShorthandSifter( proxyHeaderString, ref gs );
                 //DEBUG
                 //Console.WriteLine( $"ProxyHeader is: '{proxyHeaderString}'" );
             }
@@ -228,7 +228,7 @@ namespace NGen {
 
                 if( bracketsHeaderString.Length > 0 ) {
 
-                    HeaderParsers.HeaderShorthandSifter( bracketsHeaderString, ref newGS );
+                    HeaderWrangler.HeaderShorthandSifter( bracketsHeaderString, ref newGS );
                 
                 }
 
@@ -268,7 +268,7 @@ namespace NGen {
 
             if( tags != null && tags.Length > 0 ) {
 
-                sg.tags = tags;
+                sg.ownTags = tags;
 
             }
 

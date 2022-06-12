@@ -5,9 +5,9 @@ namespace NGen {
 
     public abstract class Gen { 
 
-        public abstract GenOutput[] GetOutput();
+        public abstract GenOutput[] GetOutput( params string[] tags );
 
-        protected abstract GenOutput[] PickTxt();
+        protected abstract GenOutput[] PickTxt( params string[] tags  );
 
         //settings
         public GenSettings gs;  
@@ -79,9 +79,9 @@ namespace NGen {
             return GetTxt( out _, out _ );
         }
 
-        public override GenOutput[] GetOutput() {
+        public override GenOutput[] GetOutput( params string[] tags ) {
 
-            string os = GetTxt( out bool sepBefore, out bool sepAfter );
+            string os = GetTxt( out bool sepBefore, out bool sepAfter, tags );
             GenOutput go = new GenOutput( os, gs ) {
                 SepBefore = sepBefore,
                 SepAfter = sepAfter

@@ -27,7 +27,7 @@ namespace NGen {
 
         public ProxyGen() { }
 
-        protected override GenOutput[] PickTxt() {
+        protected override GenOutput[] PickTxt( params string[] tags ) {
             if( gen == null ) {
 
                 return null;
@@ -38,19 +38,19 @@ namespace NGen {
 
                     if( onceText == null ) {
 
-                        onceText = gen.GetOutput();
+                        onceText = gen.GetOutput(  tags  );
 
                     }
                     return onceText;
 
                 } else {
 
-                    return gen.GetOutput();
+                    return gen.GetOutput( tags  );
                 }
             }
         }
 
-        public override GenOutput[] GetOutput() {
+        public override GenOutput[] GetOutput( params string[] tags ) {
 
             if( gs.OutputChance == 1 || Rand.ChanceTest( gs.OutputChance ) ) {
 
@@ -58,7 +58,7 @@ namespace NGen {
                 int repeats = GetRepeatNum();
                 List<GenOutput> gens = new List<GenOutput>();
                 for( int r = 0; r < repeats + 1; r++ ) {
-                    GenOutput[] newGOs = PickTxt();
+                    GenOutput[] newGOs = PickTxt( tags  );
 
                     if( newGOs != null && newGOs.Length > 0 ) {
 

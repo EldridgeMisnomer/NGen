@@ -4,7 +4,6 @@ using Utils;
 
 using PU = NGen.ParserUtils;
 using GP = NGen.GenProcessors;
-using HP = NGen.HeaderParsers;
 
 
 namespace NGen {
@@ -227,21 +226,18 @@ namespace NGen {
 
                         //split the line into the name and (potentially only the start of) the declaration
                         PU.StringToStringPair( lines[i], out string name, out string contents );
-
-                        //DEBUG
-                        //Console.WriteLine( $"Getting tags from: '{name}'" );
+                        currentDeclaration = contents.Trim();
 
                         //get the tags from the name
-                        string[] thesetags = TagWrangler.ExtractTagsFromName( ref name );
+                        string[] thesetags = TagWrangler.GetTagsFromName( ref name );
                         tags.Add( thesetags );
 
                         //extract the header from the name
-                        GenSettings newGS = HP.GetSettingsFromName( ref name, oldSettings );
-
-                        //store the settings, name and declaration
+                        GenSettings newGS = HeaderWrangler.GetSettingsFromName( ref name, oldSettings );
                         settings.Add( newGS );
+
+                        //store the name, which has been modified by the previous two methods
                         names.Add( name.Trim() );
-                        currentDeclaration = contents.Trim();
 
                     } else {
                         //if a new declaration wasn't started this line,
@@ -262,9 +258,16 @@ namespace NGen {
                 Console.WriteLine( $"Line Processor Error: the number of names ({names.Count}) did not match the number of generator declarations ({declarations.Count})" );
             }
 
+            Dictionary<string, OutputGen> genDict = CreateGenDictionary( names, declarations, settings, tags );
+            
+            return genDict;
+
+        }
+
+        private static Dictionary<string, OutputGen> CreateGenDictionary( List<string> names, List<string> declarations, List<GenSettings> settings, List<string[]> tags ) {
+
             Dictionary<string, SenGen> senGens = new Dictionary<string, SenGen>();
             Dictionary<string, TagGen> tagGens = new Dictionary<string, TagGen>();
-
 
             for( int i = 0; i < names.Count; i++ ) {
 
@@ -286,7 +289,7 @@ namespace NGen {
                         tg.AddGen( senGens[names[i]] );
                         tg.AddGen( g );
                         tagGens.Add( names[i], tg );
-                        senGens.Remove(  names[i] );
+                        senGens.Remove( names[i] );
 
                     } else {
 
@@ -311,13 +314,13 @@ namespace NGen {
             }
 
             //Now, combine the two dictionaries and return it
-            Dictionary<string, OutputGen> namedDeclarations = new Dictionary<string, OutputGen>();
+            Dictionary<string, OutputGen> genDict = new Dictionary<string, OutputGen>();
 
             if( senGens.Count > 0 ) {
 
-                foreach( KeyValuePair<string,SenGen> sg in senGens ) {
+                foreach( KeyValuePair<string, SenGen> sg in senGens ) {
 
-                    namedDeclarations.Add( sg.Key, sg.Value );
+                    genDict.Add( sg.Key, sg.Value );
 
                 }
             }
@@ -326,13 +329,12 @@ namespace NGen {
 
                 foreach( KeyValuePair<string, TagGen> tg in tagGens ) {
 
-                    namedDeclarations.Add( tg.Key, tg.Value );
+                    genDict.Add( tg.Key, tg.Value );
 
                 }
             }
 
-            return namedDeclarations;
-
+            return genDict;
         }
     }
 }
