@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -294,7 +293,6 @@ namespace NGen {
 
             return bracketsHeaderString;
         }
-
 
         public static string[] GetBracketsContents( string s, out string postBrackets ) {
             /*

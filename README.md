@@ -1,9 +1,22 @@
 # NGen
 A simple scripting language for creating procedural text generators with a focus on the creation of short texts - like names.
 
-Text generators are written in simple text files. At their simplest they consist of a single named Generator, for example:
+---
+***Note***:
 
-`hi = Hello World`
+NGen is in active development but is not ready for use, in particular there is no way yet to load your own text files into NGen.
+
+NGen is initially being developed as a console application, but will eventually by a Unity component.
+
+Below you will find documentation for NGen; it is, however, incomplete, erroneous, rambling, and badly organised. This will be fixed, eventually.
+
+---
+
+Text Generators are written in simple text files. At their most basic they consist of a single named Generator (`name = generator`), for example:
+
+```
+hi = Hello World
+```
 
 An NGen file can contain multiple Generators with complex constructions for returning text.
 
@@ -19,15 +32,14 @@ An NGen file can contain multiple Generators with complex constructions for retu
     * [Sentences](#sentence-settings)
     * [Proxies](#proxy-settings)
 * [Headers](#headers)
+* [Tags](#tags)
 * [Comments](#comments)
 * [Escaping characters](#escaping-characters)
 * [Error Messages](#error-messages)
 
 </details>
 
-
 ---
-
 
 ## Generators
 
@@ -52,34 +64,80 @@ There are three diferent components which Generators can contain:
 
 A Generator Name must be unique – no two Generators can have the same Name; it can contain any characters with a few exceptions, and no whitespace. 
 
-Generator Names cannot contain these characters: `$`, `[`, `]`, `/`
+Generator Names cannot contain these characters: `=`, `$`, `[`, `]`, `(`, `)`, `,`
 
-Names are case insensitive, that is 'Name' is the same as 'name' is the same as 'NAME'.
+//TODO - check if this is true - there may be other characters I haven't thought of - especially when it comes to proxies
 
-Some example good and bad names:
+Names are case insensitive, that is 'Name' is the same as 'name' is the same as 'NAME' is the same as 'nAmE'.
+
+Some example functional and nonfunctional names:
 
 ```
-#these names are all good
+# these names are all good:
+
 adj = [ short, wiry, blue ]
 PANIC = [ argh, wraaaagh, oof, erk, eeeep ]
 so_slow = [ slowly, very slowly, inch by inch, oh so slow]
 *!&xx??** = [ !#**, #@!!, @@x!*, !!! ]
-#although the last one is perhaps not the most sensible name for a generator
 
-#these names won't work
-#'adj' has already been used, names must be unique so this won't work
+# although the last one is perhaps not the most sensible name for a generator
+
+# the following names won't work:
+
+# 'adj' has already been used, names must be unique so this won't work:
 adj = [ wobbly, worried, slick ]
-#names are case insensitve, and 'adj' has already been used, so this won't work
+
+# names are case insensitve, and 'adj' has already been used, so this won't work:
 Adj = [ stinky, smelly, shrieking ]
-#this won't work because it has prohibited characters in it
+
+# this won't work because it has prohibited characters in it:
 *!&$$??** = [ !#**, #@!!, @@x!*, !!! ]
-#this won't work because names cannot contain spaces
+
+# this won't work because names cannot contain spaces:
 long gen = once upon a time in the land of the jolly blue mermen...
-#(actually, it will work - but the name of the generator will be 'long' and the 'gen' will be discarded...
-#...this can be dangerous however, as we will see later, there is a chance that it won't be discarded 
-#and will affect the behaviour of the generator
+# actually, it will work... 
+#	but the name of the generator will be 'long' and the 'gen' will be discarded...
 
 ```
+### Running Generators
+
+Once an NGen has been created from a text file you can generate text with it by running one of the Generators it contains with the `GenTxt( generatorName )` method which run the Generator and return its output as a string:
+
+```
+NGen nGen = ???
+string output = nGen.GenTxt( "generatorName" );
+```
+
+You can get an array containing all the Generator Names using the `GetGenNames()` method:
+
+```
+string[] genNames = nGen.GetGenNames();
+```
+
+You can get multiple output texts from the same Generator by using the `GenTxt( generatorName, numberOfOutputs )` method, which will return a string array:
+
+```
+string[] outputs = nGen.genTxt( "generatorName", 10 );
+```
+
+You can get a Generator output using Tags by using the `GenTxt( "generatorName", "tags" )` method, where "tags" can either be a string array of Tag names, or Tags as separate arguments, eg:
+
+*TODO - write this better*
+
+```
+string[] tags = { "tag1", "tag2", "tag3" };
+string output = nGen.GenTxt( "generatorName", tags );
+
+//Or:
+
+string output = nGen.GenTxt( "generatorName", "tag1", "tag2", tag3" );
+```
+
+See [below](#tags) for more about Tags.
+
+#### Indirectly running Generators
+
+*TODO*
 
 ### Multiline Generators
 
@@ -107,7 +165,7 @@ etc
 
 ### Settings in Generators
 
-As we will see later, the Components of Generators (Lists, Sentences, and Proxies) have Settings which can be changed.
+As we will see later, the Components of Generators ([Lists](#lists), [Sentences](#sentences), and [Proxies](#proxies)) have [Settings](#component-settings) which can be changed.
 
 While each component can have its Settings changed individually, it is also possible to apply Settings to *all* of the components in a Generator by doing it at the Generator level.
 
@@ -130,7 +188,9 @@ proxy = three
 trickygen &f2 = [ one, $proxy, two ]
 ```
 
-In the above a Fixed Repeat 2 is set at the Generator level of `trickygen`, this means that elements which can Repeat (Lists and Proxies) will repeat their output twice. However, `trickygen` contains both a Proxy inside a List. If only 'one' or 'two' is selected from the List then the output might be "two one one", but if the proxy is selected it will perform its repeat twice, and the output could be "two three three three three three three". If this is what's expected then fine, if it's not then a solution is to set the Repeats on individual Components, either: `trickygen  = &f2[ one, $proxy, two ]`, or `trickygen  = [ one, &f2$proxy, two ]`
+In the above a Fixed Repeat 2 is set at the Generator level of `trickygen`, this means that elements which can Repeat (Lists and Proxies) will repeat their output twice. However, `trickygen` contains a Proxy inside a List, both of which will repeat.
+
+If only 'one' or 'two' is selected from the List then the output might be "two one one", but if the proxy is selected it will perform its repeat twice, and the output could be "two three three three three three three". If this is what's expected then fine, if it's not then a solution is to set the Repeats on individual Components, either: `trickygen  = &f2[ one, $proxy, two ]`, or `trickygen  = [ one, &f2$proxy, two ]`
 
 For more information about specific Settings, see [Component Settings](#component-settings)
 
@@ -655,6 +715,126 @@ The location of `reset` in the header is not important.`
 
 A header can contain just the word `reset` in order to change everything back to their defaults without setting any other behaviours.
 
+## Tags
+
+Tags provide another way of organising your generators, at their simplest they don't provide any additional functionality, but they can be more versatile and provide an easier way to access varied output.
+
+Consider this example (without tags):
+
+```
+poshdwelling = [ mansion, villa, country house ]
+poordwelling = [ hovel, hut, bedsit ]
+
+dwelling = [ $poshdwelling, $poordwelling ]
+```
+
+In the above example there are three Generators: 'poshdwelling', which will output an example of a posh place to live, 'poordwelling', which will output a poor place to live, and 'dwelling' which, when you get its output will provide either a poor or a posh place to live.
+
+The same effect can be achieved using tags. Tags allow you to give two or more generators the same name, so long as they have different tags:
+
+```
+dwelling (posh) = [ mansion, villa, country house ]
+dwelling (poor) = [ hovel, hut, bedsit ]
+```
+
+Here, we have just one generator, defined twice with different tags, when you access the output of 'dwelling' it will provide either a posh or a poor place to live, however you can also provide tags when you access generators, which will limit the possibilities to either posh or poor, you do this in the same way as with the `GenTxt( name )` method, but add additional tags: `GenTxt( name, tag1, tag2, tag3 )`. You can add as many tags as you like, although in the above example only two will have any effect: `GenTxt( "dwelling", "posh")` will output a posh place to live, and `GenTxt( "dwelling", "poor")` will output a poor place to live.
+
+Let's look at a more complicated example to see how Tags can be useful, we'll write a name generator with two separate variables - male/female and posh/prole, first without tags:
+
+```
+firstnamefemaleposh = [ Dorothea, Elisabeth, Lucinda, Juliet ]
+firstnamemaleposh = [ Clarence, Richard, Edwin, Augustus ]
+firstnamefemaleprole = [ Dot, Liz, Lucy, Jill ]
+firstnamemaleprole = [ Clive, Dick, Ed, Alf ]
+
+lastnameprole = [ Dubbins, Smith, Lapper, Boff ]
+lastnameprole = [ Ellington-Dukesbury, Wently-Lefferdale, Dinglington-Bradley, Carlington-Dash ]
+
+femalename = [ $firstnamefemaleposh $lastnameposh, $firstnamefemaleprole $lastnameprole ]
+malename = [ $firstnamemaleposh $lastnameposh, $firstnamemaleprole $lastnameprole ]
+
+name = [ $femalename, $malename ]
+```
+
+And now let's write the same thing but with tags:
+
+```
+firstname (female) (posh) = [ Dorothea, Elisabeth, Lucinda, Juliet ]
+firstname (male) (posh) = [ Clarence, Richard, Edwin, Augustus ]
+firstname (female) (prole) = [ Dot, Liz, Lucy, Jill ]
+firstname (male) (prole) = [ Clive, Dick, Ed, Alf ]
+
+lastname (prole) = [ Dubbins, Smith, Lapper, Boff ]
+lastname (posh) = [ Ellington-Dukesbury, Wently-Lefferdale, Dinglington-Bradley, Carlington-Dash ]
+
+name = $firstname $lastname
+```
+
+It should be clear that the second version has some advantages: it is more readable for a start, and it requires less intermediate generators without sacrificing the possibility of retrieving the results of those intermetiate generators (we can call `GenTxt( "name", "female" )` and get the equivalent of calling `GenTxt( "femalename" )` in the first example).
+
+Furthermore, what if we wanted to retreive a posh name, without regard for gender? With tags we can call `GenTxt( "name", "posh" )`, but in the first example we would have to write two new Generators:
+
+```
+prolename = [ $firstnamefemaleprole, $firstnamemaleprole ] $lastnameprole
+poshname = [ $firstnamefemaleposh, $firstnamemaleposh ] $lastnameposh
+```
+
+The more complicated the example the greater value tags can have, imagine if we wanted to add names in another language to the above example, with tags we would just have to add some new generators for the new language, while tagging our existing generators with `(english)` or similar, without tags it would require a much more complicated construction.
+
+For a more extensive example of how tags can be used, see the Placename Generator in the Examples folder (*TODO - doesn't exist yet* ).
+
+### How do Tags actually work?
+
+Any Generator can be assigned Tags by writing them after the Generator Name and before the `=` symbol, surrounded by brackets `( )`, like so: `generator name (tag) = [ one, two, three ]`. 
+
+The same [rules which apply to Generator names](#generator-names) also apply to tags (including the fact that they are case-insensitive).
+
+Generators can be given multiple tags, and there are two ways to write these, either: `(tag1, tag2, tag3)` or `(tag1) (tag2) (tag3)`. The second version is prefered, because normally commas `,` in NGen suggest mutually exlusive options in a List, but the first version is offered as a possibility because it is less verbose.
+
+*TODO - decide about this, because the first option would be easier to add a header to*
+
+One Generator with Tags on its own doesn't do anything, for Tags to work you need to have at least two Generators with the same Name and different tags, for example:
+
+```
+numbers (arabic) = [ 1, 2, 3, 4, 5 ]
+numbers (roman) = [ I, II, III, IV, V ]
+```
+
+These two identically named Generators will, internally be combined into one Generator, and when the 'numbers' Generator is run it will output randomly from one or the other.
+
+*TODO - think about if we need to add all the Pick options from Lists to Tags*
+
+This in itself is not particularly useful, however we can also specify a Tag (or Tags) when we access a Generator and get the corresponding result.
+
+The standard way to access a Generator in NGen is to use the `GenTxt( generatorname )` method, to specify Tags when we access a Generator we can include the Tag names after the Generator Name, like so: `GenTxt( "numbers", "roman" )`.
+
+Whenever we access a Generator with Tags it will attempt to provide us with output from a Generator which contains all the Tags we have specified, so if we access the numbers Generator with `GenTxt( "numbers", "arabic" )` we'll receive an output from the List `[ 1, 2, 3, 4, 5 ]`.
+
+If a Generator can't be found with the correct tags, for example if we access `GenTxt( "numbers", "words" )` then Output will be given from one of the available Generators chosen at random.
+
+If we access a Generator with conflicting Tags, for example: `GenTxt( "numbers", "roman", "arabic" )`, then Output will be given from one of the available Generators chosen at random.
+
+If some of the Tags we specify are available and other aren't then the Generator will do its best, for example: `GenTxt( "numbers", "arabic", "big" ) will still give us output from the `arabic` Generator. More precisely the Generator with the most matching Tags will be Output, if there is more than one Generator with most matching Tags, then one of these will be picked at random.
+
+#### Tags and Proxies
+
+All of the above refers to accessing Generators directly, but what happens when Generators are accessed indirectly (via a Proxy)?
+
+Generators with Tags pass their Tags down to other Generators they contain (via Proxies) which in turn provide an output just as if the user had supplied the tags, for example:
+
+```
+fname (es) = [ Javier, Ignacio, Carlos, Juan ]
+fname (en) = [ Shaun, Richard, Ben, Mike ]
+fname (fr) = [ François, Leo, Claude, Louis ]
+
+sen (en) = I once knew a man called $fname <.
+```
+
+In the above, the 'sen' Generator has a Proxy which links to the 'fname' Generator. There are 'fname' Generators with three different tags, corresponding to different languages. Because the 'sen' Generator also has a Tag ('en'). Even though 'sen' only has one version, and so the Tag doesn't do anything directly to its output, it will pass this Tag to the 'fname' Generator and so will only make a sentence with an English name.
+
+However, User Tags, those input with `GenTxt( genName, tags )` will override internal Tags, so in the above example, if you generate an output with `GenTxt( "sen", "fr" ), you will receive an output with a French name in it, not the default English one.
+
+This allows you to, for example, set a default type of output for a Generator.
 
 ## Comments
 

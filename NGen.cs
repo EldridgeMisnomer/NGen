@@ -4,31 +4,57 @@ using System.Collections.Generic;
 namespace NGen {
     public class NGen {
 
-        public readonly Dictionary<string, SenGen> gens = new Dictionary<string, SenGen>();
         /*
          *  Top-level holder for all the gens.
          *  This is what will be created from a succesfully parsed Text file
          */
 
+        public readonly Dictionary<string, OutputGen> gens = new Dictionary<string, OutputGen>();
 
-        public NGen( Dictionary<string, SenGen> namedGens ) {
+        public NGen( Dictionary<string, OutputGen> namedGens ) {
             gens = namedGens;
         }
 
         public NGen() { }
 
-        public string GenTxt( string name ) {
+        public string GenTxt( string name, params string[] tags ) {
 
-            if( gens.ContainsKey(name) ) {
+            if( gens.ContainsKey( name ) ) {
 
-                return gens[name].GetTxt();
+                return gens[name].GetTxt( tags );
 
             } else {
-                Console.WriteLine( $"Error: This NGen did not have a Gen named {name} in it" );
+                Console.WriteLine( $"NGen Error: This NGen did not have a Gen named {name} in it" );
                 return "";
             }
 
         }
+
+        public string GenTxt( string name ) {
+
+            if( gens.ContainsKey( name ) ) {
+
+                return gens[name].GetTxt();
+
+            } else {
+                Console.WriteLine( $"NGen Error: This NGen did not have a Gen named {name} in it" );
+                return "";
+            }
+
+        }
+
+        public string[] GenTxt( string name, int number ) {
+
+            string[] output = new string[number];
+
+            for( int i = 0; i < number; i++ ) {
+                output[i] = GenTxt( name );
+            }
+
+            return output;
+
+        }
+
 
         public string[] GetGenNames() {
 

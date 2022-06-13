@@ -95,7 +95,7 @@ namespace NGen {
 
             if( refIndex > 0 ) {
                 string proxyHeaderString = s.Substring( 0, refIndex );
-                HeaderParsers.HeaderShorthandSifter( proxyHeaderString, ref gs );
+                HeaderWrangler.HeaderShorthandSifter( proxyHeaderString, ref gs );
                 //DEBUG
                 //Console.WriteLine( $"ProxyHeader is: '{proxyHeaderString}'" );
             }
@@ -172,7 +172,7 @@ namespace NGen {
             return wg;
         }
 
-        public static SenGen SenGenProcessor( string s, GenSettings headerSettings ) {
+        public static SenGen SenGenProcessor( string s, GenSettings headerSettings, string[] tags = null ) {
             /*
              * This will take a string and turn it into a SenGen,
              * although, if it is a simple sentence it may return
@@ -228,7 +228,7 @@ namespace NGen {
 
                 if( bracketsHeaderString.Length > 0 ) {
 
-                    HeaderParsers.HeaderShorthandSifter( bracketsHeaderString, ref newGS );
+                    HeaderWrangler.HeaderShorthandSifter( bracketsHeaderString, ref newGS );
                 
                 }
 
@@ -265,6 +265,19 @@ namespace NGen {
             }
 
             SenGen sg = new SenGen( gens.ToArray(), headerSettings );
+
+            if( tags != null && tags.Length > 0 ) {
+
+                sg.ownTags = tags;
+
+                //DEBUG
+                string ts = "";
+                foreach( string t in tags ) {
+                    ts += t + ", ";
+                }
+                Console.WriteLine( $"new SenGen, tags are: '({ts})' " );
+            }
+
 
             //DEBUG
             //Console.WriteLine( $"new SenGen. gs.NoSepB: {sg.GetNoSepBefore()}, gs.NoSepA: {sg.GetNoSepAfter()} " );

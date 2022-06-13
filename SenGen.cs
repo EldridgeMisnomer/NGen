@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NGen {
-    public class SenGen : Gen {
+
+    public class SenGen : OutputGen {
 
         /*
          * A container for word choices
@@ -14,12 +16,30 @@ namespace NGen {
             gs = genSettings;
             wrds = gens;
         }
-        public SenGen
-() { }
 
-        public string GetTxt( out bool sepBefore, out bool sepAfter ) {
+        public string[] ownTags = null;
 
-            GenOutput[] outputs = PickTxt();
+        public SenGen() { }
+
+        public override string GetTxt( out bool sepBefore, out bool sepAfter, params string[] tags ) {
+            /*
+            //DEBUG
+            string s1 = "nada";
+            string s2 = "nada";
+            if( ownTags != null ) s1 = ownTags[0];
+            if( tags.Length > 0 ) s2 = tags[0];
+            Console.WriteLine( $"SenGen: ownTag[0] is: '{s1}', tags[0] is: '{s2}'" );
+            */
+            string[] pickTags = tags;
+            if( ownTags != null && tags.Length == 0 ) {
+                pickTags = ownTags;
+            }
+
+            GenOutput[] outputs = PickTxt(pickTags);
+            //choose which tags to use
+            //user tags (incoming tags) always trump own tags
+            //TODO - think about this more - do we want to combine the too???
+
             string outputString = "";
 
             sepBefore = true;
@@ -28,9 +48,9 @@ namespace NGen {
             if( outputs != null ) {
 
                 for( int i = 0; i < outputs.Length; i++ ) {
+
                     outputString += outputs[i].Txt;
-                    //DEBUG
-                    //Console.WriteLine( $"sengen txt: output {i} is: '{outputs[i].Txt}', sepBefore: {outputs[i].SepBefore}, speAfter: {outputs[i].SepAfter}" );
+
                     if( i < outputs.Length - 1 ) {
 
                         //DEBUG
@@ -38,7 +58,6 @@ namespace NGen {
                         if( outputs[i].SepAfter && outputs[i + 1].SepBefore ) {
                             outputString += GetSeparator();
                         }
-
                     }
                 }
 
@@ -48,10 +67,6 @@ namespace NGen {
 
             return outputString.Trim();
 
-        }
-
-        public string GetTxt( ) {
-            return GetTxt( out _, out _ );
         }
 
         private string GetSeparator() {
@@ -73,26 +88,13 @@ namespace NGen {
 
         }
 
-        public override GenOutput[] GetOutput() {
-
-            bool sepBefore;
-            bool sepAfter;
-            string os = GetTxt( out sepBefore, out sepAfter );
-            GenOutput go = new GenOutput( os, gs );
-            go.SepBefore = sepBefore;
-            go.SepAfter = sepAfter; 
-
-            return new GenOutput[] { go };
-
-        }
-
-        protected override GenOutput[] PickTxt() {
+        protected override GenOutput[] PickTxt( params string[] tags  ) {
 
             List<GenOutput> gens = new List<GenOutput>();
 
             for( int i = 0; i < wrds.Length; i++ ) {
 
-                GenOutput[] newGOs = wrds[i].GetOutput();
+                GenOutput[] newGOs = wrds[i].GetOutput( tags );
 
                 if( newGOs != null ) {
 
@@ -102,9 +104,6 @@ namespace NGen {
                     }
                 }
             }
-
-            //DEBUG
-            //Console.WriteLine( $"SenGen PickTxt, number of wrds: {wrds.Length}, number of gens: {gens.Count}." );
 
             if( gens.Count > 0 ) {
 

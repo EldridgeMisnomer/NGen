@@ -4,7 +4,6 @@ using Utils;
 
 using PU = NGen.ParserUtils;
 using GP = NGen.GenProcessors;
-using HP = NGen.HeaderParsers;
 
 
 namespace NGen {
@@ -22,8 +21,11 @@ namespace NGen {
         //TODO - fill in missing longhand
 
 
+        //TODO maybe - add possibility to tag Generators as importand - so they are
+        //              highlighted when viewing all Generators
 
-        public static Dictionary<string, SenGen> SplitHeadersAndGenerators( string[] lines ) {
+
+        public static Dictionary<string, OutputGen> SplitHeadersAndGenerators( string[] lines ) {
             /*
              *  receives the comment-stripped lines from the text file
              *  and divides them up into sections - headers and generator declarations,
@@ -37,7 +39,7 @@ namespace NGen {
             bool inHeader = false;
 
             //dictionary to store gens in
-            Dictionary<string, SenGen> gens = new Dictionary<string, SenGen>();
+            Dictionary<string, OutputGen> gens = new Dictionary<string, OutputGen>();
 
             //loop through all lines slotting them into the correct list
             //once we have a header and a set of declarations, process them
@@ -68,9 +70,9 @@ namespace NGen {
                                 //store the new GenSettings
                                 genSettings.Add( gs );
 
-                                Dictionary<string, SenGen> tempGens = LineProcessor( gs, declareLines.ToArray() );
+                                Dictionary<string, OutputGen> tempGens = LineProcessor( gs, declareLines.ToArray() );
 
-                                foreach( KeyValuePair<string, SenGen> g in tempGens ) {
+                                foreach( KeyValuePair<string, OutputGen> g in tempGens ) {
 
                                     if( !gens.ContainsKey( g.Key ) ) {
 
@@ -118,9 +120,9 @@ namespace NGen {
                 //we don't need to store this one as it's the last
                 GenSettings gs = ParseMainHeader( headerString, genSettings[genSettings.Count - 1] );
 
-                Dictionary<string, SenGen> tempGens = LineProcessor( gs, declareLines.ToArray() );
+                Dictionary<string, OutputGen> tempGens = LineProcessor( gs, declareLines.ToArray() );
 
-                foreach( KeyValuePair<string, SenGen> g in tempGens ) {
+                foreach( KeyValuePair<string, OutputGen> g in tempGens ) {
                     if( !gens.ContainsKey( g.Key ) ) {
 
                         gens.Add( g.Key, g.Value );
@@ -194,7 +196,7 @@ namespace NGen {
             return gs;
         }
 
-        private static Dictionary<string, SenGen> LineProcessor( GenSettings oldSettings, string[] lines ) {
+        private static Dictionary<string, OutputGen> LineProcessor( GenSettings oldSettings, string[] lines ) {
             /*
              *  receives the comment-stripped lines from the text file
              *  and process them into generator declarations,
@@ -205,7 +207,8 @@ namespace NGen {
 
             List<string> names = new List<string>();
             List<string> declarations = new List<string>();
-            List<GenSettings> settings = new List<GenSettings>(); 
+            List<GenSettings> settings = new List<GenSettings>();
+            List<string[]> tags = new List<string[]>();
 
             string currentDeclaration = "";
 
@@ -223,14 +226,25 @@ namespace NGen {
 
                         //split the line into the name and (potentially only the start of) the declaration
                         PU.StringToStringPair( lines[i], out string name, out string contents );
+                        currentDeclaration = contents.Trim();
+
+                        //get the tags from the name
+                        string[] thesetags = TagWrangler.GetTagsFromName( ref name );
+                        tags.Add( thesetags );
+
+                        //DEBUG
+                        string ts = "";
+                        foreach( string t in thesetags ) {
+                            ts += t + ", ";
+                        }
+                        Console.WriteLine( $"LineProcessor - received tags are: '({ts})'." );
 
                         //extract the header from the name
-                        GenSettings newGS = HP.GetSettingsFromName( ref name, oldSettings );
-
-                        //store the settings, name and declaration
+                        GenSettings newGS = HeaderWrangler.GetSettingsFromName( ref name, oldSettings );
                         settings.Add( newGS );
+
+                        //store the name, which has been modified by the previous two methods
                         names.Add( name.Trim() );
-                        currentDeclaration = contents.Trim();
 
                     } else {
                         //if a new declaration wasn't started this line,
@@ -251,19 +265,55 @@ namespace NGen {
                 Console.WriteLine( $"Line Processor Error: the number of names ({names.Count}) did not match the number of generator declarations ({declarations.Count})" );
             }
 
-            //create a dictionary and return it
-            Dictionary<string, SenGen> namedDeclarations = new Dictionary<string, SenGen>();
-            for( int i = 0; i < names.Count; i++ ) {
-                SenGen g = GP.SenGenProcessor( declarations[i], settings[i] );
+            Dictionary<string, OutputGen> genDict = CreateGenDictionary( names, declarations, settings, tags );
+            
+            return genDict;
 
+        }
+
+        private static Dictionary<string, OutputGen> CreateGenDictionary( List<string> names, List<string> declarations, List<GenSettings> settings, List<string[]> tags ) {
+
+            Dictionary<string, SenGen> senGens = new Dictionary<string, SenGen>();
+            Dictionary<string, TagGen> tagGens = new Dictionary<string, TagGen>();
+
+            for( int i = 0; i < names.Count; i++ ) {
+
+                //Create the SenGen
+                SenGen g = GP.SenGenProcessor( declarations[i], settings[i], tags[i] );
+
+                //If that worked, put it somewhere
                 if( g != null ) {
 
-                    if( !namedDeclarations.ContainsKey( names[i] ) ) {
+                    //If there's already a sengen with that name
+                    if( senGens.ContainsKey( names[i] ) ) {
 
-                        namedDeclarations.Add( names[i], g );
+                        //DEBUG
+                        Console.WriteLine( $"There is already a gen named '{names[i]}', Creating a TagGen and putting stuff in it" );
+                        Console.WriteLine( $"Old SenGen has first tag: ({senGens[names[i]].ownTags[0]})");
+                        Console.WriteLine( $"New SenGen has first tag: ({g.ownTags[0]})");
+
+                        //create a TagGen, put old and new Gens in it,
+                        //add it to the tagGen dictionary and remove the old Gen from the senGen Dictionary
+                        TagGen tg = new TagGen();
+                        tg.AddGen( senGens[names[i]] );
+                        tg.AddGen( g );
+                        tagGens.Add( names[i], tg );
+                        senGens.Remove( names[i] );
 
                     } else {
-                        Console.WriteLine( $"Duplicate Generator Name Error: Only the first generator with the name '{names[i]}' has been added." );
+
+                        //If there's already a TagGen with this name, add the new SenGen to it
+                        if( tagGens.ContainsKey( names[i] ) ) {
+
+                            tagGens[names[i]].AddGen( g );
+
+                        } else {
+
+                            //otherwise, add it to the SenGen dictionary
+                            senGens.Add( names[i], g );
+
+                        }
+
                     }
                 } else {
 
@@ -271,9 +321,29 @@ namespace NGen {
 
                 }
             }
-            return namedDeclarations;
+
+            //Now, combine the two dictionaries and return it
+            Dictionary<string, OutputGen> genDict = new Dictionary<string, OutputGen>();
+
+            if( senGens.Count > 0 ) {
+
+                foreach( KeyValuePair<string, SenGen> sg in senGens ) {
+
+                    genDict.Add( sg.Key, sg.Value );
+
+                }
+            }
+
+            if( tagGens.Count > 0 ) {
+
+                foreach( KeyValuePair<string, TagGen> tg in tagGens ) {
+
+                    genDict.Add( tg.Key, tg.Value );
+
+                }
+            }
+
+            return genDict;
         }
-
-
     }
 }

@@ -11,7 +11,7 @@ namespace NGen {
          *          and after that it alawys returns the same text
          */
 
-        public SenGen gen;
+        public OutputGen gen;
         public string genName;
 
         public GenOutput[] onceText = null;
@@ -27,7 +27,7 @@ namespace NGen {
 
         public ProxyGen() { }
 
-        protected override GenOutput[] PickTxt() {
+        protected override GenOutput[] PickTxt( params string[] tags ) {
             if( gen == null ) {
 
                 return null;
@@ -38,19 +38,19 @@ namespace NGen {
 
                     if( onceText == null ) {
 
-                        onceText = gen.GetOutput();
+                        onceText = gen.GetOutput(  tags  );
 
                     }
                     return onceText;
 
                 } else {
 
-                    return gen.GetOutput();
+                    return gen.GetOutput( tags  );
                 }
             }
         }
 
-        public override GenOutput[] GetOutput() {
+        public override GenOutput[] GetOutput( params string[] tags ) {
 
             if( gs.OutputChance == 1 || Rand.ChanceTest( gs.OutputChance ) ) {
 
@@ -58,9 +58,13 @@ namespace NGen {
                 int repeats = GetRepeatNum();
                 List<GenOutput> gens = new List<GenOutput>();
                 for( int r = 0; r < repeats + 1; r++ ) {
-                    GenOutput[] newGOs = PickTxt();
-                    foreach( GenOutput go in newGOs ) {
-                        gens.Add( go );
+                    GenOutput[] newGOs = PickTxt( tags  );
+
+                    if( newGOs != null && newGOs.Length > 0 ) {
+
+                        foreach( GenOutput go in newGOs ) {
+                            gens.Add( go );
+                        }
                     }
                 }
 
@@ -73,7 +77,7 @@ namespace NGen {
             }
         }
 
-        public void SetGen( SenGen g ) {
+        public void SetGen( OutputGen g ) {
             gen = g;
         }
 
@@ -82,6 +86,7 @@ namespace NGen {
         }
 
         public string GetProxyTxt() {
+            //This is just used in the context of separators
             return gen.GetTxt();
         }
 
