@@ -13,7 +13,7 @@ namespace NGen {
 
             PageStack ps = new PageStack();
             Paragraph pg = new Paragraph {
-                text = "Suscipit architecto dolorum ullam necessitatibus iure. Sit ea minima tempore deleniti maxime sapiente consequatur maiores. Saepe aliquid dolorem eos. Fuga minima incidunt autem cum perspiciatis. Ut aut occaecati modi."
+                text = "Suscipit architecto dolorum ullam necessitatibus iure. Sit ea minima tempore deleniti maxime sapiente consequatur maiores. Saepe aliquid dolorem eos. Fuga minima incidunt autem cum perspiciatis. Ut aut occaecati modi.\n\nSuscipit architecto dolorum ullam necessitatibus iure. Sit ea minima tempore deleniti maxime sapiente consequatur maiores. Saepe aliquid dolorem eos. Fuga minima incidunt autem cum perspiciatis. Ut aut occaecati modi."
             };
 
             Page p = new Page( "test one", pg );
