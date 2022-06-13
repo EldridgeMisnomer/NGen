@@ -8,7 +8,7 @@ namespace NGen {
         public static string[] GetTagsFromName( ref string name ) {
 
             int firstBracket = name.IndexOf( '(' );
-            int lastBracket = name.IndexOf( ')' );
+            int lastBracket = name.LastIndexOf( ')' );
 
             if( firstBracket >= 0 && lastBracket >= 0 ) {
 
@@ -47,6 +47,9 @@ namespace NGen {
              *      (tag1, tag2, tag3)
              *      (tag1, tag2) (tag3, tag4)
              */
+
+            //DEBUG
+            //Console.WriteLine( $"tagText is: '{tagText}'." );
 
             List<String> bracketedText = new List<string>();
 
@@ -92,18 +95,15 @@ namespace NGen {
 
             } else {
                 tags = bracketedText;
-            }
+            }          
 
+            //DEBUG
+            //string ds = "";
+            //foreach( string t in tags ) {
+            //    ds += t + ' ';
+            //}
 
-                      
-                        //DEBUG
-                        string ds = "";
-                        foreach( string t in tags ) {
-                            ds += t + ' ';
-                        }
-
-                        Console.WriteLine( $"tags are: {ds} " );
-            
+            //Console.WriteLine( $"tags are: {ds} " );
 
             return tags.ToArray();
         }

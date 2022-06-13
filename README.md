@@ -739,19 +739,19 @@ dwelling (poor) = [ hovel, hut, bedsit ]
 
 Here, we have just one generator, defined twice with different tags, when you access the output of 'dwelling' it will provide either a posh or a poor place to live, however you can also provide tags when you access generators, which will limit the possibilities to either posh or poor, you do this in the same way as with the `GenTxt( name )` method, but add additional tags: `GenTxt( name, tag1, tag2, tag3 )`. You can add as many tags as you like, although in the above example only two will have any effect: `GenTxt( "dwelling", "posh")` will output a posh place to live, and `GenTxt( "dwelling", "poor")` will output a poor place to live.
 
-Let's look at a more complicated example to see how Tags can be useful, we'll write a name generator with two separate variables - male/female and posh/poor, first without tags:
+Let's look at a more complicated example to see how Tags can be useful, we'll write a name generator with two separate variables - male/female and posh/prole, first without tags:
 
 ```
 firstnamefemaleposh = [ Dorothea, Elisabeth, Lucinda, Julliette ]
 firstnamemaleposh = [ Clarence, Richard, Edwin, Augustus ]
-firstnamefemalepoor = [ Dot, Liz, Lucy, Jill ]
-firstnamemalepoor = [ Clive, Dick, Ed, Alf ]
+firstnamefemaleprole = [ Dot, Liz, Lucy, Jill ]
+firstnamemaleprole = [ Clive, Dick, Ed, Alf ]
 
-lastnamepoor = [ Dubbins, Smith, Lapper, Boff ]
-lastnamepoor = [ Ellington-Dukesbury, Wently-Lefferdale, Dinglington-Bradley, Carlington-Dash ]
+lastnameprole = [ Dubbins, Smith, Lapper, Boff ]
+lastnameprole = [ Ellington-Dukesbury, Wently-Lefferdale, Dinglington-Bradley, Carlington-Dash ]
 
-femalename = [ $firstnamefemaleposh $lastnameposh, $firstnamefemalepoor $lastnamepoor ]
-malename = [ $firstnamemaleposh $lastnameposh, $firstnamemalepoor $lastnamepoor ]
+femalename = [ $firstnamefemaleposh $lastnameposh, $firstnamefemaleprole $lastnameprole ]
+malename = [ $firstnamemaleposh $lastnameposh, $firstnamemaleprole $lastnameprole ]
 
 name = [ $femalename, $malename ]
 ```
@@ -759,12 +759,12 @@ name = [ $femalename, $malename ]
 And now let's write the same thing but with tags:
 
 ```
-firstname (female) (posh) = [ Dorothea, Elisabeth, Lucinda, Julliette ]
+firstname (female) (posh) = [ Dorothea, Elisabeth, Lucinda, Juliet ]
 firstname (male) (posh) = [ Clarence, Richard, Edwin, Augustus ]
-firstname (female) (poor) = [ Dot, Liz, Lucy, Jill ]
-firstname (male) (poor) = [ Clive, Dick, Ed, Alf ]
+firstname (female) (prole) = [ Dot, Liz, Lucy, Jill ]
+firstname (male) (prole) = [ Clive, Dick, Ed, Alf ]
 
-lastname (poor) = [ Dubbins, Smith, Lapper, Boff ]
+lastname (prole) = [ Dubbins, Smith, Lapper, Boff ]
 lastname (posh) = [ Ellington-Dukesbury, Wently-Lefferdale, Dinglington-Bradley, Carlington-Dash ]
 
 name = $firstname $lastname
@@ -775,11 +775,11 @@ It should be clear that the second version has some advantages: it is more reada
 And there's a less clear advantage, what if we wanted to retreive a posh name, without regard for gender? With tags we can call `GenTxt( "name", "posh" )`, but in the first example we would have to write two new Generators:
 
 ```
-poorname = [ $firstnamefemalepoor, $firstnamemalepoor ] $lastnamepoor
+prolename = [ $firstnamefemaleprole, $firstnamemaleprole ] $lastnameprole
 poshname = [ $firstnamefemaleposh, $firstnamemaleposh ] $lastnameposh
 ```
 
-The more complicated the example the greate value tags can have, imagine if we wanted to add names in another language to the above example, with tags we would just have to add some new generators for the new language, while tagging our existing generators with `(english)` or similar, without tags it would require a much more complicated construction.
+The more complicated the example the greater value tags can have, imagine if we wanted to add names in another language to the above example, with tags we would just have to add some new generators for the new language, while tagging our existing generators with `(english)` or similar, without tags it would require a much more complicated construction.
 
 For a more extensive example of how tags can be used, see the Placename Generator in the Examples folder (*TODO - doesn't exist yet* ).
 
