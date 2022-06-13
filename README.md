@@ -194,6 +194,23 @@ If only 'one' or 'two' is selected from the List then the output might be "two o
 
 For more information about specific Settings, see [Component Settings](#component-settings)
 
+### Main Generators
+
+Although all Generators are created equal, some may be more equal than others, in that you might only be interested in the output of certain Generators, for example:
+
+```
+weather = [ sunny, rainy, windy ]
+time = [ mornin, afternoon, evening ]
+
+sentence = It was a $weather $time <.
+```
+
+In the above, while it might always be possible for me to get the Output from any Generator, in practice maybe I'm only ever interested in the final 'sentence' Generator. As a quality of life feature I can mark it as a Main Generator by preceeding the Name with an `@` symbol, like so: `@sentence = It was a $weather $time <.`. Internally this won't affect how the Generator runs at all, and its name remains 'sentence'.
+
+However I can use the `GetGenNames( true )` method to return the names of only Main Generators instead of all the Generators. I can also use the `GenAll( true )` method to get the Output from all the Main Generators instead of all the Generators.
+
+*TODO - implement this!*
+
 ## Generator Components
 
 A Generator can hold three different types of components, any generator will have at least one components, although it may consist of many.
