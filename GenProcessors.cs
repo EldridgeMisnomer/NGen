@@ -270,6 +270,12 @@ namespace NGen {
 
                 sg.ownTags = tags;
 
+                //DEBUG
+                string ts = "";
+                foreach( string t in tags ) {
+                    ts += t + ", ";
+                }
+                Console.WriteLine( $"new SenGen, tags are: '({ts})' " );
             }
 
 

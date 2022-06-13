@@ -232,6 +232,13 @@ namespace NGen {
                         string[] thesetags = TagWrangler.GetTagsFromName( ref name );
                         tags.Add( thesetags );
 
+                        //DEBUG
+                        string ts = "";
+                        foreach( string t in thesetags ) {
+                            ts += t + ", ";
+                        }
+                        Console.WriteLine( $"LineProcessor - received tags are: '({ts})'." );
+
                         //extract the header from the name
                         GenSettings newGS = HeaderWrangler.GetSettingsFromName( ref name, oldSettings );
                         settings.Add( newGS );
@@ -282,6 +289,8 @@ namespace NGen {
 
                         //DEBUG
                         Console.WriteLine( $"There is already a gen named '{names[i]}', Creating a TagGen and putting stuff in it" );
+                        Console.WriteLine( $"Old SenGen has first tag: ({senGens[names[i]].ownTags[0]})");
+                        Console.WriteLine( $"New SenGen has first tag: ({g.ownTags[0]})");
 
                         //create a TagGen, put old and new Gens in it,
                         //add it to the tagGen dictionary and remove the old Gen from the senGen Dictionary

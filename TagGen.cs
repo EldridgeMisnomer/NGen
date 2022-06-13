@@ -18,6 +18,9 @@ namespace NGen {
 
         public override string GetTxt( out bool sepBefore, out bool sepAfter , params string[] tags ) {
 
+            //DEBUG
+            //Console.WriteLine( $"Getting request for Tagged Gen with first tag: ({tags[0]})." );
+
             //if there are tags, find a gen to match to them
             if( tags != null && tags.Length > 0 ) {
 
@@ -28,11 +31,15 @@ namespace NGen {
 
                 //get scores representing how many of the user tags gens fulfill
                 int[] scores = new int[gens.Count];
+                //DEBUG
+                //string ss = "";
                 for( int i = 0; i < gens.Count; i++ ) {
 
                     scores[i] = TagWrangler.ScoreTags( tags, gens[i].ownTags );
+                    //ss += scores[i] + ", ";
 
                 }
+                //Console.WriteLine( $"Tag scores are: ({ss})." );
 
                 int maxScore = scores.Max();
 
@@ -46,9 +53,16 @@ namespace NGen {
                     //find all the gens with the highest score
                     int[] genIndexes = scores.AllIndexesOf( maxScore );
 
+                    //DEBUG
+                    //Console.WriteLine( $"Index of first gen with max score is: '{genIndexes[0]}'." );
+
                     //pick one at random to output
                     int choice = Rand.RandomRangeInt( 0, genIndexes.Length );
-                    return gens[choice].GetTxt( out sepBefore, out sepAfter, tags );
+
+                    //DEBUG
+                    //Console.WriteLine( $"Index of gen chosen was: '{choice}'" );
+
+                    return gens[genIndexes[choice]].GetTxt( out sepBefore, out sepAfter, tags );
 
                 }
 

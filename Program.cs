@@ -13,7 +13,7 @@ namespace NGen {
             bool runAllGens = false;
 
             string[] gensToRun = { "name" };
-            string[] tagsToUse = { };
+            string[] tagsToUse = {  };
 
             int numTestToRunPerName = 30;
 

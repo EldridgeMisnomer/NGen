@@ -95,7 +95,7 @@ namespace NGen {
             }
 
 
-            /*          
+                      
                         //DEBUG
                         string ds = "";
                         foreach( string t in tags ) {
@@ -103,7 +103,7 @@ namespace NGen {
                         }
 
                         Console.WriteLine( $"tags are: {ds} " );
-            */
+            
 
             return tags.ToArray();
         }
