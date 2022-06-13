@@ -1,9 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
+using CUILib;
 
 namespace NGen {
     class Program {
         static void Main( string[] args ) {
+
+            //UIElements.Box( "This is some text in a box.\n And here is a second line, && I love you \n And here is a really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really long line." );
+
+            string title = "_____ _____         \n|   | |   __|___ ___ \n| | | |  |  | -_|   |\n|_|___|_____|___|_|_|";
+            UIElements.SetTitle( title );
+            UIElements.H1();
+
+            PageStack ps = new PageStack();
+            Paragraph pg = new Paragraph {
+                text = "Suscipit architecto dolorum ullam necessitatibus iure. Sit ea minima tempore deleniti maxime sapiente consequatur maiores. Saepe aliquid dolorem eos. Fuga minima incidunt autem cum perspiciatis. Ut aut occaecati modi."
+            };
+
+            Page p = new Page( "test one", pg );
+            ps.AddPage( "one", p );
+            ps.ShowPage( "one" );
+
+
 
             bool loadFromJSON = false;
 
@@ -44,11 +61,11 @@ namespace NGen {
 
 
                 foreach( string s in gensToRun ) {
-                    Console.WriteLine( $"{s}:" );
+                    //Console.WriteLine( $"{s}:" );
                     for( int i = 0; i < numTestToRunPerName; i++ ) {
-                        Console.WriteLine( "\t" + nGen.GenTxt( s ) );
+                        //Console.WriteLine( "\t" + nGen.GenTxt( s ) );
                     }
-                    Console.WriteLine( "" );
+                    //Console.WriteLine( "" );
                 }
             }
 

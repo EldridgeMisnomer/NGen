@@ -122,5 +122,11 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CUILib\CUILib.csproj">
+      <Project>{ebfeb0bb-7257-4ac8-90f9-b52e1daef25c}</Project>
+      <Name>CUILib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
