@@ -42,6 +42,9 @@
         //once behaviour (only for proxies)
         public bool Once = false;
 
+        //main gen (only for top level generators)
+        public bool isMain = false;
+
         public GenSettings() { }
 
         public GenSettings( GenSettings gs ) {

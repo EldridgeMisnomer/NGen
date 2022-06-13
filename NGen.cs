@@ -11,11 +11,29 @@ namespace NGen {
 
         public readonly Dictionary<string, OutputGen> gens = new Dictionary<string, OutputGen>();
 
+        public string[] mainGens = null;
+
         public NGen( Dictionary<string, OutputGen> namedGens ) {
             gens = namedGens;
+
+            //Check for mainGens
+            List<string> tempMain = new List<string>();
+            foreach( KeyValuePair<string, OutputGen> g in gens ) {
+                if( g.Value.gs.isMain ) {
+                    tempMain.Add( g.Key );
+                }
+            }
+            if( tempMain.Count > 0 ) {
+                mainGens = tempMain.ToArray();
+            }
+
         }
 
         public NGen() { }
+
+        public bool HasMainGens() {
+            return mainGens != null;
+        }
 
         public string GenTxt( string name, params string[] tags ) {
 
@@ -55,10 +73,49 @@ namespace NGen {
 
         }
 
+        public string[][] GenAll( int number = 10, bool onlyMain = false ) {
 
-        public string[] GetGenNames() {
+            int count = onlyMain ? mainGens.Length : gens.Count;
 
-            return new List<string>(gens.Keys).ToArray();
+            string[][] output = new string[count][];
+
+            string[] keys = GetGenNames();
+
+            for( int i = 0; i< output.Length; i++ ) {
+
+                output[i] = new string[number];
+                for( int j = 0; j < number; j++ ) {
+
+                    if( onlyMain ) {
+
+                        output[i][j] = gens[mainGens[j]].GetTxt();
+
+                    } else {
+
+                        output[i][j] = gens[keys[j]].GetTxt();
+
+                    }
+                }
+            }
+
+            return output;
+
+        }
+
+
+        public string[] GetGenNames( bool onlyMain = false ) {
+
+            if( onlyMain ) {
+                if( mainGens != null ) {
+                    return mainGens;
+                } else {
+                    //TODO - maybe put an error in here?
+                    return null;
+                }
+            } else {
+                return new List<string>(gens.Keys).ToArray();
+            }
+
 
         }
 

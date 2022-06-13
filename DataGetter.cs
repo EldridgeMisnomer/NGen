@@ -19,10 +19,7 @@ namespace NGen {
         //TODO - ??? some form of controlling case
         //TODO - add the possibility to manually define the start of Sentences using |
         //TODO - fill in missing longhand
-
-
-        //TODO maybe - add possibility to tag Generators as importand - so they are
-        //              highlighted when viewing all Generators
+        //TODO - test MainGens
 
 
         public static Dictionary<string, OutputGen> SplitHeadersAndGenerators( string[] lines ) {
@@ -241,6 +238,14 @@ namespace NGen {
 
                         //extract the header from the name
                         GenSettings newGS = HeaderWrangler.GetSettingsFromName( ref name, oldSettings );
+
+                        //Check if is MainGen
+                        if( name[0] == '@' ) {
+                            name = name.Substring( 1 );
+                            newGS.isMain = true;
+                        }
+
+                        //store the header
                         settings.Add( newGS );
 
                         //store the name, which has been modified by the previous two methods

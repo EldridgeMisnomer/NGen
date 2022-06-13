@@ -10,10 +10,12 @@ namespace NGen {
             bool loadFromJSON = false;
             bool testJSON = false;
             bool displayGenNames = true;
-            bool runAllGens = false;
+            bool runAllGens = true;
+            bool testMainGens = true;
+
 
             string[] gensToRun = { "name" };
-            string[] tagsToUse = { "poor", "male" };
+            string[] tagsToUse = { };
 
             int numTestToRunPerName = 30;
 
@@ -30,7 +32,15 @@ namespace NGen {
 
             }
 
-            string[] genNames = nGen.GetGenNames();
+            string[] genNames; 
+            if( testMainGens ) {
+
+                genNames = nGen.GetGenNames( true );
+
+            } else {
+                genNames = nGen.GetGenNames();
+            }
+
 
             if( displayGenNames ) {
                 string s = "";
