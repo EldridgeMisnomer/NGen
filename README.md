@@ -742,7 +742,7 @@ Here, we have just one generator, defined twice with different tags, when you ac
 Let's look at a more complicated example to see how Tags can be useful, we'll write a name generator with two separate variables - male/female and posh/prole, first without tags:
 
 ```
-firstnamefemaleposh = [ Dorothea, Elisabeth, Lucinda, Julliette ]
+firstnamefemaleposh = [ Dorothea, Elisabeth, Lucinda, Juliet ]
 firstnamemaleposh = [ Clarence, Richard, Edwin, Augustus ]
 firstnamefemaleprole = [ Dot, Liz, Lucy, Jill ]
 firstnamemaleprole = [ Clive, Dick, Ed, Alf ]
@@ -772,7 +772,7 @@ name = $firstname $lastname
 
 It should be clear that the second version has some advantages: it is more readable for a start, and it requires less intermediate generators without sacrificing the possibility of retrieving the results of those intermetiate generators (we can call `GenTxt( "name", "female" )` and get the equivalent of calling `GenTxt( "femalename" )` in the first example).
 
-And there's a less clear advantage, what if we wanted to retreive a posh name, without regard for gender? With tags we can call `GenTxt( "name", "posh" )`, but in the first example we would have to write two new Generators:
+Furthermore, what if we wanted to retreive a posh name, without regard for gender? With tags we can call `GenTxt( "name", "posh" )`, but in the first example we would have to write two new Generators:
 
 ```
 prolename = [ $firstnamefemaleprole, $firstnamemaleprole ] $lastnameprole
@@ -808,19 +808,33 @@ This in itself is not particularly useful, however we can also specify a Tag (or
 
 The standard way to access a Generator in NGen is to use the `GenTxt( generatorname )` method, to specify Tags when we access a Generator we can include the Tag names after the Generator Name, like so: `GenTxt( "numbers", "roman" )`.
 
-Whenever we access a Generator with Tags it will attempt to provide us with output from a Generator which contains all the Tags we have specified, so if we access the numbers Generator with `GenTxt( "numbers", "arabic" )` we'll receive an output from the list `[ 1, 2, 3, 4, 5 ]`.
+Whenever we access a Generator with Tags it will attempt to provide us with output from a Generator which contains all the Tags we have specified, so if we access the numbers Generator with `GenTxt( "numbers", "arabic" )` we'll receive an output from the List `[ 1, 2, 3, 4, 5 ]`.
 
 If a Generator can't be found with the correct tags, for example if we access `GenTxt( "numbers", "words" )` then Output will be given from one of the available Generators chosen at random.
 
-If we access a Generator with conflicting Tags, for example: `GenTxt( "numbers", "roman", "arabic" )`, then the first Generator we specify which is available will give its output, in this case 'roman'.
+If we access a Generator with conflicting Tags, for example: `GenTxt( "numbers", "roman", "arabic" )`, then Output will be given from one of the available Generators chosen at random.
 
-If some of the Tags we specify are available and other aren't then the Generator will do its best, for example: `GenTxt( "numbers", "arabic", "big" ) will still give us output from the `arabic` Generator.
+If some of the Tags we specify are available and other aren't then the Generator will do its best, for example: `GenTxt( "numbers", "arabic", "big" ) will still give us output from the `arabic` Generator. More precisely the Generator with the most matching Tags will be Output, if there is more than one Generator with most matching Tags, then one of these will be picked at random.
 
 #### Tags and Proxies
 
 All of the above refers to accessing Generators directly, but what happens when Generators are accessed indirectly (via a Proxy)?
 
-*TODO...*
+Generators with Tags pass their Tags down to other Generators they contain (via Proxies) which in turn provide an output just as if the user had supplied the tags, for example:
+
+```
+fname (es) = [ Javier, Ignacio, Carlos, Juan ]
+fname (en) = [ Shaun, Richard, Ben, Mike ]
+fname (fr) = [ François, Leo, Claude, Louis ]
+
+sen (en) = I once knew a man called $fname <.
+```
+
+In the above, the 'sen' Generator has a Proxy which links to the 'fname' Generator. There are 'fname' Generators with three different tags, corresponding to different languages. Because the 'sen' Generator also has a Tag ('en'). Even though 'sen' only has one version, and so the Tag doesn't do anything directly to its output, it will pass this Tag to the 'fname' Generator and so will only make a sentence with an English name.
+
+However, User Tags, those input with `GenTxt( genName, tags )` will override internal Tags, so in the above example, if you generate an output with `GenTxt( "sen", "fr" ), you will receive an output with a French name in it, not the default English one.
+
+This allows you to, for example, set a default type of output for a Generator.
 
 ## Comments
 
