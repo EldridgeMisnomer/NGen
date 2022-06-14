@@ -41,6 +41,36 @@ namespace NGen {
                 };
 
 
+        public static void RemapChars( Dictionary<char, char> remapDict ) {
+
+            //DEBUG
+            Console.WriteLine( "Performing character remap" );
+
+            foreach( KeyValuePair<char,char> mapping in remapDict ) {
+
+                //check if char to be remapped is in dictionary
+                if( chars.ContainsValue( mapping.Key ) ) {
+
+                    //check if either the new char is not in the dictionary or it is to be remapped
+                    if( !chars.ContainsValue( mapping.Value ) || remapDict.ContainsKey( mapping.Value ) ) {
+
+                        //remap
+                        CharType k = chars.FirstOrDefault( x => x.Value == mapping.Key ).Key;
+                        chars[k] = mapping.Value;
+
+                    } else {
+                        Console.WriteLine( $"Remap Error: character '{mapping.Value}' is already in use and so must be remapped too." );
+                        //TODO generate error about new value already in use and must be remapped too.
+                    }
+
+                } else {
+                    Console.WriteLine( $"Remap Error: character '{mapping.Key}' is not remappable." );
+
+                    //TODO generate error about char not being remappable
+                }
+            }
+        }
+
         public static bool StringContinsList( string s ) {
             return NonEscapedCharCheck( s, CharMap( CharType.openList ) );
         }
@@ -131,8 +161,18 @@ namespace NGen {
 
             string pattern = @"(?<!\\)" + c;
             //DEBUG
-            //Console.WriteLine( $"RegEx Split. String is: '{s}', char is: '{c}', pattern is: '{pattern}'");
-            return Regex.Split( s, pattern );
+            Console.WriteLine( $"RegEx Split. String is: '{s}', char is: '{c}', pattern is: '{pattern}'");
+            string[] output =  Regex.Split( s, pattern );
+
+            //DEBUG
+            string st = "";
+            foreach( string o in output ) {
+                st += "[" + o + "] ";
+            }
+            Console.WriteLine( st );
+
+            return output;
+
 
         }
 

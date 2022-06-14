@@ -13,6 +13,9 @@ namespace NGen {
 
         public string[] mainGens = null;
 
+        public Dictionary<char, char> remapDict = null;
+
+
         public NGen( Dictionary<string, OutputGen> namedGens ) {
             gens = namedGens;
 
@@ -121,7 +124,7 @@ namespace NGen {
 
         public void TurnIntoJSON() {
 
-            FileHandler.NGenToJSON( this );
+            FileWrangler.NGenToJSON( this );
 
         }
 

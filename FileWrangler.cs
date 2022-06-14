@@ -5,7 +5,7 @@ using TinyJSON;
 
 namespace NGen {
 
-    public static class FileHandler {
+    public static class FileWrangler {
 
         public static void NGenToJSON( NGen ngen ) {
 
@@ -35,6 +35,10 @@ namespace NGen {
                 string json = File.ReadAllText( path );
 
                 JSON.MakeInto( JSON.Load( json ), out n );
+
+                if( n.remapDict != null ) {
+                    ParserUtils.RemapChars( n.remapDict );
+                }
 
                 return n;
 
@@ -66,7 +70,7 @@ namespace NGen {
         public static NGen TxtFileToNGen( string path ) {
 
             //Get the file as an array of lines
-            string[] lines = FileHandler.GetTxtFromFile( path );
+            string[] lines = FileWrangler.GetTxtFromFile( path );
             //Remove the comments
             string[] strippedLines = ParserUtils.StripComments( lines );
             //process the lines into Gens with names
@@ -92,6 +96,13 @@ namespace NGen {
 
             //Create the nGen and return it
             NGen nGen = new NGen( gens );
+
+            //if there's a remap dictionary, add it to the gen
+            if( DataGetter.remapDict != null ) {
+                nGen.remapDict = DataGetter.remapDict;
+                DataGetter.remapDict = null;
+            }
+
             return nGen;
 
         }

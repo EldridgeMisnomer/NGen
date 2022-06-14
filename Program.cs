@@ -10,8 +10,8 @@ namespace NGen {
             bool loadFromJSON = false;
             bool testJSON = false;
             bool displayGenNames = true;
-            bool runAllGens = true;
-            bool testMainGens = true;
+            bool runAllGens = false;
+            bool testMainGens = false;
 
 
             string[] gensToRun = { "name" };
@@ -23,12 +23,12 @@ namespace NGen {
             if( loadFromJSON ) {
 
                 string path = "JSON output/names_01.json";
-                nGen = FileHandler.JSONToNGen( path );
+                nGen = FileWrangler.JSONToNGen( path );
 
             } else {
 
                 string path = "data/names_01.txt";
-                nGen = FileHandler.TxtFileToNGen( path );
+                nGen = FileWrangler.TxtFileToNGen( path );
 
             }
 

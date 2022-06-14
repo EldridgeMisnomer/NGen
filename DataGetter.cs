@@ -10,16 +10,16 @@ namespace NGen {
 
     public static class DataGetter {
 
-        //TODO - remap special characters
         //TODO - fix NoRep shuffle function
         //TODO - check what happens if no header, or no header at beginning but yes one later
         //TODO - better optimise WrdProcessor
         //TODO - ??? Glitch ???
-        //TODO - ??? add 1 or two default Lists - Numbers, Letters, Alphanumeric, Uppercase Letters
+        //TODO - ??? add 1 or two default Lists - Numbers, Letters, Uppercase Letters
         //TODO - ??? some form of controlling case
         //TODO - add the possibility to manually define the start of Sentences using |
         //TODO - fill in missing longhand
-        //TODO - test MainGens
+
+        public static Dictionary<char, char> remapDict = null;
 
 
         public static Dictionary<string, OutputGen> SplitHeadersAndGenerators( string[] lines ) {
@@ -151,25 +151,85 @@ namespace NGen {
                 gs = new GenSettings( oldSettings );
             }
 
-
-            /*
-             *  I need to rethink a bit how this is done.
-             *  
-             *  3 types of setting
-             *  
-             *  EnumType = EnumType.value
-             *  BoolType = On / Off
-             *  Number = Number / Array of Numbers
-             *  
-             *  We need to split it up by =
-             *      Then 0 will contain a name, 
-             *      1 will contain the value, & the next name, 
-             *      2 the value & the next name, 
-             *      etc.
-             */
-
-
             if( h.Length > 0 ) {
+
+                //remapping
+                int remapInd = h.IndexOf( "remap" );
+
+                //DEBUG
+                Console.WriteLine( $"remapInd: '{remapInd}'." );
+
+                if( remapInd >= 0 ) {
+
+                    int startInd = h.IndexOf( '(', remapInd + 5 );
+                    int endInd = h.IndexOf( ')', startInd + 1 );
+
+                    //DEBUG
+                    Console.WriteLine( $"remap string: '{h}'." );
+                    Console.WriteLine( $"remap, startInd: '{startInd}', endInd: '{endInd}'." );
+
+                    string remapString = h.Substring( startInd + 1, endInd - startInd - 1 );
+                    Console.WriteLine( $"remap string: '{remapString}'." );
+
+                    //split string based on '='
+                    string[] remapSplit = ParserUtils.StringSplitOnUnEscapedCharacter( remapString, '=' );
+
+                    Console.WriteLine( $" remapArray is {remapSplit.Length} elements long." );
+
+
+                    remapDict = new Dictionary<char, char>();
+
+                    for( int i = 0; i < remapSplit.Length-1; i++ ) {
+
+                        //DEBUG
+                        Console.WriteLine( $" remapLoop: {i} " );
+
+                        string f1 = remapSplit[i].Trim();
+                        string f2 = remapSplit[i+1].Trim();
+                        char c1 = f1[f1.Length-1];
+                        char c2 = f2[0];
+                        remapDict.Add( c1, c2 );
+                    }
+
+                    ParserUtils.RemapChars( remapDict );
+
+                }
+
+
+
+                //Split header
+                //char[] separators = { '=' };
+                //string[] hParts = h.Split( separators, StringSplitOptions.RemoveEmptyEntries );
+
+                //Search strings
+
+                List<string> searchStrings = new List<string> {
+                    "remap", "pick", "repeat", "chance", "separator", "once", "allow"
+                };
+
+                //for( int i = 0; i < hParts.Length; i++ ) {
+
+
+
+                //}
+
+                /*
+                 *  I need to rethink a bit how this is done.
+                 *  
+                 *  3 types of setting
+                 *  
+                 *  EnumType = EnumType.value
+                 *  BoolType = On / Off
+                 *  Number = Number / Array of Numbers
+                 *  
+                 *  We need to split it up by =
+                 *      Then 0 will contain a name, 
+                 *      1 will contain the value, & the next name, 
+                 *      2 the value & the next name, 
+                 *      etc.
+                 */
+
+
 
                 //Pick Type
                 PickType pt = gs.PickType;
@@ -234,7 +294,7 @@ namespace NGen {
                         foreach( string t in thesetags ) {
                             ts += t + ", ";
                         }
-                        Console.WriteLine( $"LineProcessor - received tags are: '({ts})'." );
+                        //Console.WriteLine( $"LineProcessor - received tags are: '({ts})'." );
 
                         //extract the header from the name
                         GenSettings newGS = HeaderWrangler.GetSettingsFromName( ref name, oldSettings );
@@ -293,9 +353,9 @@ namespace NGen {
                     if( senGens.ContainsKey( names[i] ) ) {
 
                         //DEBUG
-                        Console.WriteLine( $"There is already a gen named '{names[i]}', Creating a TagGen and putting stuff in it" );
-                        Console.WriteLine( $"Old SenGen has first tag: ({senGens[names[i]].ownTags[0]})");
-                        Console.WriteLine( $"New SenGen has first tag: ({g.ownTags[0]})");
+                        //Console.WriteLine( $"There is already a gen named '{names[i]}', Creating a TagGen and putting stuff in it" );
+                        //Console.WriteLine( $"Old SenGen has first tag: ({senGens[names[i]].ownTags[0]})");
+                        //Console.WriteLine( $"New SenGen has first tag: ({g.ownTags[0]})");
 
                         //create a TagGen, put old and new Gens in it,
                         //add it to the tagGen dictionary and remove the old Gen from the senGen Dictionary

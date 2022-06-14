@@ -275,7 +275,7 @@ namespace NGen {
                 foreach( string t in tags ) {
                     ts += t + ", ";
                 }
-                Console.WriteLine( $"new SenGen, tags are: '({ts})' " );
+                //Console.WriteLine( $"new SenGen, tags are: '({ts})' " );
             }
 
 

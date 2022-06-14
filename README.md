@@ -867,7 +867,7 @@ Every commented line must have a `#` as its first character.
 
 As we have seen, NGen uses special characters like `[` and `$` to define things like Lists and References, the complete list of these special characters is:
 
-`# = [ ] , $ /`
+`# = [ ] , $ / < >`
 
 Sometimes you want to use these characters in your text, to do so they need to be escaped by putting a `\` character before them, otherwise they will be read as part of your generator structure, and not part of its content. eg:
 
@@ -881,21 +881,85 @@ money2 = [\$100, \$200]
 
 ```
 
+## Remapping Characters
+
+Occasionally escaping characters can be a pain, especially if you use a character which needs to be escaped a lot (this can be especcially true of the comma `,`).
+
+In cases like this it is possible to change the character NGen uses for a particular function with the `remap` command.
+
+Remapping always happens in the main header and looks like this:
+
+```
+^
+remap ( , = ; )
+^
+listgen = [ one; two; three ]
+```
+
+Now NGen will recognise a semicolon `;` as separating elements in the list instead of the comma `,` and the comma can be used normally in text without escaping it. Semicolons, however, must now be escaped when used normally.
+
+There can only be one `remap` command in an NGen file, and it must be in a Main Header at the top of the file, you can't remap part way through a file.
+
+Multiple characters can be remapped at the same time, they must all be included in the same set of brackets after `remap`, so this is valid:
+
+```
+^
+remap ( $ = £ , = ; )
+^
+```
+and this is not valid, or rather only the first remap will succeed:
+```
+^
+remap ( $ = £ )
+remap ( , = ; )
+^
+```
+
+You may, however, separate Remaps however you like, all of the below are valid, although not all at once:
+```
+remap ( $ = £ , = ; )
+remap ( $=£ / ,=; )
+remap ($ = £ , , = ;)
+remap ( $ = £ | , = ; )
+remap ($=£,=;)
+```
+
+
+Care must be taken when remapping characters. If you remap to a character which is already used (for example: `, = <`) then that character *must* also be remapped, otherwise NGen will produce an error and remapping will fail.
+
+### Remapping limitations
+
+There are some limitations to Remapping:
+
+`= [ ] , $ < >`
+
+**You can only Remap the above characters**, the same ones which have to be escaped, with the exception of the escape character itself `\` and the comment character `#`, both of which can't be remapped.
+
+*TODO - think about how remapping comments would work, or ensure that it's never necessary???*
+
+*TODO - Ditto with headers `^` do we need to remap this???*
+
+**You can only Remap to a single character**, not a string of characters; it is impossible to remap `$` to `!%` for example.
+
+
+
 ### Table of Special Characters
 
 Here is a table of all Special Characters in NGen:
 
-| Character | Function							|
-|-----------|-----------------------------------|
-| #  		| Comment							|
-| =			| assignement						|
-| [			| start List						|
-| ]			| end List							|
-| ,			| separates List elements			|
-| $			| denotes a Proxy				    |
-| \|		| marks the beginning of a new Sentence |
+| Character | Function														|
+|-----------|---------------------------------------------------------------|
+| #  		| Comment														|
+| =			| assignement													|
+| [			| start List													|
+| ]			| end List														|
+| ,			| separates List elements										|
+| $			| denotes a Proxy												|
+| \|		| marks the beginning of a new Sentence							|
 | >			| indicates no separator between this and the following element |
 | <			| indicates no separator between this and the preceding element |
+| @			| marks a Main Generator										|
+| \			| escapes a special character									|
 
 ### Table of Shorthand Characters
 
