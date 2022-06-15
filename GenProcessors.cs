@@ -87,7 +87,7 @@ namespace NGen {
 
         public static ProxyGen ProxyProcessor( string s, GenSettings genSettings ) {
 
-            int refIndex = s.IndexOf( PU.CharMap( CharType.reference ) );
+            int refIndex = s.IndexOf( PU.CharMap( CharType.proxy ) );
 
             string name = s.Substring( refIndex + 1, s.Length - refIndex - 1 );
 

@@ -105,9 +105,6 @@ namespace NGen {
 
             s = s.Trim();
 
-            //DEBUG
-            //Console.WriteLine( $"HeaderParser: char: '{c}', string: '{s}'" );
-
             switch( c ) {
 
                 case '&':
@@ -296,7 +293,7 @@ namespace NGen {
             if( s.Length > 0 ) {
 
                 //If this is a ProxyGen Separator
-                if( s[0] == ParserUtils.CharMap( CharType.reference ) ) {
+                if( s[0] == ParserUtils.CharMap( CharType.proxy ) ) {
 
                     string proxyName = s.Substring( 1, s.Length - 1 );
                     ProxyGen pg = GenProcessors.ProxyProcessor( proxyName, gs );

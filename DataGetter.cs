@@ -193,57 +193,133 @@ namespace NGen {
 
                     ParserUtils.RemapChars( remapDict );
 
+                    //remake h without remap, to save time on later searches
+                    string preRemap = "";
+                    string postRemap = "";
+
+                    if( remapInd > 0 ) {
+                        //"0123remap)012"
+                        preRemap = h.Substring( 0, remapInd );
+                    }
+                    if( h.Length > endInd + 1 ) {
+                        postRemap = h.Substring(endInd + 1 );
+                    }
+
+                    h = preRemap + ' ' + postRemap;
+
                 }
 
 
 
                 //Split header
-                //char[] separators = { '=' };
-                //string[] hParts = h.Split( separators, StringSplitOptions.RemoveEmptyEntries );
+                char[] separators = { '=' };
+                List<string> hParts = new List<string>( h.Split( separators, StringSplitOptions.RemoveEmptyEntries ) );
 
                 //Search strings
-
                 List<string> searchStrings = new List<string> {
-                    "remap", "pick", "repeat", "chance", "separator", "once", "allow"
+                    "pick", "repeat", "chance", "separator", "once", "allow"
                 };
 
-                //for( int i = 0; i < hParts.Length; i++ ) {
+                //keep track of pick or repeat last picked, for weights
+                bool pickLast = false;
+
+                //work backwards through the parts
+                for( int i = hParts.Count - 1; i > 0; i++ ) {
+
+                    string p1 = hParts[i-1];
+                    string p2 = hParts[i];
+
+                    //search p1 for searchStrings
+                    for( int j = 0; j < searchStrings.Count; j++ ) {
+
+                        string ss = searchStrings[j];
+                        if( p1.Contains( ss ) ) {
+
+                            //if the string is found do something depending on which one it is
+                            switch( ss ) {
+                                case "pick":
+
+                                    pickLast = true;
+
+                                    PickType pt = gs.PickType;
+                                    EnumHelpers.StringToEnum<PickType>( p2, ref pt );
+
+                                    switch( pt ) {
+                                        case PickType.shuffle:
+                                            searchStrings.Add( "point" );
+                                            break;
+                                        case PickType.cycle:
+                                            searchStrings.Add( "skip" );
+                                            break;
+                                        case PickType.weighted:
+                                            searchStrings.Add( "weights" );
+                                            break;
+                                    }
+
+                                    gs.PickType = pt;
+                                    gs.SetPickDefaults();
+                                    break;
+
+                                case "repeat":
+
+                                    pickLast = false;
+
+                                    RepeatType rt = gs.RepType;
+                                    EnumHelpers.StringToEnum<RepeatType>( p2, ref rt );
+
+                                    switch( rt ) {
+                                        case RepeatType.uniform:
+                                            searchStrings.Add( "min" );
+                                            searchStrings.Add( "max" );
+                                            break;
+                                        case RepeatType.normal:
+                                            searchStrings.Add( "min" );
+                                            searchStrings.Add( "max" );
+                                            searchStrings.Add( "mean" );
+                                            searchStrings.Add( "dev" );
+                                            break;
+                                        case RepeatType.@fixed:
+                                            searchStrings.Add( "num" );
+                                            break;
+                                        case RepeatType.weighted:
+                                            searchStrings.Add( "weights" );
+                                            break;
+                                    }
+
+                                    gs.RepType = rt;
+                                    gs.SetRepeatDefaults();
+                                    break;
+
+                                case "chance":
+
+                                    double c;
+                                    if( ParserUtils.DirtyStringToDouble( p2, out c ) ) {
+
+                                        gs.OutputChance = c;
+
+                                    } else {
+                                        //TODO - report an error here
+                                    }
+
+                                    break;
+
+                                case "separator":
+
+                                    //check if this is a proxy
+                                    if( ParserUtils.StringContainsProxy(p2) ) {
+
+                                        //string proxyName = p2.Substring( )
+
+                                    }
+
+                                    break;
+                            }
+                        }
+                    }
+                }
 
 
-
-                //}
-
-                /*
-                 *  I need to rethink a bit how this is done.
-                 *  
-                 *  3 types of setting
-                 *  
-                 *  EnumType = EnumType.value
-                 *  BoolType = On / Off
-                 *  Number = Number / Array of Numbers
-                 *  
-                 *  We need to split it up by =
-                 *      Then 0 will contain a name, 
-                 *      1 will contain the value, & the next name, 
-                 *      2 the value & the next name, 
-                 *      etc.
-                 */
-
-
-
-                //Pick Type
-                PickType pt = gs.PickType;
-
-                EnumHelpers.StringToEnum<PickType>( h, "pick", ref pt );
-                gs.PickType = pt;
-
-                //Repeat Type
-                RepeatType rt = gs.RepType;
-
-                EnumHelpers.StringToEnum<RepeatType>( h, "repeat", ref rt );
-                gs.RepType = rt;
-                gs.SetRepeatDefaults();
-
+                //TODO - fix this
                 if( h.Contains("norep") ) {
                     gs.AllowRepeats = true;
                 }

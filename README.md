@@ -547,7 +547,7 @@ In the above example there is only one list and it only contains one word, "happ
 	I was very very very happy.
 	I was very very very very happy.
 
-However, the second sentence is the most likely, the first is slightly less like, the third is half as likely as the second, and the fourth is the least likey - 4 times less likely than the second.
+However, the second sentence is the most likely, the first is slightly less like, the third is half as likely as the second, and the fourth is the least likely - 4 times less likely than the second.
 
 
 #### Output Chance Setting

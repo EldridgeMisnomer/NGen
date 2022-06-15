@@ -6,13 +6,11 @@ namespace NGen {
         static void Main( string[] args ) {
 
             //Testing Switches and Parameters
-
             bool loadFromJSON = false;
             bool testJSON = false;
             bool displayGenNames = true;
             bool runAllGens = false;
             bool testMainGens = false;
-
 
             string[] gensToRun = { "name" };
             string[] tagsToUse = { };

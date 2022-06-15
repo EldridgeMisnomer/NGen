@@ -34,12 +34,15 @@ namespace NGen {
                     { CharType.openList, '[' },
                     { CharType.closeList, ']' },
                     { CharType.listSeparator, ',' },
-                    { CharType.reference, '$' },
+                    { CharType.proxy, '$' },
                     { CharType.header, '^' },
                     { CharType.noSepBefore, '<' },
                     { CharType.noSepAfter, '>' }
                 };
 
+        public static char[] GetAllSpecialChars() {
+            return chars.Values.ToArray();
+        }
 
         public static void RemapChars( Dictionary<char, char> remapDict ) {
 
@@ -76,7 +79,7 @@ namespace NGen {
         }
 
         public  static bool StringContainsProxy( string s ) {
-            return NonEscapedCharCheck( s,  CharMap( CharType.reference ) );
+            return NonEscapedCharCheck( s,  CharMap( CharType.proxy ) );
         }
 
         public static bool StringContainsDeclaration( string s ) {
@@ -97,7 +100,7 @@ namespace NGen {
             if( contains ) {
 
                 //collect all the indexes of the given character in the string
-                int[] charIndexes = GetAllCharacterIndexes( s, c );
+                int[] charIndexes = GetAllCharIndexes( s, c );
 
                 //go through all of the indexes, and check if the previous character was NOT an escape character
                 //if it wasn't, return true
@@ -115,7 +118,7 @@ namespace NGen {
             }
         }
 
-        private static int[] GetAllCharacterIndexes( string s, char c ) {
+        private static int[] GetAllCharIndexes( string s, char c ) {
             List<int> charIndexes = new List<int>();
             for( int i = s.IndexOf( c ); i > -1; i = s.IndexOf( c, i + 1 ) ) {
                 charIndexes.Add( i );
@@ -172,8 +175,20 @@ namespace NGen {
             Console.WriteLine( st );
 
             return output;
+        }
 
+        public static bool DirtyStringToDouble( string s, out double d ) {
 
+            //first strip a string of all character that are not numbers or .
+            string pattern = @"[0-9]|\.";
+            var rxm = Regex.Matches( s, pattern );
+            string cleanS = "";
+            foreach( Match m in rxm ) {
+                cleanS += m.Value;
+            }
+
+            //now try and parse it
+            return double.TryParse( cleanS, out d ); 
         }
 
         public static string StripEscapes( string s ) {
@@ -184,11 +199,28 @@ namespace NGen {
              *      This uses RegEx, you do not understand it, don't pretend you do
              *      You used this website to generate this:
              *      https://regex101.com/r/HQm24o/1
+             *      
+             *  TODO - test this
+             *      
              */
 
             if( s.Contains( '\\' ) ) {
 
-                string pattern = @"(?<!\\)\\";
+
+                char[] chars = GetAllSpecialChars();
+                string patMid = @"";
+                foreach( char c in chars ) {
+                    if( c == ']' ) {
+                        patMid += @"\]";
+                    } else {
+                        patMid += c;
+                    }
+                }
+
+                string patStart = @"(?<!\\)\\(?=[";
+                string patEnd = @"])";
+
+                string pattern = patStart + patMid + patEnd;
                 RegexOptions options = RegexOptions.Multiline;
                 Regex regex = new Regex( pattern, options );
                 return regex.Replace( s, "" );
@@ -251,7 +283,7 @@ namespace NGen {
             if( s.Contains( c ) ) {
 
                 //collect all the indexes of the given character in the string
-                int[] charIndexes = GetAllCharacterIndexes( s, c );
+                int[] charIndexes = GetAllCharIndexes( s, c );
 
                 //go through all of the indexes, and count them
                 //only if the previous character was NOT an escape character
