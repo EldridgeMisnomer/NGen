@@ -126,6 +126,26 @@ namespace NGen {
             return charIndexes.ToArray();
         }
 
+        public static int GetNonEscapedCharIndex( this string s, char c, int start = 0 ) {
+
+            int index = start;
+
+            while( index < s.Length ) {
+
+                if( s[index] == c &&
+                    ( index == 0 || s[index - 1] != '/' ) ) {
+
+                    return index;
+
+                }
+                index++;
+
+            }
+
+            return -1;
+
+        }
+
         public static void StringToStringPair( string s, out string name, out string contents ) {
 
             int divide = s.IndexOf( CharMap( CharType.declare ) );
@@ -134,7 +154,7 @@ namespace NGen {
 
         }
 
-        public static string[] StripComments( string[] ls ) {
+        public static string[] StripCommentsAndEmpties( string[] ls ) {
 
             /*
              *  Receives an array of strings and returns an array including 
@@ -177,19 +197,6 @@ namespace NGen {
             return output;
         }
 
-        public static bool DirtyStringToDouble( string s, out double d ) {
-
-            //first strip a string of all character that are not numbers or .
-            string pattern = @"[0-9]|\.";
-            var rxm = Regex.Matches( s, pattern );
-            string cleanS = "";
-            foreach( Match m in rxm ) {
-                cleanS += m.Value;
-            }
-
-            //now try and parse it
-            return double.TryParse( cleanS, out d ); 
-        }
 
         public static string StripEscapes( string s ) {
             /*
@@ -272,6 +279,34 @@ namespace NGen {
                 return -1;
 
             }
+        }
+
+        public static bool DirtyStringToDouble( string s, out double d ) {
+
+            //first strip a string of all characters that are not numbers or .
+            string pattern = @"[0-9]|\.";
+            var rxm = Regex.Matches( s, pattern );
+            string cleanS = "";
+            foreach( Match m in rxm ) {
+                cleanS += m.Value;
+            }
+
+            //now try and parse it
+            return double.TryParse( cleanS, out d ); 
+        }
+
+        public static bool DirtyStringToInt( string s, out int i ) {
+
+            //first strip a string of all characters that are not numbers
+            string pattern = @"[0-9]";
+            var rxm = Regex.Matches( s, pattern );
+            string cleanS = "";
+            foreach( Match m in rxm ) {
+                cleanS += m.Value;
+            }
+
+            //now try and parse it
+            return int.TryParse( cleanS, out i );
         }
 
         public static int GetCharacterCount( string s, char c ) {

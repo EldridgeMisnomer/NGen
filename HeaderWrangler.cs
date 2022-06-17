@@ -192,8 +192,8 @@ namespace NGen {
                                 }
 
                                 gs.WeightFac = n;
-                                gs.WeightsFromFac = true;
-                                gs.WeightsFromEnds = false;
+                                gs.PickWeightsFromFac = true;
+                                gs.PickWeightsFromEnds = false;
 
                             } else if( sNumParts.Length == 2 ) {
 
@@ -203,18 +203,18 @@ namespace NGen {
 
                                 if( start > 0 && end > 0 ) {
 
-                                    gs.WeightStart = start;
-                                    gs.WeightEnd = end;
+                                    gs.PickWeightStart = start;
+                                    gs.PickWeightEnd = end;
 
                                 } else {
 
-                                    gs.WeightStart = 10;
-                                    gs.WeightEnd = 1;
+                                    gs.PickWeightStart = 10;
+                                    gs.PickWeightEnd = 1;
 
                                 }
 
-                                gs.WeightsFromEnds = true;
-                                gs.WeightsFromFac = false;
+                                gs.PickWeightsFromEnds = true;
+                                gs.PickWeightsFromFac = false;
 
                             } else {
 
@@ -228,8 +228,8 @@ namespace NGen {
                                 }
 
                                 gs.PickWeights = weights;
-                                gs.WeightsFromEnds = false;
-                                gs.WeightsFromFac = false;
+                                gs.PickWeightsFromEnds = false;
+                                gs.PickWeightsFromFac = false;
 
                             }
 
@@ -356,6 +356,11 @@ namespace NGen {
                         //Try and convert the num string into integers
                         int[] numParts = new int[sNumParts.Length];
 
+                        double stdDevHack = 0.5;
+                        if( sNumParts.Length >= 4) {
+                            stdDevHack = PU.StringToDouble( sNumParts[2] );
+                        }
+
                         for( int i = 0; i < sNumParts.Length; i++ ) {
 
                             int num = PU.StringToInt( sNumParts[i] );
@@ -379,7 +384,7 @@ namespace NGen {
                             }
 
                             //for uniform repeat type only
-                            if( gs.RepType == RepeatType.uniform ) {
+                            if( gs.RepType == RepeatType.normal ) {
 
                                 //three numbers means set min, mean, and max
                                 if( sNumParts.Length == 3 ) {
@@ -391,11 +396,11 @@ namespace NGen {
                                     gs.UseDev = false;
 
 
-                                } else {
+                                } else if ( sNumParts.Length > 3 ) {
                                     //more than three numbers mean set min, mean, stdDev, and max
                                     gs.RepMin = numParts[0];
                                     gs.RepMean = numParts[1];
-                                    gs.RepStdDev = numParts[2];
+                                    gs.RepStdDev = stdDevHack;
                                     gs.RepMax = numParts[3];
                                     gs.UseMean = true;
                                     gs.UseDev = true;
@@ -432,11 +437,11 @@ namespace NGen {
 
             if( s.Length > 0 && s.Contains( '!' ) ) {
 
-                gs.AllowRepeats = false;
+                gs.AllowDupes = false;
 
             } else {
 
-                gs.AllowRepeats = true;
+                gs.AllowDupes = true;
 
             }
         }        

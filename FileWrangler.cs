@@ -72,7 +72,7 @@ namespace NGen {
             //Get the file as an array of lines
             string[] lines = FileWrangler.GetTxtFromFile( path );
             //Remove the comments
-            string[] strippedLines = ParserUtils.StripComments( lines );
+            string[] strippedLines = ParserUtils.StripCommentsAndEmpties( lines );
             //process the lines into Gens with names
             Dictionary<string, OutputGen> gens = DataGetter.SplitHeadersAndGenerators( strippedLines );
 

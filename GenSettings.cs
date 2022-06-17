@@ -5,16 +5,16 @@
         //pick behaviour (only for lists)
         public PickType PickType = PickType.random;
 
-        public bool AllowRepeats = true;
+        public bool AllowDupes = true;
         public double ShufflePoint = 1;
         public int Skip = 0;
 
         //pick behaviour - weights
         public double WeightFac = 0.8;
-        public double WeightStart = 1;
-        public double WeightEnd = 10;
-        public bool WeightsFromFac = false;
-        public bool WeightsFromEnds = true;
+        public double PickWeightStart = 1;
+        public double PickWeightEnd = 10;
+        public bool PickWeightsFromFac = false;
+        public bool PickWeightsFromEnds = true;
         public double[] PickWeights = new double[0];
 
         //repeat behaviour
@@ -51,16 +51,16 @@
 
             //pick behaviour
             PickType = gs.PickType;
-            AllowRepeats = gs.AllowRepeats;
+            AllowDupes = gs.AllowDupes;
             ShufflePoint = gs.ShufflePoint;
             Skip = gs.Skip;
 
             //pick behaviour - weights
             WeightFac = gs.WeightFac;
-            WeightStart = gs.WeightStart;
-            WeightEnd = gs.WeightEnd;
-            WeightsFromFac = gs.WeightsFromFac;
-            WeightsFromEnds = gs.WeightsFromEnds;
+            PickWeightStart = gs.PickWeightStart;
+            PickWeightEnd = gs.PickWeightEnd;
+            PickWeightsFromFac = gs.PickWeightsFromFac;
+            PickWeightsFromEnds = gs.PickWeightsFromEnds;
             PickWeights = gs.PickWeights;
 
             //repeat behaviour
@@ -126,8 +126,8 @@
                     break;
                 case PickType.weighted:
                     WeightFac = 0.8;
-                    WeightsFromEnds = false;
-                    WeightsFromFac = true;
+                    PickWeightsFromEnds = false;
+                    PickWeightsFromFac = true;
                     double[] defaultPickWeights = new double [0];
                     PickWeights = defaultPickWeights;
                     break;

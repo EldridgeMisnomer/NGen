@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Utils;
+using System.Linq;
 
 using PU = NGen.ParserUtils;
 using GP = NGen.GenProcessors;
@@ -11,6 +12,7 @@ namespace NGen {
     public static class DataGetter {
 
         //TODO - fix NoRep shuffle function
+        //TODO - extend AllowDupes to weighted pick types
         //TODO - check what happens if no header, or no header at beginning but yes one later
         //TODO - better optimise WrdProcessor
         //TODO - ??? Glitch ???
@@ -283,6 +285,7 @@ namespace NGen {
                                             break;
                                         case RepeatType.weighted:
                                             searchStrings.Add( "weights" );
+                                            searchStrings.Add( "factor" );
                                             break;
                                     }
 
@@ -294,9 +297,7 @@ namespace NGen {
 
                                     double c;
                                     if( ParserUtils.DirtyStringToDouble( p2, out c ) ) {
-
                                         gs.OutputChance = c;
-
                                     } else {
                                         //TODO - report an error here
                                     }
@@ -306,13 +307,153 @@ namespace NGen {
                                 case "separator":
 
                                     //check if this is a proxy
-                                    if( ParserUtils.StringContainsProxy(p2) ) {
+                                    int proxyInd = p2.GetNonEscapedCharIndex( ParserUtils.CharMap( CharType.proxy ) );
+                                    if( proxyInd >= 0 ) {
 
-                                        //string proxyName = p2.Substring( )
+                                        string proxyName = p2.Substring( proxyInd + 1 ).Trim();
+
+                                        //check if there's any spaces after the proxy name and chop accordingly
+                                        int spaceInd = p2.IndexOf( ' ', proxyInd );
+                                        if( spaceInd >= 0 ) {
+                                            proxyName = proxyName.Substring( 0, spaceInd );
+                                        }
+
+                                        //TODO - check if using gs here is really correct???
+                                        ProxyGen pg = GenProcessors.ProxyProcessor( proxyName, gs );
+                                        gs.ProxySeparator = pg;
+                                        gs.UseProxySeparator = true;
+
+                                    } else {
+
+                                        if( p2.Trim().Length == 0 ) {
+                                            gs.Separator = " ";
+                                        } else {
+                                            gs.Separator = p2.Trim();
+                                        }
+                                        gs.UseProxySeparator = false;
 
                                     }
 
                                     break;
+
+                                case "once":
+
+                                    if( p2.ToLower().Contains( "on" ) ) {
+                                        gs.Once = true;
+                                    } else {
+                                        gs.Once = false;
+                                    }
+
+                                    break;
+
+                                case "allow":
+
+                                    if( p2.ToLower().Contains( "on" ) ) {
+                                        gs.AllowDupes = true;
+                                    } else {
+                                        gs.AllowDupes = false;
+                                    }
+
+                                    break;
+
+                                case "point":
+
+                                    double p;
+                                    if( ParserUtils.DirtyStringToDouble( p2, out p ) ) {
+                                        gs.ShufflePoint = p;
+                                    } else {
+                                        //TODO - report an error here
+                                    }
+                                    break;
+
+                                case "skip":
+
+                                    int s;
+                                    if( ParserUtils.DirtyStringToInt( p2, out s ) ) {
+                                        gs.Skip = s;
+                                    } else {
+                                        //TODO - report an error here
+                                    }
+
+                                    break;
+                                case "weights":
+
+                                    if( p2.Contains( '-' ) ) {
+
+                                        string[] sNums = p2.Split( '-' );
+
+                                        //TODO - need to work out why repeat weights are ints
+                                        //      and pick weights are doubles
+
+                                        if( pickLast ) {
+
+                                            double[] dNums = new double[sNums.Length];
+                                            for( int k = 0; k < sNums.Length; k++ ) {
+
+                                                double n;
+                                                if( ParserUtils.DirtyStringToDouble( sNums[k], out n ) ) {
+                                                    dNums[k] = n;
+                                                } else {
+                                                    //TODO - report an error here, decide what number should be added
+                                                    dNums[k] = 0;
+                                                }
+                                            }
+
+                                            if( dNums.Length == 2 ) {
+
+                                                gs.PickWeightStart = dNums[0];
+                                                gs.PickWeightEnd = dNums[1];
+                                                gs.PickWeightsFromEnds = true;
+                                                gs.PickWeightsFromFac = false;
+
+                                            } else {
+
+                                                gs.PickWeights = dNums;
+                                                gs.PickWeightsFromEnds = false;
+                                                gs.PickWeightsFromFac = false;
+
+                                            }
+
+                                        } else {
+
+                                            int[] iNums = new int[sNums.Length];
+                                            for( int k = 0; k < sNums.Length; k++ ) {
+
+                                                int ni;
+                                                if( ParserUtils.DirtyStringToInt( sNums[k], out ni ) ) {
+                                                    iNums[k] = ni;
+                                                } else {
+                                                    //TODO - report an error here, decide what number should be added
+                                                    iNums[k] = 1;
+                                                }
+
+                                            }
+
+                                        }
+                                    } else {
+                                        //TODO - report an error here
+                                        Console.WriteLine( $"Main Header Parser Error: weights could not be determined from '{p2}'." );
+                                    }
+                                        
+
+                                    break;
+                                case "factor":
+                                    break;
+                                case "min":
+                                    break;
+                                case "max":
+                                    break;
+                                case "mean":
+                                    break;
+                                case "dev":
+                                    break;
+                                case "num":
+                                    break;
+                                default:
+                                    //TODO report an error here
+                                    Console.WriteLine( $"Main Header Parser Error: settings pair not recognised '{p1}' = '{p2}'." );
+                                    break;
+
                             }
                         }
                     }
@@ -321,7 +462,7 @@ namespace NGen {
 
                 //TODO - fix this
                 if( h.Contains("norep") ) {
-                    gs.AllowRepeats = true;
+                    gs.AllowDupes = true;
                 }
 
             }

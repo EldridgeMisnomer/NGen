@@ -104,7 +104,7 @@ namespace Utils {
 
         public static int RandomNormalRangeMeanInt( int min, int max, int mean ) {
 
-            double stdDev = ( max - min ) / 4;
+            double stdDev = ( max - min ) / 3.5;
             int num = RandomNormalRangeMeanDevInt( min, max, mean, stdDev );
             return num;
 

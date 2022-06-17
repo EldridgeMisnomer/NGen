@@ -1,0 +1,810 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1024"
+   height="1024"
+   viewBox="0 0 270.93333 270.93333"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
+   sodipodi:docname="NGenIcon-02.svg"
+   inkscape:export-filename="D:\snailsnail\Game Dev\02 - Misc Bits and Pieces\NGen\Design\icon.png"
+   inkscape:export-xdpi="24"
+   inkscape:export-ydpi="24">
+  <defs
+     id="defs2">
+    <linearGradient
+       id="linearGradient1485"
+       osb:paint="solid">
+      <stop
+         style="stop-color:#e56b4a;stop-opacity:1;"
+         offset="0"
+         id="stop1483" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1477"
+       osb:paint="solid">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop1475" />
+    </linearGradient>
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1384"
+       is_visible="true"
+       lpeversion="1"
+       satellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1"
+       unit="px"
+       method="auto"
+       mode="F"
+       radius="0"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1382"
+       is_visible="true"
+       lpeversion="1"
+       satellites_param="C,0,0,1,0,50,0,1 @ C,0,0,1,0,50,0,1 @ C,0,0,1,0,50,0,1 @ C,0,0,1,0,50,0,1"
+       unit="px"
+       method="auto"
+       mode="F"
+       radius="50"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1378"
+       is_visible="true"
+       lpeversion="1"
+       satellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1"
+       unit="px"
+       method="auto"
+       mode="F"
+       radius="0"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1376"
+       is_visible="true"
+       lpeversion="1"
+       satellites_param="C,0,0,1,0,50,0,1 @ C,0,0,1,0,50,0,1 @ C,0,0,1,0,50,0,1 @ C,0,0,1,0,50,0,1"
+       unit="px"
+       method="auto"
+       mode="F"
+       radius="50"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <linearGradient
+       id="linearGradient1370"
+       osb:paint="solid"
+       gradientTransform="matrix(0.26458333,0,0,0.26458333,1502.6454,-413.27905)">
+      <stop
+         style="stop-color:#4a9ee5;stop-opacity:1;"
+         offset="0"
+         id="stop1368" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1120"
+       osb:paint="solid"
+       gradientTransform="matrix(0.26458333,0,0,0.26458333,4507.9362,-1239.8371)">
+      <stop
+         style="stop-color:#31b4c7;stop-opacity:1;"
+         offset="0"
+         id="stop1118" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1060"
+       osb:paint="solid"
+       gradientTransform="translate(1504.2329,-414.86655)">
+      <stop
+         style="stop-color:#4acee5;stop-opacity:1;"
+         offset="0"
+         id="stop1058" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient922"
+       osb:paint="solid">
+      <stop
+         style="stop-color:#f28568;stop-opacity:1;"
+         offset="0"
+         id="stop920" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1060"
+       id="linearGradient1062"
+       x1="324.93897"
+       y1="42.874248"
+       x2="401.32283"
+       y2="42.874248"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1060"
+       id="linearGradient1172"
+       gradientUnits="userSpaceOnUse"
+       x1="324.93897"
+       y1="42.874248"
+       x2="401.32283"
+       y2="42.874248" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient922"
+       id="linearGradient1263"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(1.8520833,-0.3908139)"
+       x1="78.253371"
+       y1="113.16606"
+       x2="192.67996"
+       y2="113.16606" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1120"
+       id="linearGradient1267"
+       gradientUnits="userSpaceOnUse"
+       x1="74.549201"
+       y1="116.47945"
+       x2="188.97579"
+       y2="116.47945"
+       gradientTransform="translate(1.8520833)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1120"
+       id="linearGradient1362"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-462.45066,-274.18366)"
+       x1="74.549201"
+       y1="116.47945"
+       x2="188.97579"
+       y2="116.47945" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient922"
+       id="linearGradient1366"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-241.68603,-307.12789)"
+       x1="78.253371"
+       y1="113.16606"
+       x2="192.67996"
+       y2="113.16606" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1370"
+       id="linearGradient1372"
+       x1="29.775453"
+       y1="178.63675"
+       x2="118.00549"
+       y2="178.63675"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1485"
+       id="linearGradient1487"
+       x1="2168.1397"
+       y1="-273.8954"
+       x2="2274.7941"
+       y2="-273.8954"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1485"
+       id="linearGradient1489"
+       gradientTransform="matrix(0.26458333,0,0,0.26458333,4507.9362,-1239.8371)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1485"
+       id="linearGradient1491"
+       gradientTransform="matrix(0.26458333,0,0,0.26458333,4507.9362,-1239.8371)"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#e9e9e9"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.25"
+     inkscape:cx="6834.379"
+     inkscape:cy="-1241.9687"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer2"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     units="px"
+     inkscape:showpageshadow="false"
+     inkscape:window-width="3840"
+     inkscape:window-height="2126"
+     inkscape:window-x="1717"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid833"
+       spacingx="4.2333332"
+       spacingy="4.2333332"
+       empspacing="4"
+       empcolor="#ff3fd5"
+       empopacity="0.25098039" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Layer 2">
+    <rect
+       style="display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:8.22355;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1459"
+       width="1129.2672"
+       height="398.99164"
+       x="1779.0583"
+       y="-484.98123" />
+    <rect
+       style="display:inline;fill:#d1d1d1;fill-opacity:1;stroke:none;stroke-width:8.80299;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1342"
+       width="1129.2672"
+       height="457.19998"
+       x="287.86667"
+       y="-50.799999" />
+    <path
+       style="display:inline;fill:#d1d1d1;fill-opacity:1;stroke:none;stroke-width:8.80299;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1374"
+       width="1129.2672"
+       height="457.19998"
+       x="287.86667"
+       y="-575.73334"
+       inkscape:path-effect="#path-effect1376;#path-effect1378"
+       d="M 337.86667,-575.73334 H 1367.1339 l 50,50 v 357.19998 l -50,50 -1029.26723,0 -50,-50 v -357.19998 z"
+       sodipodi:type="rect" />
+    <path
+       id="path1380"
+       style="display:inline;fill:#d1d1d1;fill-opacity:1;stroke:none;stroke-width:6.19469;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 1832.0572,-435.50416 v 35.18523 109.94362 119.72342 l 35.1852,35.18522 h 282.8425 441.4567 35.1853 v -35.18522 -131.63946 -98.02758 l -35.1853,-35.18523 h -282.8425 -441.4567 z"
+       sodipodi:nodetypes="ccccccccccccccc" />
+  </g>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline">
+    <g
+       id="g1116"
+       transform="translate(-2.3287756,-2.0798472)"
+       style="fill:url(#linearGradient1120)">
+      <g
+         id="g1096"
+         transform="matrix(-1,0,0,1,271.08927,0)"
+         style="fill:url(#linearGradient1120);fill-opacity:1">
+        <g
+           id="g1084"
+           style="fill:url(#linearGradient1120);fill-opacity:1">
+          <g
+             aria-label="N"
+             id="g1080"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="rotate(90,204.57971,58.27749)" />
+          <g
+             aria-label="N"
+             id="g1082"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="matrix(0,-1,-1,0,262.8572,503.57572)" />
+        </g>
+        <g
+           id="g1094"
+           transform="matrix(-1,0,0,1,270.54511,0)"
+           style="fill:url(#linearGradient1120);fill-opacity:1">
+          <g
+             aria-label="N"
+             id="g1088"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="rotate(90,204.57971,58.27749)">
+            <path
+               d="m 364.09212,51.114877 h 2.31377 -41.46692 V 22.087543 h 39.15315 c 8.13327,0 15.70562,2.734459 22.71705,8.203377 7.01143,5.749375 11.56886,12.690694 13.67229,20.823957 0.56091,2.10343 0.84137,5.959719 0.84137,7.362006 v 51.840697 h -30.07905 v -51.840697 -2.73446 l -0.21034,-0.841372 c -0.70114,-2.524116 -2.24366,-3.786174 -4.62755,-3.786174 z"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke-width:5.25858"
+               id="path1086"
+               sodipodi:nodetypes="ccccsccccccccsc" />
+          </g>
+          <g
+             aria-label="N"
+             id="g1092"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="matrix(0,-1,-1,0,262.8572,503.57572)">
+            <path
+               d="m 364.09212,51.114877 h 2.31377 -41.46692 V 22.087543 h 39.15315 c 8.13327,0 15.70562,2.734459 22.71705,8.203377 7.01143,5.749375 11.56886,12.690694 13.67229,20.823957 0.56091,2.10343 0.84137,5.959719 0.84137,7.362006 v 5.18407 h -30.07905 v -5.18407 -2.73446 l -0.21034,-0.841372 c -0.70114,-2.524116 -2.24366,-3.786174 -4.62755,-3.786174 z"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke-width:5.25858"
+               id="path1090"
+               sodipodi:nodetypes="ccccsccccccccsc" />
+          </g>
+        </g>
+      </g>
+      <g
+         id="g1114"
+         transform="translate(0.79744474)"
+         style="fill:url(#linearGradient1120);fill-opacity:1">
+        <g
+           id="g1102"
+           style="fill:url(#linearGradient1120);fill-opacity:1">
+          <g
+             aria-label="N"
+             id="g1098"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="rotate(90,204.57971,58.27749)" />
+          <g
+             aria-label="N"
+             id="g1100"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="matrix(0,-1,-1,0,262.8572,503.57572)" />
+        </g>
+        <g
+           id="g1112"
+           transform="matrix(-1,0,0,1,270.54511,0)"
+           style="fill:url(#linearGradient1120);fill-opacity:1">
+          <g
+             aria-label="N"
+             id="g1106"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="rotate(90,204.57971,58.27749)">
+            <path
+               d="m 364.09212,51.114877 h 2.31377 -41.46692 V 22.087543 h 39.15315 c 8.13327,0 15.70562,2.734459 22.71705,8.203377 7.01143,5.749375 11.56886,12.690694 13.67229,20.823957 0.56091,2.10343 0.84137,5.959719 0.84137,7.362006 v 51.840697 h -30.07905 v -51.840697 -2.73446 l -0.21034,-0.841372 c -0.70114,-2.524116 -2.24366,-3.786174 -4.62755,-3.786174 z"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke-width:5.25858"
+               id="path1104"
+               sodipodi:nodetypes="ccccsccccccccsc" />
+          </g>
+          <g
+             aria-label="N"
+             id="g1110"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="matrix(0,-1,-1,0,262.8572,503.57572)">
+            <path
+               d="m 364.09212,51.114877 h 2.31377 -41.46692 V 22.087543 h 39.15315 c 8.13327,0 15.70562,2.734459 22.71705,8.203377 7.01143,5.749375 11.56886,12.690694 13.67229,20.823957 0.56091,2.10343 0.84137,5.959719 0.84137,7.362006 v 5.18407 h -30.07905 v -5.18407 -2.73446 l -0.21034,-0.841372 c -0.70114,-2.524116 -2.24366,-3.786174 -4.62755,-3.786174 z"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke-width:5.25858"
+               id="path1108"
+               sodipodi:nodetypes="ccccsccccccccsc" />
+          </g>
+        </g>
+      </g>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1267);fill-opacity:1;stroke:none;stroke-width:5.25858"
+       x="65.884132"
+       y="207.55797"
+       id="text1066"><tspan
+         sodipodi:role="line"
+         x="65.884132"
+         y="207.55797"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1267);fill-opacity:1;stroke-width:5.25858"
+         id="tspan1064">N</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1263);fill-opacity:1;stroke:none;stroke-width:5.25858"
+       x="69.588303"
+       y="203.85378"
+       id="text833"><tspan
+         sodipodi:role="line"
+         x="69.588303"
+         y="203.85378"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1263);fill-opacity:1;stroke-width:5.25858"
+         id="tspan835">N</tspan></text>
+    <g
+       id="g980"
+       transform="translate(1.3753909,-5.7840137)">
+      <g
+         id="g898"
+         transform="matrix(-1,0,0,1,271.08927,0)"
+         style="fill:#e56b4a;fill-opacity:1">
+        <g
+           id="g886"
+           style="fill:#e56b4a;fill-opacity:1">
+          <g
+             aria-label="N"
+             id="g882"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#e56b4a;fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="rotate(90,204.57971,58.27749)" />
+          <g
+             aria-label="N"
+             id="g884"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#e56b4a;fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="matrix(0,-1,-1,0,262.8572,503.57572)" />
+        </g>
+        <g
+           id="g896"
+           transform="matrix(-1,0,0,1,270.54511,0)"
+           style="fill:#e56b4a;fill-opacity:1">
+          <g
+             aria-label="N"
+             id="g890"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#e56b4a;fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="rotate(90,204.57971,58.27749)">
+            <path
+               d="m 364.09212,51.114877 h 2.31377 -41.46692 V 22.087543 h 39.15315 c 8.13327,0 15.70562,2.734459 22.71705,8.203377 7.01143,5.749375 11.56886,12.690694 13.67229,20.823957 0.56091,2.10343 0.84137,5.959719 0.84137,7.362006 v 51.840697 h -30.07905 v -51.840697 -2.73446 l -0.21034,-0.841372 c -0.70114,-2.524116 -2.24366,-3.786174 -4.62755,-3.786174 z"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#e56b4a;fill-opacity:1;stroke-width:5.25858"
+               id="path888"
+               sodipodi:nodetypes="ccccsccccccccsc" />
+          </g>
+          <g
+             aria-label="N"
+             id="g894"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1062);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="matrix(0,-1,-1,0,262.8572,503.57572)">
+            <path
+               d="m 364.09212,51.114877 h 2.31377 -41.46692 V 22.087543 h 39.15315 c 8.13327,0 15.70562,2.734459 22.71705,8.203377 7.01143,5.749375 11.56886,12.690694 13.67229,20.823957 0.56091,2.10343 0.84137,5.959719 0.84137,7.362006 v 5.18407 h -30.07905 v -5.18407 -2.73446 l -0.21034,-0.841372 c -0.70114,-2.524116 -2.24366,-3.786174 -4.62755,-3.786174 z"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1172);fill-opacity:1;stroke-width:5.25858"
+               id="path892"
+               sodipodi:nodetypes="ccccsccccccccsc" />
+          </g>
+        </g>
+      </g>
+      <g
+         id="g960"
+         transform="translate(0.79744474)"
+         style="fill:#e56b4a;fill-opacity:1">
+        <g
+           id="g948"
+           style="fill:#e56b4a;fill-opacity:1">
+          <g
+             aria-label="N"
+             id="g944"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#e56b4a;fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="rotate(90,204.57971,58.27749)" />
+          <g
+             aria-label="N"
+             id="g946"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#e56b4a;fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="matrix(0,-1,-1,0,262.8572,503.57572)" />
+        </g>
+        <g
+           id="g958"
+           transform="matrix(-1,0,0,1,270.54511,0)"
+           style="fill:#e56b4a;fill-opacity:1">
+          <g
+             aria-label="N"
+             id="g952"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#e56b4a;fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="rotate(90,204.57971,58.27749)">
+            <path
+               d="m 364.09212,51.114877 h 2.31377 -41.46692 V 22.087543 h 39.15315 c 8.13327,0 15.70562,2.734459 22.71705,8.203377 7.01143,5.749375 11.56886,12.690694 13.67229,20.823957 0.56091,2.10343 0.84137,5.959719 0.84137,7.362006 v 51.840697 h -30.07905 v -51.840697 -2.73446 l -0.21034,-0.841372 c -0.70114,-2.524116 -2.24366,-3.786174 -4.62755,-3.786174 z"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#e56b4a;fill-opacity:1;stroke-width:5.25858"
+               id="path950"
+               sodipodi:nodetypes="ccccsccccccccsc" />
+          </g>
+          <g
+             aria-label="N"
+             id="g956"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#e56b4a;fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="matrix(0,-1,-1,0,262.8572,503.57572)">
+            <path
+               d="m 364.09212,51.114877 h 2.31377 -41.46692 V 22.087543 h 39.15315 c 8.13327,0 15.70562,2.734459 22.71705,8.203377 7.01143,5.749375 11.56886,12.690694 13.67229,20.823957 0.56091,2.10343 0.84137,5.959719 0.84137,7.362006 v 5.18407 h -30.07905 v -5.18407 -2.73446 l -0.21034,-0.841372 c -0.70114,-2.524116 -2.24366,-3.786174 -4.62755,-3.786174 z"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#e56b4a;fill-opacity:1;stroke-width:5.25858"
+               id="path954"
+               sodipodi:nodetypes="ccccsccccccccsc" />
+          </g>
+        </g>
+      </g>
+    </g>
+    <g
+       id="g1099"
+       transform="translate(-245.86689,-308.81693)"
+       style="fill:url(#linearGradient1120)">
+      <g
+         id="g1079"
+         transform="matrix(-1,0,0,1,271.08927,0)"
+         style="fill:url(#linearGradient1120);fill-opacity:1">
+        <g
+           id="g1067"
+           style="fill:url(#linearGradient1120);fill-opacity:1">
+          <g
+             aria-label="N"
+             id="g1063"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="rotate(90,204.57971,58.27749)" />
+          <g
+             aria-label="N"
+             id="g1065"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="matrix(0,-1,-1,0,262.8572,503.57572)" />
+        </g>
+        <g
+           id="g1077"
+           transform="matrix(-1,0,0,1,270.54511,0)"
+           style="fill:url(#linearGradient1120);fill-opacity:1">
+          <g
+             aria-label="N"
+             id="g1071"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="rotate(90,204.57971,58.27749)">
+            <path
+               d="m 364.09212,51.114877 h 2.31377 -41.46692 V 22.087543 h 39.15315 c 8.13327,0 15.70562,2.734459 22.71705,8.203377 7.01143,5.749375 11.56886,12.690694 13.67229,20.823957 0.56091,2.10343 0.84137,5.959719 0.84137,7.362006 v 51.840697 h -30.07905 v -51.840697 -2.73446 l -0.21034,-0.841372 c -0.70114,-2.524116 -2.24366,-3.786174 -4.62755,-3.786174 z"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke-width:5.25858"
+               id="path1069"
+               sodipodi:nodetypes="ccccsccccccccsc" />
+          </g>
+          <g
+             aria-label="N"
+             id="g1075"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="matrix(0,-1,-1,0,262.8572,503.57572)">
+            <path
+               d="m 364.09212,51.114877 h 2.31377 -41.46692 V 22.087543 h 39.15315 c 8.13327,0 15.70562,2.734459 22.71705,8.203377 7.01143,5.749375 11.56886,12.690694 13.67229,20.823957 0.56091,2.10343 0.84137,5.959719 0.84137,7.362006 v 5.18407 h -30.07905 v -5.18407 -2.73446 l -0.21034,-0.841372 c -0.70114,-2.524116 -2.24366,-3.786174 -4.62755,-3.786174 z"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke-width:5.25858"
+               id="path1073"
+               sodipodi:nodetypes="ccccsccccccccsc" />
+          </g>
+        </g>
+      </g>
+      <g
+         id="g1097"
+         transform="translate(0.79744474)"
+         style="fill:url(#linearGradient1120);fill-opacity:1">
+        <g
+           id="g1085"
+           style="fill:url(#linearGradient1120);fill-opacity:1">
+          <g
+             aria-label="N"
+             id="g1081"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="rotate(90,204.57971,58.27749)" />
+          <g
+             aria-label="N"
+             id="g1083"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="matrix(0,-1,-1,0,262.8572,503.57572)" />
+        </g>
+        <g
+           id="g1095"
+           transform="matrix(-1,0,0,1,270.54511,0)"
+           style="fill:url(#linearGradient1120);fill-opacity:1">
+          <g
+             aria-label="N"
+             id="g1089"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="rotate(90,204.57971,58.27749)">
+            <path
+               d="m 364.09212,51.114877 h 2.31377 -41.46692 V 22.087543 h 39.15315 c 8.13327,0 15.70562,2.734459 22.71705,8.203377 7.01143,5.749375 11.56886,12.690694 13.67229,20.823957 0.56091,2.10343 0.84137,5.959719 0.84137,7.362006 v 51.840697 h -30.07905 v -51.840697 -2.73446 l -0.21034,-0.841372 c -0.70114,-2.524116 -2.24366,-3.786174 -4.62755,-3.786174 z"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke-width:5.25858"
+               id="path1087"
+               sodipodi:nodetypes="ccccsccccccccsc" />
+          </g>
+          <g
+             aria-label="N"
+             id="g1093"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="matrix(0,-1,-1,0,262.8572,503.57572)">
+            <path
+               d="m 364.09212,51.114877 h 2.31377 -41.46692 V 22.087543 h 39.15315 c 8.13327,0 15.70562,2.734459 22.71705,8.203377 7.01143,5.749375 11.56886,12.690694 13.67229,20.823957 0.56091,2.10343 0.84137,5.959719 0.84137,7.362006 v 5.18407 h -30.07905 v -5.18407 -2.73446 l -0.21034,-0.841372 c -0.70114,-2.524116 -2.24366,-3.786174 -4.62755,-3.786174 z"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke-width:5.25858"
+               id="path1091"
+               sodipodi:nodetypes="ccccsccccccccsc" />
+          </g>
+        </g>
+      </g>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1362);fill-opacity:1;stroke:none;stroke-width:5.25858"
+       x="-398.41861"
+       y="-66.625687"
+       id="text1103"><tspan
+         sodipodi:role="line"
+         x="-398.41861"
+         y="-66.625687"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1362);fill-opacity:1;stroke-width:5.25858"
+         id="tspan1101">N</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1366);fill-opacity:1;stroke:none;stroke-width:5.25858"
+       x="-173.94981"
+       y="-102.88331"
+       id="text1107"><tspan
+         sodipodi:role="line"
+         x="-173.94981"
+         y="-102.88331"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1366);fill-opacity:1;stroke-width:5.25858"
+         id="tspan1105">N</tspan></text>
+    <g
+       id="g1113"
+       style="fill:#e56b4a;fill-opacity:1"
+       transform="matrix(-1,0,0,1,606.70433,-5.7840137)">
+      <g
+         aria-label="N"
+         id="g1109"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#e56b4a;fill-opacity:1;stroke:none;stroke-width:5.25858"
+         transform="rotate(90,204.57971,58.27749)" />
+      <g
+         aria-label="N"
+         id="g1111"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#e56b4a;fill-opacity:1;stroke:none;stroke-width:5.25858"
+         transform="matrix(0,-1,-1,0,262.8572,503.57572)" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.70169"
+       x="403.82797"
+       y="819.90735"
+       id="text1213"><tspan
+         sodipodi:role="line"
+         id="tspan1211"
+         x="403.82797"
+         y="819.90735"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:3.70169">NGen</tspan></text>
+    <g
+       id="g1409">
+      <path
+         d="m 445.89657,50.724075 -1.4724,153.129705 H 414.34512 L 416.23821,21.696735 H 491.541 q 12.1999,0 22.71705,8.20338 10.51715,8.62406 13.67229,20.82396 0.84138,3.15514 0.84138,7.362 l -1.26206,145.767705 h -30.07905 l 1.26206,-148.502165 -0.21035,-0.84137 q -1.05171,-3.78617 -4.62754,-3.78617 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke:none;stroke-width:3.70169"
+         id="path1215" />
+      <path
+         d="m 763.93485,174.6161 -0.21034,29.23767 h -61.20982 q -15.35504,0 -23.76876,-6.94132 -8.62406,-7.15166 -12.41024,-22.29635 -0.84137,-3.15515 -0.84137,-7.15167 l 0.42069,-70.675235 q 0,-9.67578 6.09995,-15.77573 6.73097,-6.09995 16.40675,-6.09995 h 46.06512 q 11.77921,0 22.92738,7.99304 11.35853,8.62406 13.6723,20.613605 0.21034,2.31377 0.42069,4.20686 0.21034,1.89309 0.21034,3.57583 l 0.42069,12.41024 q 0.21034,7.99303 -3.78618,13.25161 -3.78617,5.25857 -10.93784,7.57235 l -62.05118,20.40327 0.21034,5.25857 0.21035,0.84137 q 1.05171,3.57584 4.4172,3.57584 z m -22.29636,-61.42015 q 0,-1.26206 -0.21034,-1.89309 -1.4724,-6.31029 -9.04475,-7.362 h -30.92042 q -6.09995,0 -5.67926,5.46892 v 22.50669 l 42.69962,-14.09298 q 3.78618,-1.26205 3.57584,-5.25857 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1060);fill-opacity:1;stroke:none;stroke-width:3.70169"
+         id="path1219" />
+      <path
+         d="m 824.51361,103.94086 -1.05172,99.91292 h -30.07905 l 1.4724,-128.940265 h 75.3028 q 12.19989,0 22.71704,8.20338 10.51715,8.62406 13.6723,20.823965 0.84137,3.15514 0.84137,7.362 l -0.84137,92.55092 h -30.07905 l 1.05171,-95.28538 -0.21034,-0.84137 q -1.05171,-3.78617 -4.83789,-3.78617 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1120);fill-opacity:1;stroke:none;stroke-width:3.70169"
+         id="path1221" />
+      <path
+         id="path1115"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1370);fill-opacity:1;stroke:none;stroke-width:19.8749"
+         d="m 2023.3906,364.60742 v 113.6836 h 19.5938 10.334 l 3.1816,0.79492 c 2.2958,0.63771 4.3076,1.46464 6.0508,2.4707 l 1.1719,-115.17773 c -7.6754,-1.17946 -16.785,-1.77149 -20.7383,-1.77149 z m 47.418,316.48438 v 120.18945 8.74609 c 0,9.00998 -4.7686,14.84026 -14.3086,17.49024 l -3.1816,0.79492 h -10.334 -195.9336 v 113.68359 h 195.9336 c 5.2999,0 19.8742,-1.05971 27.8242,-3.17968 30.7399,-7.94998 56.9752,-25.17394 78.7051,-51.67383 20.6699,-26.4999 31.0058,-55.12141 31.0058,-85.86133 v -18.78711 c -20.6245,-5.51456 -40.0047,-15.55439 -57.582,-29.83594 l -0.031,-0.0215 -0.029,-0.0234 c -24.1295,-19.78616 -41.7539,-43.92152 -52.0684,-71.52148 z"
+         transform="scale(0.26458333)" />
+      <g
+         id="g1143"
+         transform="translate(336.4125,-5.7840137)"
+         style="fill:url(#linearGradient1372);fill-opacity:1">
+        <g
+           id="g1131"
+           style="fill:url(#linearGradient1372);fill-opacity:1">
+          <g
+             aria-label="N"
+             id="g1127"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1372);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="rotate(90,204.57971,58.27749)" />
+          <g
+             aria-label="N"
+             id="g1129"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1372);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="matrix(0,-1,-1,0,262.8572,503.57572)" />
+        </g>
+        <g
+           id="g1141"
+           transform="matrix(-1,0,0,1,270.54511,0)"
+           style="fill:url(#linearGradient1372);fill-opacity:1">
+          <g
+             aria-label="N"
+             id="g1135"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1372);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="rotate(90,204.57971,58.27749)">
+            <path
+               d="m 364.09212,51.114877 h 2.31377 -41.46692 V 22.087543 h 39.15315 c 8.13327,0 15.70562,2.734459 22.71705,8.203377 7.01143,5.749375 11.56886,12.690694 13.67229,20.823957 0.56091,2.10343 0.84137,5.959719 0.84137,7.362006 v 51.840697 h -30.07905 v -51.840697 -2.73446 l -0.21034,-0.841372 c -0.70114,-2.524116 -2.24366,-3.786174 -4.62755,-3.786174 z"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1372);fill-opacity:1;stroke-width:5.25858"
+               id="path1133"
+               sodipodi:nodetypes="ccccsccccccccsc" />
+          </g>
+          <g
+             aria-label="N"
+             id="g1139"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1372);fill-opacity:1;stroke:none;stroke-width:5.25858"
+             transform="matrix(0,-1,-1,0,262.8572,503.57572)">
+            <path
+               d="m 364.09212,51.114877 h 2.31377 -41.46692 V 22.087543 h 39.15315 c 8.13327,0 15.70562,2.734459 22.71705,8.203377 7.01143,5.749375 11.56886,12.690694 13.67229,20.823957 0.56091,2.10343 0.84137,5.959719 0.84137,7.362006 v 5.18407 h -30.07905 v -5.18407 -2.73446 l -0.21034,-0.841372 c -0.70114,-2.524116 -2.24366,-3.786174 -4.62755,-3.786174 z"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1372);fill-opacity:1;stroke-width:5.25858"
+               id="path1137"
+               sodipodi:nodetypes="ccccsccccccccsc" />
+          </g>
+        </g>
+      </g>
+      <path
+         style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-variant-east-asian:normal;font-feature-settings:normal;font-variation-settings:normal;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;text-anchor:start;white-space:normal;shape-padding:0;shape-margin:0;inline-size:0;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;vector-effect:none;fill:url(#linearGradient1120);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8.99583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate;stop-color:#000000"
+         d="m 587.03654,203.85378 c -8.27349,0 -15.77572,-2.73446 -22.5067,-8.20337 -7.01143,-5.74938 -11.56886,-12.76081 -13.67229,-21.0343 -0.28046,-1.40229 -0.56092,-2.66435 -0.84138,-3.78618 -0.14023,-1.12183 -0.21034,-2.24366 -0.21034,-3.36549 l 1.26206,-123.892025 c 0,-6.45052 2.10343,-11.709097 6.31029,-15.77573 4.48732,-4.066633 9.95624,-6.09995 16.40675,-6.09995 h 70.67525 l -0.42068,29.02734 h -57.42364 c -3.92641,0 -5.88961,1.822973 -5.88961,5.46892 l -0.84137,109.378365 c 0,0.70114 0.0701,1.33217 0.21034,1.89308 1.26206,4.76778 4.34709,7.15167 9.2551,7.15167 h 23.34807 l 0.84137,-81.402755 h 30.07905 l -0.84137,110.640425 z"
+         id="path1302" />
+    </g>
+    <path
+       d="m 1948.542,-362.55498 -1.4724,153.12971 h -30.0791 l 1.8931,-182.15704 h 75.3028 q 12.1999,0 22.7171,8.20338 10.5171,8.62406 13.6722,20.82395 0.8414,3.15515 0.8414,7.36201 l -1.262,145.7677 h -30.0791 l 1.2621,-148.50216 -0.2104,-0.84137 q -1.0517,-3.78617 -4.6275,-3.78617 z"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f28568;fill-opacity:1;stroke:none;stroke-width:3.70169"
+       id="path1411" />
+    <path
+       d="m 2266.5803,-238.66295 -0.2104,29.23767 h -61.2098 q -15.355,0 -23.7688,-6.94132 -8.624,-7.15166 -12.4102,-22.29635 -0.8414,-3.15515 -0.8414,-7.15167 l 0.4207,-70.67523 q 0,-9.67578 6.1,-15.77573 6.7309,-6.09995 16.4067,-6.09995 h 46.0651 q 11.7792,0 22.9274,7.99304 11.3585,8.62406 13.6723,20.6136 0.2104,2.31377 0.4207,4.20686 0.2103,1.89309 0.2103,3.57583 l 0.4207,12.41024 q 0.2104,7.99303 -3.7862,13.25161 -3.7861,5.25857 -10.9378,7.57235 l -62.0512,20.40327 0.2104,5.25857 0.2103,0.84137 q 1.0517,3.57584 4.4172,3.57584 z m -22.2964,-61.42015 q 0,-1.26206 -0.2103,-1.89309 -1.4724,-6.31029 -9.0448,-7.362 h -30.9204 q -6.1,0 -5.6793,5.46892 v 22.50669 l 42.6996,-14.09298 q 3.7862,-1.26205 3.5759,-5.25857 z"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1487);fill-opacity:1;stroke:none;stroke-width:3.70169"
+       id="path1413" />
+    <path
+       d="m 2327.159,-309.33819 -1.0517,99.91292 h -30.0791 l 1.4724,-128.94027 h 75.3028 q 12.1999,0 22.7171,8.20339 10.5171,8.62406 13.6723,20.82396 0.8414,3.15514 0.8414,7.362 l -0.8414,92.55092 h -30.0791 l 1.0517,-95.28538 -0.2103,-0.84137 q -1.0517,-3.78617 -4.8379,-3.78617 z"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient1491);fill-opacity:1;stroke:none;stroke-width:3.70169"
+       id="path1415" />
+    <path
+       id="path1417"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient922);fill-opacity:1;stroke:none;stroke-width:5.25857"
+       d="m 2038.0008,-316.81 v 30.07878 h 5.1842 2.7342 l 0.8418,0.21032 c 0.6074,0.16873 1.1397,0.38752 1.601,0.65371 l 0.31,-30.47411 c -2.0308,-0.31206 -4.441,-0.4687 -5.487,-0.4687 z m 12.546,83.73649 v 31.80012 2.31407 c 0,2.38389 -1.2617,3.92649 -3.7858,4.62763 l -0.8418,0.21032 h -2.7342 -51.8407 v 30.07878 h 51.8407 c 1.4023,0 5.2584,-0.28038 7.3618,-0.84129 8.1333,-2.10343 15.0747,-6.6606 20.8241,-13.67203 5.4689,-7.01143 8.2036,-14.58421 8.2036,-22.71748 v -4.97075 c -5.4569,-1.45907 -10.5846,-4.11544 -15.2352,-7.8941 l -0.01,-0.006 -0.01,-0.006 c -6.3843,-5.23508 -11.0474,-11.6209 -13.7764,-18.92339 z" />
+    <g
+       id="g1435"
+       transform="translate(1839.0579,-419.06306)"
+       style="fill:url(#linearGradient922);fill-opacity:1">
+      <g
+         id="g1423"
+         style="fill:url(#linearGradient922);fill-opacity:1">
+        <g
+           aria-label="N"
+           id="g1419"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient922);fill-opacity:1;stroke:none;stroke-width:5.25858"
+           transform="rotate(90,204.57971,58.27749)" />
+        <g
+           aria-label="N"
+           id="g1421"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient922);fill-opacity:1;stroke:none;stroke-width:5.25858"
+           transform="matrix(0,-1,-1,0,262.8572,503.57572)" />
+      </g>
+      <g
+         id="g1433"
+         transform="matrix(-1,0,0,1,270.54511,0)"
+         style="fill:url(#linearGradient922);fill-opacity:1">
+        <g
+           aria-label="N"
+           id="g1427"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient922);fill-opacity:1;stroke:none;stroke-width:5.25858"
+           transform="rotate(90,204.57971,58.27749)">
+          <path
+             d="m 364.09212,51.114877 h 2.31377 -41.46692 V 22.087543 h 39.15315 c 8.13327,0 15.70562,2.734459 22.71705,8.203377 7.01143,5.749375 11.56886,12.690694 13.67229,20.823957 0.56091,2.10343 0.84137,5.959719 0.84137,7.362006 v 51.840697 h -30.07905 v -51.840697 -2.73446 l -0.21034,-0.841372 c -0.70114,-2.524116 -2.24366,-3.786174 -4.62755,-3.786174 z"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient922);fill-opacity:1;stroke-width:5.25858"
+             id="path1425"
+             sodipodi:nodetypes="ccccsccccccccsc" />
+        </g>
+        <g
+           aria-label="N"
+           id="g1431"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient922);fill-opacity:1;stroke:none;stroke-width:5.25858"
+           transform="matrix(0,-1,-1,0,262.8572,503.57572)">
+          <path
+             d="m 364.09212,51.114877 h 2.31377 -41.46692 V 22.087543 h 39.15315 c 8.13327,0 15.70562,2.734459 22.71705,8.203377 7.01143,5.749375 11.56886,12.690694 13.67229,20.823957 0.56091,2.10343 0.84137,5.959719 0.84137,7.362006 v 5.18407 h -30.07905 v -5.18407 -2.73446 l -0.21034,-0.841372 c -0.70114,-2.524116 -2.24366,-3.786174 -4.62755,-3.786174 z"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient922);fill-opacity:1;stroke-width:5.25858"
+             id="path1429"
+             sodipodi:nodetypes="ccccsccccccccsc" />
+        </g>
+      </g>
+    </g>
+    <path
+       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:210.343px;line-height:1.25;font-family:Covid19;-inkscape-font-specification:'Covid19, Normal';font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-variant-east-asian:normal;font-feature-settings:normal;font-variation-settings:normal;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;text-anchor:start;white-space:normal;shape-padding:0;shape-margin:0;inline-size:0;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;vector-effect:none;fill:url(#linearGradient1489);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:8.99583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate;stop-color:#000000"
+       d="m 2089.6819,-209.42527 c -8.2734,0 -15.7757,-2.73446 -22.5067,-8.20337 -7.0114,-5.74938 -11.5688,-12.76081 -13.6722,-21.0343 -0.2805,-1.40229 -0.561,-2.66435 -0.8414,-3.78618 -0.1403,-1.12183 -0.2104,-2.24366 -0.2104,-3.36549 l 1.2621,-123.89202 c 0,-6.45052 2.1034,-11.7091 6.3103,-15.77574 4.4873,-4.06663 9.9562,-6.09994 16.4067,-6.09994 h 70.6753 l -0.4207,29.02733 h -57.4236 c -3.9264,0 -5.8896,1.82298 -5.8896,5.46893 l -0.8414,109.37836 c 0,0.70114 0.07,1.33217 0.2103,1.89308 1.2621,4.76778 4.3471,7.15167 9.2551,7.15167 h 23.3481 l 0.8414,-81.40275 h 30.079 l -0.8414,110.64042 z"
+       id="path1437" />
+  </g>
+</svg>

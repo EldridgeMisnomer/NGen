@@ -61,19 +61,19 @@ namespace NGen {
             if( gs.PickType == PickType.weighted ) {
 
                 //calculate weigths based on the given factor
-                if( gs.WeightsFromFac ) {
+                if( gs.PickWeightsFromFac ) {
 
                     int num = wrds.Length;
                     gs.PickWeights = Rand.CalculateWeightsFromMult( gs.WeightFac, num );
 
                     //calculate weigths based on first and last given weights
-                } else if( gs.WeightsFromEnds ) {
+                } else if( gs.PickWeightsFromEnds ) {
 
                     int num = wrds.Length;
-                    double min = Math.Min( gs.WeightStart, gs.WeightEnd );
-                    double max = Math.Max( gs.WeightStart, gs.WeightEnd );
+                    double min = Math.Min( gs.PickWeightStart, gs.PickWeightEnd );
+                    double max = Math.Max( gs.PickWeightStart, gs.PickWeightEnd );
 
-                    gs.PickWeights = Rand.CalculateLinearWeightsFromMinMax( min, max, num, gs.WeightStart > gs.WeightEnd );
+                    gs.PickWeights = Rand.CalculateLinearWeightsFromMinMax( min, max, num, gs.PickWeightStart > gs.PickWeightEnd );
 
                 } else {
                     //if weights have already been set,
@@ -124,7 +124,7 @@ namespace NGen {
                             //(which I don't think should ever happen - but you never know)
                             //switch to default Factor calculation
 
-                            gs.WeightsFromFac = true;
+                            gs.PickWeightsFromFac = true;
                             gs.WeightFac = 0.8;
                             Setup();
                         }
@@ -153,7 +153,7 @@ namespace NGen {
 
                     case PickType.random:
 
-                        if( gs.AllowRepeats ) {
+                        if( gs.AllowDupes ) {
 
                             return Rand.RandFromArray( wrds ).GetOutput( tags );
 
@@ -169,7 +169,7 @@ namespace NGen {
                         nextWrd++;
                         if( nextWrd >= ( wrds.Length * gs.ShufflePoint ) ) {
 
-                            if( gs.AllowRepeats ) {
+                            if( gs.AllowDupes ) {
 
                                 wrds.Shuffle();
 

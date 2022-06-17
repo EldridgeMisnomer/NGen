@@ -1,4 +1,59 @@
-﻿#This is a comment
+﻿^
+#This is a header
+
+#the following currently works:
+#repeat = normal min = 0 max = 27 factor = 0.9
+
+#repeat = fixed num = 2
+
+
+#pick = uniform
+
+#allow duplicates = on
+
+#chance = 0.5%
+
+#separator = $proxy / _
+
+#once = on
+
+#remap ( $ = £\= = € )
+
+#need to extend them to:
+
+#pick = shuffle point = 0.5
+#pick = cycle skip = 3
+#pick = weighted weights = 1 - 2 - 3 - 10
+#pick = weighted weights = 1 - 20
+#pick = weighted factor = 0.6
+
+^
+
+#firstname = &n[ Ethelred, Sibella, Catriona, Joseph, Lackery, Chiquita, Alfred ]
+#lastname = [ Chalfont, D'Ascoyne, Farquharson, MacCodrun, Parkin, Pendlebury ]
+
+#name = this is s1 $firstname | this is s2 $lastname
+
+#fname (f) = [ Emily, Susan, Jessica ]
+#fname (m) = [ Bob, Shaun, Vince ]
+#lname = [ Braskett, Dundle, Ment ]
+#name (m) = $fname $lname
+
+firstname (female) (posh) € [ Dorothea, Elisabeth, Lucinda, Julliette ]
+firstname (male) (posh) € [ Clarence, Richard, Edwin, Augustus ]
+firstname (female) (poor) € [ Dot, Liz, Lucy, Jill ]
+firstname (male) (poor) € [ Clive, Dick, Ed, Alf ]
+
+lastname (poor) € [ Dubbins, Smith, Lapper, Boff ]
+lastname (posh) € [ Ellington-Dukesbury, Wently-Lefferdale, Dinglington-Bradley, Carlington-Dash ]
+
+name € £firstname £lastname
+
+test € I love a lovely bucket of bees.
+
+---
+
+#This is a comment
 # -?? rename noRep - allow repeats
 # > = allowRepeats on
 # >! = allowRepeats off

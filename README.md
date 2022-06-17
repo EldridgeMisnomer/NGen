@@ -278,25 +278,25 @@ Settings are most important for Lists, but all Component types have different Se
 * [Sentence Settings](#sentence-settings)
 * [Proxy Settings](#proxy-settings)
 
-Normally the settings for a component are written imediately before that component, not separated by a space, eg:
+Normally the settings for a component are written imediately before that component, not separated by a space, and consist of a symbol representing the type of Setting to be changed ( `?`, `&`, `%`, `_`, `*`, or `~`); most then require a letter and optionally some numbers defining exactly how they sould be set, although two ('*' and '~') can merely be switched on of off (off is specified with the '!' symbol, on by the absence of an extra symbol). An example:
 
 ```
 time = [ day, morning, afternoon, evening, saturday ]
-gen = It was a ?s[ lovely, wonderful, delightful, gorgeous ] *$time
+gen = It was a ?s0.5[ lovely, wonderful, delightful, gorgeous ] *$time
 ```
 
-In the above example the List has its Pick Setting set to Shuffle, and the Proxy has it's Once Setting set to On.
+In the above example the List has its Pick (`?`) Setting set to Shuffle (denoted by the (`s`), with the Shuffle Point set to 0.5; and the Proxy has it's Once (`*`) Setting set to On.
 
-Settings can also be set [in the Header](#settings-in-the-header) or [in the Generator](#settings-in-generators). See the applicable sections for more information.
+Settings can also be set [in the Header](#settings-in-the-header) or [in the Generator](#settings-in-generators). See below and in the applicable sections for more information.
 
-## List Settings
+### List Settings
 
 Lists have Settings in the following categories:
 
 * [Pick](#pick-settings)
+* [Allow Duplicates](#allow-duplicates-setting)
 * [Repeat](#repeat-settings)
 * [Output Chance](#output-chance-setting)
-* Allow Duplicates - TODO *think of a better name for this*
 
 Settings are normally changed using shorthand codes written either after the Generator Name or immediately before the List:
 
@@ -314,12 +314,26 @@ Settings after a Generator Name are applied to all Lists in the Generator, where
 
 Settings after a Generator Name *must* be separated from the Name by a space, and can be written separately or bunched together (ie: either `genname %8 &n = ...` or `genname %8&n= ...`), on the other hand Settings before a List *cannot* be separated from the List by a space and *must* be written bunched together ( ie: `&w[one, two, three]`).
 
-See below for details about how to apply Settings to Lists. TODO - *link this up*
+### Sentence Settings
 
+Sentences only have one Setting - Separator.
+
+### Proxy Settings
+
+Proxies have a number of Settings, most of which are shared with Lists
+Proixes have a single setting that is unique to them, called Once.
+
+* [Once](#once-setting)
+* [Repeat](#repeat-settings)
+* [Output Chance](#output-chance)
+
+---
 
 ### Pick Settings
 
-Lists always output one element, normally chosen at random; exactly how this word is picked can be changed by modifying a List's Pick Settings.
+Pick can only be set for Lists, it controls how they choose their output.
+
+Lists output one of their elements chosen at random; exactly how this word is picked can be changed by modifying a List's Pick Settings.
 
 There are four different ways of picking an element for output: `random`(the default), `shuffle`, `cycle`, and `weighted`.
 
@@ -342,6 +356,8 @@ For more about what the different symbols mean and how to change Settings, see t
 * [Shuffle](#shuffle-pick)
 * [Cycle](#cycle-pick)
 * [Weighted](#weighted-pick)
+
+The [Allow Duplicates Setting](#allow-duplicates-setting) is closely linked to the Pick Setting.
 
 #### Random Pick
 
@@ -473,9 +489,32 @@ Be careful about setting a high factor, particularly with long lists, as you mig
 
 The default factor is `0.8`, and this can be set just by writing `?w`.
 
-#### Repeat Settings
 
-Using Repeat Settings a List can be told to output more than once, either a fixed number of times, or a random number of times using a couple of different methods. This is useful if, for example, you're generating a person's name and you want to add the possibility of a second or even a third name drawn from the same pool.
+### Allow Duplicates Setting
+
+Allow Duplicates is a simple setting which relates to the Pick Setting and hence only applies to Lists.
+
+With all Pick types except for `cycle` there is a chance that the same element will be picket twice in a row (this is relatively rare in Shuffle) which may be undesirable.
+
+This outcome can be avoided by setting the Allow Duplicates Setting to Off using the symbol `~` followe by an `!`, it can be switched on again by simply using the `~` symbol. Allow Duplicates is set to On by default.
+
+When Allow Duplicates is Off, the List will never output the same element twice in a row.
+
+This setting has no effect when using the `Cycle` Pick type.
+
+An example:
+
+```
+fname = &f1?r~![ John, Henry, Peter, Goliath, Anthony ]
+```
+
+The above first name Generator is set to Repeat Fixed 1, so it will always output two names - perhaps a first and a second name for a person; its Pick method is set to Random, so it could output a name like "Henry Henry", which may not be desirable, so Allow Duplicates is set to Off, "Henry Henry" will never be Output, nor will "Peter Peter", etc.
+
+### Repeat Settings
+
+Both Proxies and Lists can have a Repeat Setting which will allow them to provide their output more than once when their Generators are run. They can be set to repeat either a fixed number of times, or a random number of times using a couple of different methods. 
+
+This are many occasions in which this can be useful, for example, if you're generating a person's name and you want to add the possibility of a second or even a third name drawn from the same pool.
 
 ```
 firstname = &n[ Ethelred, Sibella, Catriona, Joseph, Lackery, Chiquita, Alfred ]
@@ -484,25 +523,36 @@ lastname = [ Chalfont, D'Ascoyne, Farquharson, MacCodrun, Parkin, Pendlebury ]
 name = $firstname $lastname
 ```
 
-In the above example, a simple person's name generator, the List in the firstname Generator is set up to repeat up to 4 times, which results in outputs such as: 'Sibella Chalfont', 'Ethelred Alfred Farquharson', 'Alfred Joseph Lackery Ethelred Chalfont', or 'Catriona MacCodrun', however, most of the time it will produce a name with just one first name.
+In the above, a simple person's name generator, the List in the firstname Generator is set up to repeat up to 4 times, which results in Outputs such as: 'Sibella Chalfont', 'Ethelred Alfred Farquharson', 'Alfred Joseph Lackery Ethelred Chalfont', or 'Catriona MacCodrun', however, most of the time it will produce a name with just one first name.
 
-Repeat Settings are set using the `&` symbol, followed by the first letter of the type of Repeat wanted, there are 4 different  Repeat types: `(f)ixed`, `(u)niform`, `(n)ormal`, and `(w)eighted`; this can then be followed by some optional settings, details of which are below. Some example Repeat Settings are: `&f2`, `&n0-10`
+Repeat Settings are set using the `&` symbol, followed by the first letter of the type of Repeat wanted, there are 4 different Repeat types: `(f)ixed`, `(u)niform`, `(n)ormal`, and `(w)eighted`; this can then be followed by some optional settings, details of which are below.
 
+**Note:** All numbers here refer to the number of *repetitions* not the number of instances; so 0 repetitions, still mean that a List will output once. To add the possibility of a List not outputting at all, you have to set the [Output Chance](#output-chance).
 
-**Note:** All numbers here refer to the number of *repetitions* not the number of instances; so 0 repetitions, still mean that a list will output once. To add the possibility of a list not outputting at all, you have to set the [Output Chance Setting](#output-chance-setting).
+Repetition can also be set in generators or in the header, see [Setting Repeat Type in the Generator](#setting-repeats-in-the-generator) or [Setting Repeat Type in the Header](#setting-repeats-in-the-header) for more information.
 
-Repetition can be set in generators or in the header, see [Setting Repeat Type in the Generator](#setting-repeat-type-in-the-generator) or [Setting Repeat Type in the Header](#setting-repeat-type-in-the-header) for more information.
+#### Fixed Repeat
 
-##### Fixed Repeat Type
+A List or Proxy with Repeat set to `fixed` will always output the same number of times. The default number of repetitions is 0.
 
-A List with a `fixed` Repeat Type will always output the same number of times. Currently the default number of repetitions is 0, and there is no way to change it, so this Repeat Type isn't at all useful yet.
-
-##### Uniform Repeat Type
-
-A List with a `uniform` Repeat Type will repeat a number of times between its minimum and maximum (both inclusive). The default minimum is 0 and the default maximum is 3. Whenever the List has to output text it will pick a number between its minimum and maximum following a uniform distribution, that is each possibility has an equal chance to occur, 0 is just as likely as 3.
+You set the Repeat to fixed by writing the repeat symbol '&' followed by the letter 'r' followed, optionally, by the number of repeats you want, like so: `&r3`. If you leave the number off then the default will be used, which is 0.
 
 ```
-uniformlist &u = [ Henry, Mary, Jane, Louis, Caleb, Martha, Richard, Anna ] 
+fixedrepgen = &r1[ umber, jade, puce, maroon, lilac, indigo, beige  ]
+```
+
+The above Generator will always output 2 colours. Example outputs could be: "umber puce", "lilac lilac", "beige, umber".
+
+Remember that setting a Fixed Repeat of 0 (&r0) will still result in a single output.
+
+#### Uniform Repeat
+
+A List or Proxyu with a `uniform` Repeat type will repeat a number of times between its minimum and maximum (both inclusive). The default minimum is 0 and the default maximum is 3. Whenever the List has to output text it will pick a number between its minimum and maximum following a uniform distribution, that is each possibility has an equal chance to occur, 0 is just as likely as 3.
+
+You set the Repeat type to `uniform` by writing `&` followed by the letter `u` followed, optinally by two numbers – a minimum and maximum, separated by a dash `-`, like so:
+
+```
+uniformlist = &u0-4[ Henry, Mary, Jane, Louis, Caleb, Martha, Richard, Anna ] 
 ```
 
 Example outputs might be:
@@ -511,48 +561,81 @@ Example outputs might be:
 	'Richard Caleb'
 And so on.
 
-##### Normal Repeat Type
+If you don't add any numbers after the `u` then the minimum and maximum will be set to their defaults: 0 and 3.
 
-A `normal` repeat type will repeat a number of times between its minimum and maximum following a normal or gaussian distribution, with the mean equal to the minimum and the standard deviation calculated so that the maximum is possible but very unlikely (somewhere between 0.1 and 0.01%).
-The default minimum is 0 and the default max is 4. This means that 0 is the most likely number of repeats, 1 is less likely than 0, 2 is less likely than 1, 3 is less likely than 2, and 4 is the least likely of all possibilities.
+#### Normal Repeat
 
-Normal distributions do not typically have a minimum and maximum, however we set them here firstly because negative numbers have no meaning in this context, and secondly to avoid extreme outliers – it is perfectly possible that while 99% of the time there are 0-3 repeats, every so often we'll get 10 repeats, and normally that is not desirable. It is possible however to retain this behaviour by manually setting the standard deviation along with a very high maximum, see below. TODO
+A List or Proxy with a `normal` Repeat type will also repeat some number of times between its minumum and maximum (both inclusive), but instead of following a uniform distribution the number of Repeats follows a normal or gaussian distribution, that is some numbers are more likely than other numbers.
 
-**TODO** explain this better when my head is more screwed on, also think of an example below
+Technically the distribution is not truly gaussian, becuase numbers below zero are for obvious reasons ignored, and numbers below a minimum and above a maximum are also ignored to avoid extreme outlying results.
+
+You set the Repeat type to `normal` by writing `&` followed by the letter `n` followed, optionally, by two, three, or four numbers – a minimum and maximum (eg. `&n0-3`); a minimum, mean, and maximum (eg. `&n0-2-3`); or a minimum, mean, standard deviation, and a maximum (eg. `&n0-2-0.7-5`). Some examples:
 
 ```
-normallist &n = []
+rnone = &n[ one, two, three ]
+rntwo = &n1-4[ one, two, three ]
+rnthree = &n1-4-4[ one, two, three ]
+rnfour = &n1-4-0.2-4[ one, two, three ]
 ```
 
-##### Weighted Repeat Type
+Here the mean means the most likely number to occur, and the standard deviation represents the shape of the the curve of all results. The precise nature of this is outside the scope of this documentation, sufficed to say that a small standard deviation means that results are more likely to be close to the mean, wheras a large standard deviation means tha results are more likely to be spread out over a greater range of values.
 
-A `weighted` List will repeat a number of times between zero and a chosen maximum, but allows you to assign weights to each possible number to make it more or less likely.
-The default weights are: `{ 3, 4, 2, 1 }`, the first number in the list representing the chance for zero repeats, the last number in the list representing the chance for the maximum number of repeats (in this example 3), and the nth number in the list representing the chance for that number of repeats.
+The default minimum is 0 and the default maximum is 4, if you don't include any numbers after the `&n` this is what will be set. 
 
-So, for example, with weights of { 0, 1, 0, 1, 0, 1 } a List will always repeat at least once and it could repeat either 1, 3, or 5 times, with each of those numbers having an equal probability.
+Whenever just the minimum and maximum are set, including with the default, the mean and standard deviation are set automatically. The mean is always set to be equal to the minimum, meaning that low numbers are more likely than high numbers, and the standard deviation is calculated so that the maximum is possible but very unlikely (somewhere between 0.1 and 0.01%). 
 
-Or, another example, the weights: { 1, 2, 1 } allow a list to repeat either 0, 1, or 2 times, but once is twice as likely as the other two possibilities.
+When you set the minimum, mean, and maximum, the standard deviation is also calculated automatically as above.
 
-This Repeat Type gives the greatest flexibility in assigning probabilities to number of repeats, but it is also the most verbose and the fiddliest to use.
+Below are some examples of different Repeat normal settings, and graphs of their distributions (real data, 1000 data points).
 
-**Note:** Currently there is no way to change the weights. This will be amended in future.
+```
+gen1 = &n[ one, two, three, four ]
+gen2 = &n0-4-4[ one, two, three, four ]
+gen3 = &n0-7[ one, two, three, four ]
+gen4 = &n0-0-0.8-7[ one, two, three, four ]
+gen5 = &n0-0-3-7[ one, two, three, four ]
+```
+
+| | 						|
+|-------------------------------------------------------------------|---------------------------------------------------------------|
+| ![gen1 graph](Documentation/imgs/NormalRepeatGraph1-s.png)   		| ![gen2 graph](Documentation/imgs/NormalRepeatGraph2-s.png)	|
+| gen1 repeats														| gen2 repeats													|
+| ![gen3 graph](Documentation/imgs/NormalRepeatGraph3-s.png)   		| ![gen4 graph](Documentation/imgs/NormalRepeatGraph4-s.png)	|
+| gen3 repeats														| gen4 repeats													|
+| ![gen5 graph](Documentation/imgs/NormalRepeatGraph5-s.png)   		|																|
+| gen5 repeats														|																|
+
+#### Weighted Repeat
+
+A List or Proxy with a `weighted` Repeat type will repeat a number of times between zero and a chosen maximum, but allows you to assign weights to each possible number to make it more or less likely.
+The default weights are: `3-4-2-1 }`, the first number in the list representing the chance for zero repeats, the last number in the list representing the chance for the maximum number of repeats (in this example 3), and the nth number in the list representing the chance for n-1 repeats.
+
+You set the Repeat type to `weighted` by writing `&` followed by `w` followed by a series of weights separated by `-` symbols, for example: `&w0-5-4-3-2-1`. If you omit the weights then the default will be set.
+
+So, for example, with weights of `0-1-0-1-0-1` a List will always repeat at least once and it could repeat either 1, 3, or 5 times, with each of those numbers having an equal probability.
+
+Or, another example, the weights: `1-2-1` allow a list to repeat either 0, 1, or 2 times, but once is twice as likely as the other two possibilities.
+
+This Repeat type gives the greatest flexibility in assigning probabilities to number of repeats, but it is also the most verbose and the fiddliest to use.
 
 ```
 weightedgen &w = I was [ very ] happy.
 ```
-In the above example there is only one list and it only contains one word, "happy", because the list is weighted it can repeat up to 3 times, to produce one of the following sentences:
+In the above example there is only one List and it only contains one word, "happy", because the list is weighted it can repeat up to 3 times, to produce one of the following sentences:
 
-	I was very happy.
-	I was very very happy.
-	I was very very very happy.
-	I was very very very very happy.
+	"I was very happy."
+	"I was very very happy."
+	"I was very very very happy."
+	"I was very very very very happy."
 
 However, the second sentence is the most likely, the first is slightly less like, the third is half as likely as the second, and the fourth is the least likely - 4 times less likely than the second.
 
 
-#### Output Chance Setting
+### Output Chance Setting
 
-Lists will normally provide an output every time a Generator will run, however they can be given a chance not to do so.
+Both Lists and Proxies have an Output Chance Settings which can govern their chance of producing an Output when they are run.
+
+Lists and Proxies will normally provide an output every time a Generator will run, however they can be given a chance not to do so.
 
 The Output Chance is set using the `%` symbol followed by a number between 0 and 100, a percentage chance for the List to provide an output, for example `%60` gives the List a 60% chance to provide an output, conversely, 40% of the time the List will output nothing.
 
@@ -562,30 +645,24 @@ sometimesnothinggen = %90[ one, two, three ]
 
 Ten percent of the time, the generator above will not output any text at all.
 
-Proxies can also have an Output Chance.
+Output Chances can stack on top of each other, so for example:
 
+```
 
+gen = %50[ one, two, three ]
+gen2 = %50$gen
 
-### Sentence Settings
+```
 
-Sentences only have one Setting - Separator.
+In the above, both the list in 'gen' and the proxy referring to 'gen' in 'gen2 have an output chance of 50 percent - this means that only 50% of the times 'gen2' is run will the proxy access 'gen' for Output, and only 50% of those times will 'gen' actually provide any Output, in other words, Ouptut will only be provided 25% of the time.
 
-### Proxy Settings
+### Once Setting
 
-Proxies have a number of Settings, most of which are shared with Lists
-Proixes have a single setting that is unique to them, called Once.
+The Once Setting is a Simple Setting which applies only to Proxies and can allow it to always output the same text.
 
-* [Once](#once-setting)
-* Repeat
-* [Output Chance](#output-chance)
+The normal use for a Proxy is to place the Output from one Generator inside another, thus allowing more complex constructions. Generally the same effect can be achieved using Nested Lists, but Proxies tend to be easier to read and can also be reused in more than one other Generator.
 
-#### Once Setting
-
-Once can be set to On or Off, default is Off.
-
-The normal use for a Proxy is to place the output from one Generator inside another, thus allowing more complex constructions. Generally the same effect can be achieved using Nested Lists, but Proxies tend to be easier to read and can also be reused in more than one other Generator.
-
-Turning Once on changes this Behaviour. If Once is set to On then the Proxy will only get the output from its Generator Once, the first time it is accessed, and thereafter it will store whatever was output the first time; this allows a Proxy to be used as a kind of storage. Take this example:
+Turning Once on changes this Behaviour. If Once is set to On then the Proxy will only get the Output from its Generator once, the first time it is accessed, and thereafter it will store whatever was output the first time; this allows a Proxy to be used as a kind of storage. Take this example:
 
 ```
 items = [ wallet, keys, left shoe, favourite tie ]
@@ -595,14 +672,11 @@ s1 = Yesterday I lost my $lostitem/.
 	I didn't know what I'd do without my $lostitem/.
 ```
 
-Here NGen is being used to tell a simple story with a procedurally generated element – the item which is lost is chosen randomly, if the Proxy containing the possible lost items were used normally it would mean that the lost item would change each time it is referenced in the sentence; instead, the Proxy is set to Once and it stores the first item it gets and repeats it every other time it is asked for output.
+Here NGen is being used to tell a simple story with a procedurally generated element – the item which is lost is chosen randomly. If the Proxy containing the possible lost items were used normally it would mean that the lost item would change each time it is referenced in the sentence; instead, the Proxy is set to Once and it stores the first item it gets and repeats it every other time it is asked for output.
 
 Once can be switched on by typing the symbol `*`, or off by typing `*!`.
 
-
-
-
-
+Once can be set to On or Off, default is Off.
 
 ## Headers
 
@@ -667,7 +741,7 @@ gen3 = [ 1 of Hearts, 2 of Clubs, 4 of Diamonds, 3 of Spades, Queen of Hearts, e
 see [Pick Types](#pick-types) for more information.
 
 
-#### Setting Repeat Type in the Header
+#### Setting Repeats in the Header
 
 you can set the Repeat Type for all Lists which follow a header by writing `repeat =` followed by the Repeat Type you want, there are four possibilities: `fixed`, `uniform`, `normal`, and `weighted`.
 
@@ -860,7 +934,39 @@ Comments can be written along with generators, by starting lines with a `#` symb
 
 gen = this is not a comment and will create a generator
 ```
-Every commented line must have a `#` as its first character.
+
+Every commented line must have a `#` as the beginning, however, the `#` does not have to be the very first character, there can be whitespace before it, such as:
+
+```
+# no whitespace here
+	# there is a tab before this comment
+      # there are 6 spaces before this comment
+
+something # this comment will not work, because there is something other than whitespace before it.
+```
+
+Note that this means that, while `#` does not normally have to be escaped ([see below](#escaping-characters])) when it appears inside a generator, it *does* have to be escaped if it starts at the beginning of a line:
+
+```
+
+gen = this is a generator with a hash # symbol in it.
+
+# the generator below will not work, because all of its contents will be interpreted as comments:
+
+hashtaggen = [
+		#NoMorePotatoes,
+		#FimFamBoodle,
+		#LoveKittens
+	]
+
+# the above should be escaped, like this:
+
+hashtaggen = [
+		\#NoMorePotatoes,
+		\#FimFamBoodle,
+		\#LoveKittens
+]
+```
 
 
 ## Escaping Characters
@@ -880,6 +986,8 @@ money = [$100, $200]
 money2 = [\$100, \$200]
 
 ```
+
+**Note:** `#` symbols do not normally need to be escaped, only at the beginning of a line, [see Comments for more](#comments).
 
 ## Remapping Characters
 
@@ -933,11 +1041,9 @@ There are some limitations to Remapping:
 
 `= [ ] , $ < >`
 
-**You can only Remap the above characters**, the same ones which have to be escaped, with the exception of the escape character itself `\` and the comment character `#`, both of which can't be remapped.
+**You can only Remap the above characters**, the same ones which have to be escaped, with the exception of the escape character itself `\` and the comment character `#`, neither of which can be remapped.
 
-*TODO - think about how remapping comments would work, or ensure that it's never necessary???*
-
-*TODO - Ditto with headers `^` do we need to remap this???*
+*TODO - think about headers `^` do we need to remap this???*
 
 **You can only Remap to a single character**, not a string of characters; it is impossible to remap `$` to `!%` for example.
 
