@@ -89,10 +89,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="ProxyGen.cs" />
+    <Compile Include="Utils_Rand.Norm.cs" />
+    <Compile Include="Utils_Rand.cs" />
     <Compile Include="SenGen.cs" />
     <Compile Include="TagGen.cs" />
     <Compile Include="TagWrangler.cs" />
-    <Compile Include="Utils.cs" />
+    <Compile Include="Utils_Extensions.cs" />
+    <Compile Include="Utils_Weights.cs" />
     <Compile Include="Wrd.cs" />
   </ItemGroup>
   <ItemGroup>

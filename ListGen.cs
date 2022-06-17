@@ -64,7 +64,7 @@ namespace NGen {
                 if( gs.PickWeightsFromFac ) {
 
                     int num = wrds.Length;
-                    gs.PickWeights = Rand.CalculateWeightsFromMult( gs.WeightFac, num );
+                    gs.PickWeights = Weights.CalculateWeightsFromMult( gs.WeightFac, num );
 
                     //calculate weigths based on first and last given weights
                 } else if( gs.PickWeightsFromEnds ) {
@@ -73,7 +73,7 @@ namespace NGen {
                     double min = Math.Min( gs.PickWeightStart, gs.PickWeightEnd );
                     double max = Math.Max( gs.PickWeightStart, gs.PickWeightEnd );
 
-                    gs.PickWeights = Rand.CalculateLinearWeightsFromMinMax( min, max, num, gs.PickWeightStart > gs.PickWeightEnd );
+                    gs.PickWeights = Weights.CalculateLinearWeightsFromMinMax( min, max, num, gs.PickWeightStart > gs.PickWeightEnd );
 
                 } else {
                     //if weights have already been set,
@@ -99,7 +99,7 @@ namespace NGen {
                             double max = Math.Max( lastWeight, penultimateWeight );
 
                             //note - missing weights include penultimate and last weights
-                            double[] missingWeights = Rand.CalculateLinearWeightsFromMinMax( min, max, dif + 2, penultimateWeight > lastWeight );
+                            double[] missingWeights = Weights.CalculateLinearWeightsFromMinMax( min, max, dif + 2, penultimateWeight > lastWeight );
 
                             double[] newWeights = new double[wrds.Length];
 

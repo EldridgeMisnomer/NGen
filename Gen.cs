@@ -32,12 +32,12 @@ namespace NGen {
 
                         if( gs.UseDev ) {
 
-                            repeats = Rand.RandomNormalRangeMeanDevInt( gs.RepMin, gs.RepMax, gs.RepMean, gs.RepStdDev );
+                            repeats = Rand.Norm.RangeMeanDevInt( gs.RepMin, gs.RepMax, gs.RepMean, gs.RepStdDev );
                             break;
 
                         } else {
 
-                            repeats = Rand.RandomNormalRangeMeanInt( gs.RepMin, gs.RepMax, gs.RepMean );
+                            repeats = Rand.Norm.RangeMeanInt( gs.RepMin, gs.RepMax, gs.RepMean );
                             break;
 
                         }
@@ -45,7 +45,7 @@ namespace NGen {
 
                     } else {
 
-                        repeats = Rand.RandomNormalRangeInt( gs.RepMin, gs.RepMax );
+                        repeats = Rand.Norm.RangeInt( gs.RepMin, gs.RepMax );
                         break;
 
                     }
