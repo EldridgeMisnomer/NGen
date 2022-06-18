@@ -24,8 +24,8 @@
         public int RepMin = 0;
         public int RepMean = 0;
         public double RepStdDev = 0;
-        public bool UseMean = false;
-        public bool UseDev = false;
+        public bool RepUseMean = false;
+        public bool RepUseDev = false;
         public int[] RepWeights = { 3, 4, 2, 1 };
 
         //output chance
@@ -75,8 +75,8 @@
             RepMin = gs.RepMin;
             RepStdDev = gs.RepStdDev;
             RepMean = gs.RepMean;
-            UseMean = gs.UseMean;
-            UseDev = gs.UseDev;
+            RepUseMean = gs.RepUseMean;
+            RepUseDev = gs.RepUseDev;
             RepWeights = gs.RepWeights;
 
             //output chance
@@ -119,8 +119,8 @@
                 case RepeatType.normal:
                     RepMax = 4;
                     RepMin = 0;
-                    UseMean = false;
-                    UseDev = false;
+                    RepUseMean = false;
+                    RepUseDev = false;
                     break;
                 case RepeatType.weighted:
                     int[] defaultRepWeights = { 3, 4, 2, 1 };

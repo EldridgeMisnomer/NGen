@@ -392,8 +392,8 @@ namespace NGen {
                                     gs.RepMin = numParts[0];
                                     gs.RepMean = numParts[1];
                                     gs.RepMax = numParts[2];
-                                    gs.UseMean = true;
-                                    gs.UseDev = false;
+                                    gs.RepUseMean = true;
+                                    gs.RepUseDev = false;
 
 
                                 } else if ( sNumParts.Length > 3 ) {
@@ -402,8 +402,8 @@ namespace NGen {
                                     gs.RepMean = numParts[1];
                                     gs.RepStdDev = stdDevHack;
                                     gs.RepMax = numParts[3];
-                                    gs.UseMean = true;
-                                    gs.UseDev = true;
+                                    gs.RepUseMean = true;
+                                    gs.RepUseDev = true;
 
                                 }
                             }

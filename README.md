@@ -667,9 +667,9 @@ Turning Once on changes this Behaviour. If Once is set to On then the Proxy will
 ```
 items = [ wallet, keys, left shoe, favourite tie ]
 lostitem * = $items
-s1 = Yesterday I lost my $lostitem/. 
+s1 = Yesterday I lost my $lostitem <. 
 	I was so sad, I loved my $lostitem so much, 
-	I didn't know what I'd do without my $lostitem/.
+	I didn't know what I'd do without my $lostitem <.
 ```
 
 Here NGen is being used to tell a simple story with a procedurally generated element – the item which is lost is chosen randomly. If the Proxy containing the possible lost items were used normally it would mean that the lost item would change each time it is referenced in the sentence; instead, the Proxy is set to Once and it stores the first item it gets and repeats it every other time it is asked for output.
@@ -734,7 +734,7 @@ For more about remapping, see [Remapping Characters](#remapping-characters).
 
 Glitch is a somewhat esoteric Setting which allows you to permanently or temorarily corrupt or glitch all of the text output by your Generators by randomly replacing some of its characters with symbols.
 
-You can only enable Glitch for *all* Generators in an NGen; you do this by writing `glitch = on` in the Main Header. 
+You can only enable Glitch for *all* Generators in an NGen; you do this by writing `glitch = on` in the Main Header. *TODO - check if this is true - it might be possible to set Glitch in any header*
 
 Glitch has the following optional settings: 
 

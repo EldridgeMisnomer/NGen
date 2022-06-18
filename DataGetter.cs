@@ -15,11 +15,14 @@ namespace NGen {
         //TODO - extend AllowDupes to weighted pick types
         //TODO - check what happens if no header, or no header at beginning but yes one later
         //TODO - better optimise WrdProcessor
-        //TODO - ??? add 1 or two default Lists - Numbers, Letters, Uppercase Letters
+        //TODO - ??? add 1 or two default Lists -
+        //          Numbers, Letters, Uppercase Letters, initials with .,
+        //          numbers with ,000 numbers with .00, example first and last names???
         //TODO - ??? some form of controlling case
         //TODO - add the possibility to manually define the start of Sentences using |
         //TODO - fill in missing longhand
         //TODO - add ability to set Glitch characters
+        //TODO - find a way to allow Once to be only per Run
 
         public static Dictionary<char, char> remapDict = null;
 
@@ -155,63 +158,7 @@ namespace NGen {
 
             if( h.Length > 0 ) {
 
-                //remapping
-                int remapInd = h.IndexOf( "remap" );
-
-                //DEBUG
-                Console.WriteLine( $"remapInd: '{remapInd}'." );
-
-                if( remapInd >= 0 ) {
-
-                    int startInd = h.IndexOf( '(', remapInd + 5 );
-                    int endInd = h.IndexOf( ')', startInd + 1 );
-
-                    //DEBUG
-                    Console.WriteLine( $"remap string: '{h}'." );
-                    Console.WriteLine( $"remap, startInd: '{startInd}', endInd: '{endInd}'." );
-
-                    string remapString = h.Substring( startInd + 1, endInd - startInd - 1 );
-                    Console.WriteLine( $"remap string: '{remapString}'." );
-
-                    //split string based on '='
-                    string[] remapSplit = ParserUtils.StringSplitOnUnEscapedCharacter( remapString, '=' );
-
-                    Console.WriteLine( $" remapArray is {remapSplit.Length} elements long." );
-
-
-                    remapDict = new Dictionary<char, char>();
-
-                    for( int i = 0; i < remapSplit.Length-1; i++ ) {
-
-                        //DEBUG
-                        Console.WriteLine( $" remapLoop: {i} " );
-
-                        string f1 = remapSplit[i].Trim();
-                        string f2 = remapSplit[i+1].Trim();
-                        char c1 = f1[f1.Length-1];
-                        char c2 = f2[0];
-                        remapDict.Add( c1, c2 );
-                    }
-
-                    ParserUtils.RemapChars( remapDict );
-
-                    //remake h without remap, to save time on later searches
-                    string preRemap = "";
-                    string postRemap = "";
-
-                    if( remapInd > 0 ) {
-                        //"0123remap)012"
-                        preRemap = h.Substring( 0, remapInd );
-                    }
-                    if( h.Length > endInd + 1 ) {
-                        postRemap = h.Substring(endInd + 1 );
-                    }
-
-                    h = preRemap + ' ' + postRemap;
-
-                }
-
-
+                HeaderRemapping( ref h );
 
                 //Split header
                 char[] separators = { '=' };
@@ -226,10 +173,10 @@ namespace NGen {
                 bool pickLast = false;
 
                 //work through the parts
-                for( int i = 0; i < hParts.Count-1; i++ ) {
+                for( int i = 0; i < hParts.Count - 1; i++ ) {
 
                     string p1 = hParts[i];
-                    string p2 = hParts[i+1];
+                    string p2 = hParts[i + 1];
 
                     //search p1 for searchStrings
                     for( int j = 0; j < searchStrings.Count; j++ ) {
@@ -296,6 +243,7 @@ namespace NGen {
                                 case "output":
 
                                     HeaderSetDouble( p2, out gs.OutputChance );
+                                    gs.OutputChance /= 100;
                                     break;
 
                                 case "separator":
@@ -409,8 +357,8 @@ namespace NGen {
                                                     //TODO - report an error here, decide what number should be added
                                                     iNums[k] = 1;
                                                 }
-
                                             }
+                                            gs.RepWeights = iNums;
 
                                         }
                                     } else {
@@ -430,21 +378,28 @@ namespace NGen {
                                 case "min":
 
                                     HeaderSetInt( p2, out gs.RepMin );
+                                    gs.RepUseMean = false;
+                                    gs.RepUseDev = false;
                                     break;
 
                                 case "max":
 
                                     HeaderSetInt( p2, out gs.RepMax );
+                                    gs.RepUseMean = false;
+                                    gs.RepUseDev = false;
                                     break;
 
                                 case "mean":
 
                                     HeaderSetInt( p2, out gs.RepMean );
+                                    gs.RepUseMean = true;
+                                    gs.RepUseDev = false;
                                     break;
 
                                 case "dev":
 
                                     HeaderSetDouble( p2, out gs.RepStdDev );
+                                    gs.RepUseDev = true;
                                     break;
 
                                 case "num":
@@ -479,6 +434,60 @@ namespace NGen {
             }
 
             return gs;
+        }
+
+        private static void HeaderRemapping( ref string h ) {
+
+            //remapping
+            int remapInd = h.IndexOf( "remap" );
+            if( remapInd >= 0 ) {
+
+                int startInd = h.IndexOf( '(', remapInd + 5 );
+                int endInd = h.IndexOf( ')', startInd + 1 );
+
+                //DEBUG
+                //Console.WriteLine( $"remap string: '{h}'." );
+                //Console.WriteLine( $"remap, startInd: '{startInd}', endInd: '{endInd}'." );
+
+                string remapString = h.Substring( startInd + 1, endInd - startInd - 1 );
+                //Console.WriteLine( $"remap string: '{remapString}'." );
+
+                //split string based on '='
+                string[] remapSplit = ParserUtils.StringSplitOnUnEscapedCharacter( remapString, '=' );
+
+                //Console.WriteLine( $" remapArray is {remapSplit.Length} elements long." );
+
+
+                remapDict = new Dictionary<char, char>();
+
+                for( int i = 0; i < remapSplit.Length - 1; i++ ) {
+
+                    //DEBUG
+                    //Console.WriteLine( $" remapLoop: {i} " );
+
+                    string f1 = remapSplit[i].Trim();
+                    string f2 = remapSplit[i + 1].Trim();
+                    char c1 = f1[f1.Length - 1];
+                    char c2 = f2[0];
+                    remapDict.Add( c1, c2 );
+                }
+
+                ParserUtils.RemapChars( remapDict );
+
+                //remake h without remap, to save time on later searches
+                string preRemap = "";
+                string postRemap = "";
+
+                if( remapInd > 0 ) {
+                    preRemap = h.Substring( 0, remapInd );
+                }
+                if( h.Length > endInd + 1 ) {
+                    postRemap = h.Substring( endInd + 1 );
+                }
+
+                h = preRemap + ' ' + postRemap;
+
+            }
         }
 
         private static void HeaderSwitch( string s, out bool b ) {

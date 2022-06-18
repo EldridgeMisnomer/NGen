@@ -28,9 +28,9 @@ namespace NGen {
 
                 case RepeatType.normal:
 
-                    if( gs.UseMean ) {
+                    if( gs.RepUseMean ) {
 
-                        if( gs.UseDev ) {
+                        if( gs.RepUseDev ) {
 
                             repeats = Rand.Norm.RangeMeanDevInt( gs.RepMin, gs.RepMax, gs.RepMean, gs.RepStdDev );
                             break;
