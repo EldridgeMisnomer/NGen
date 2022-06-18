@@ -72,6 +72,7 @@
     <Compile Include="GenProcessors.cs" />
     <Compile Include="GenSettings.cs" />
     <Compile Include="Gen.cs" />
+    <Compile Include="Utils_Glitcher.cs" />
     <Compile Include="HeaderWrangler.cs" />
     <Compile Include="ListGen.cs" />
     <Compile Include="NGen.cs" />

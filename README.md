@@ -714,6 +714,72 @@ gen3 = [umple, bumple, jigget, splinch]
 The primary use for the header is to set the behaviour of all generators which follow it.
 Currently Pick Type, Repeat Type and No Repeat behaviour can be set, there is also a `reset` command which will switch everything back to its defaults.
 
+In addition, there are a few Settings which can only be set in the Header: Remap and Glitch.
+
+#### Remap
+
+Remap allows the special characters that NGen uses to define things like Lists and Proxies to be changed, there is not often a good reason to do this, except when the content of Generators includes main of those characters which need escaping.
+
+You remap a character by writing `remap` in the Main Header, followed by a set of brackets `()` containing all the remaps you want to do, for example:
+
+```
+^
+remap ( $ = £ , = ; )
+^
+```
+
+For more about remapping, see [Remapping Characters](#remapping-characters).
+
+#### Glitch
+
+Glitch is a somewhat esoteric Setting which allows you to permanently or temorarily corrupt or glitch all of the text output by your Generators by randomly replacing some of its characters with symbols.
+
+You can only enable Glitch for *all* Generators in an NGen; you do this by writing `glitch = on` in the Main Header. 
+
+Glitch has the following optional settings: 
+
+`chance` which can be set to a percentage between 0 and 100, this is the percentage chance that a character has of being 'glitched' (default is 10%); 
+
+`perma` which can be set to `on` or `off` (default is `off`), which determines whether or not glitches are saved permanently in the Generator after being applied; 
+
+and `cleanfirst` which can also be set to `on` or `off` (default is `off`), which determines whether or not the first output from the Generator will be 'clean', or unglitched.
+
+An example:
+
+```
+^
+glitch = on chance = 20% perma = on cleanfirst = on
+^
+
+name = [ Hannah, Sarah, Brenda, Michelle, Anna, Emily, Jessica ] [ Brundle, Biggins, Alberquerk, Ventle, Nedge, Gumption, Libid ]
+```
+
+Which might result in output like this:
+
+        Emily Gumption
+        Sarah Libid
+        Anna Li#i*
+        Hannah Gu**tion
+        Jessica Brundle
+        Brenda Brundle
+        Emily B#und#e
+        An@a Nedge
+        Michelle Gu**@ion
+        S*rah Biggins
+        Michelle Gu**@i*@
+        ¡@ch*&l¡ Gu**@i¡@
+        @*r¡h Alberquerk
+        Ha!nah B##nd#e
+        H%!$ah *u**¡i¡%
+        B~enda Biggi¡s
+        ¡@ch*&l$ Alb*r*uerk
+
+The default set of symbols which characters can be glitched to is: 
+
+`#, *, $, @, %, &, !, ¡, ~`
+
+These cannot currently be changed, but there will be a way in future *TODO*
+
 
 #### Setting Pick Type in the Header
 

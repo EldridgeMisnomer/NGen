@@ -19,6 +19,7 @@ namespace NGen {
         //TODO - ??? some form of controlling case
         //TODO - add the possibility to manually define the start of Sentences using |
         //TODO - fill in missing longhand
+        //TODO - add ability to set Glitch characters
 
         public static Dictionary<char, char> remapDict = null;
 
