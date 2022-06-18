@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Utils;
 
 namespace NGen {
     class Program {
@@ -9,15 +10,29 @@ namespace NGen {
             bool loadFromJSON = false;
             bool testJSON = false;
             bool displayGenNames = true;
-            bool runAllGens = true;
+            bool runAllGens = false;
             bool testMainGens = false;
-            bool runRepeatCountTest = true;
+            bool runRepeatCountTest = false;
+            bool runGlitchTest = false;
 
 
             string[] gensToRun = { "name" };
             string[] tagsToUse = { };
 
-            int numTestToRunPerName = 1000;
+            int numTestToRunPerName = 30;
+
+            if( runGlitchTest ) {
+
+                string gt = "If I was a lovely combine harvester and you were a key, I'd wrap you up in silver foil and throw you in the barley.";
+
+                Glitcher.AddGlitchChars( new char[] { 'a', 'b'} );
+
+                gt = gt.Glitch();
+                Console.WriteLine(gt);
+
+
+            }
+
 
             NGen nGen;
             if( loadFromJSON ) {

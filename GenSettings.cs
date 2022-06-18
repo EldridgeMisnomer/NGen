@@ -45,6 +45,12 @@
         //main gen (only for top level generators)
         public bool isMain = false;
 
+        //glitch behaviour - only for wrds
+        public bool Glitch = false;
+        public double GlitchChance = 10;
+        public bool PermaGlitch = false;
+        public bool CleanFirst = false;
+
         public GenSettings() { }
 
         public GenSettings( GenSettings gs ) {
@@ -86,6 +92,14 @@
 
             //once
             Once = gs.Once; 
+
+            //don't copy isMain
+
+            //glitch
+            Glitch = gs.Glitch; ;
+            GlitchChance = gs.GlitchChance;
+            PermaGlitch = gs.PermaGlitch;
+            CleanFirst = gs.CleanFirst;
 
         }
 

@@ -17,7 +17,7 @@ namespace Utils {
 
         private static char[] glitchChars = { '#', '*', '$', '@', '%', '&', '!', '¡', '~'  };
 
-        public static string Glitch( this string s, double perCharChance = 0.3 ) {
+        public static string Glitch( this string s, double perCharChance = 0.1 ) {
 
             char[] sChars = s.ToCharArray();
 

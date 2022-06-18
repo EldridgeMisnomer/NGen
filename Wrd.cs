@@ -1,4 +1,6 @@
-﻿
+﻿using System;
+using Utils;
+
 using PU = NGen.ParserUtils;
 
 namespace NGen {
@@ -22,12 +24,41 @@ namespace NGen {
         public Wrd() { }
 
         protected override GenOutput[] PickTxt( params string[] tags ) {
-            GenOutput[] newGOs = new GenOutput[] { new GenOutput( wrd, gs ) };
+            GenOutput[] newGOs = new GenOutput[] { new GenOutput( Glitch(), gs ) };
             return newGOs;
         }
 
         public override GenOutput[] GetOutput( params string[] tags ) {
             return PickTxt( tags );
+        }
+
+        private string Glitch() {
+
+            if( gs.Glitch ) {
+               
+                string s = wrd;
+                s = s.Glitch( gs.GlitchChance/100 );
+
+                if( gs.PermaGlitch ) {
+
+                    if( gs.CleanFirst ) {
+
+                        string clean = wrd;
+                        wrd = s;
+                        return clean;
+
+                    } else {
+
+                        wrd = s;
+                        return wrd;
+
+                    }
+                } else {
+                    return s;
+                }
+            } else {
+                return wrd;
+            }
         }
 
     }

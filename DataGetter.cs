@@ -15,7 +15,6 @@ namespace NGen {
         //TODO - extend AllowDupes to weighted pick types
         //TODO - check what happens if no header, or no header at beginning but yes one later
         //TODO - better optimise WrdProcessor
-        //TODO - ??? Glitch ???
         //TODO - ??? add 1 or two default Lists - Numbers, Letters, Uppercase Letters
         //TODO - ??? some form of controlling case
         //TODO - add the possibility to manually define the start of Sentences using |
@@ -219,17 +218,17 @@ namespace NGen {
 
                 //Search strings
                 List<string> searchStrings = new List<string> {
-                    "pick", "repeat", "chance", "separator", "once", "allow"
+                    "pick", "repeat", "output", "separator", "once", "allow", "glitch"
                 };
 
                 //keep track of pick or repeat last picked, for weights
                 bool pickLast = false;
 
-                //work backwards through the parts
-                for( int i = hParts.Count - 1; i > 0; i++ ) {
+                //work through the parts
+                for( int i = 0; i < hParts.Count-1; i++ ) {
 
-                    string p1 = hParts[i-1];
-                    string p2 = hParts[i];
+                    string p1 = hParts[i];
+                    string p2 = hParts[i+1];
 
                     //search p1 for searchStrings
                     for( int j = 0; j < searchStrings.Count; j++ ) {
@@ -293,15 +292,9 @@ namespace NGen {
                                     gs.SetRepeatDefaults();
                                     break;
 
-                                case "chance":
+                                case "output":
 
-                                    double c;
-                                    if( ParserUtils.DirtyStringToDouble( p2, out c ) ) {
-                                        gs.OutputChance = c;
-                                    } else {
-                                        //TODO - report an error here
-                                    }
-
+                                    HeaderSetDouble( p2, out gs.OutputChance );
                                     break;
 
                                 case "separator":
@@ -338,44 +331,33 @@ namespace NGen {
 
                                 case "once":
 
-                                    if( p2.ToLower().Contains( "on" ) ) {
-                                        gs.Once = true;
-                                    } else {
-                                        gs.Once = false;
-                                    }
-
+                                    HeaderSwitch( p2, out gs.Once );
                                     break;
 
                                 case "allow":
 
-                                    if( p2.ToLower().Contains( "on" ) ) {
-                                        gs.AllowDupes = true;
-                                    } else {
-                                        gs.AllowDupes = false;
-                                    }
+                                    HeaderSwitch( p2, out gs.AllowDupes );
+                                    break;
+
+                                case "glitch":
+
+                                    HeaderSwitch( p2, out gs.Glitch );
+                                    searchStrings.Add( "chance" );
+                                    searchStrings.Add( "perma" );
+                                    searchStrings.Add( "clean" );
 
                                     break;
 
                                 case "point":
 
-                                    double p;
-                                    if( ParserUtils.DirtyStringToDouble( p2, out p ) ) {
-                                        gs.ShufflePoint = p;
-                                    } else {
-                                        //TODO - report an error here
-                                    }
+                                    HeaderSetDouble( p2, out gs.ShufflePoint );
                                     break;
 
                                 case "skip":
 
-                                    int s;
-                                    if( ParserUtils.DirtyStringToInt( p2, out s ) ) {
-                                        gs.Skip = s;
-                                    } else {
-                                        //TODO - report an error here
-                                    }
-
+                                    HeaderSetInt( p2, out gs.Skip );
                                     break;
+
                                 case "weights":
 
                                     if( p2.Contains( '-' ) ) {
@@ -434,21 +416,56 @@ namespace NGen {
                                         //TODO - report an error here
                                         Console.WriteLine( $"Main Header Parser Error: weights could not be determined from '{p2}'." );
                                     }
-                                        
 
                                     break;
+
                                 case "factor":
+
+                                    HeaderSetDouble( p2, out gs.WeightFac );
+                                    gs.PickWeightsFromFac = true;
+                                    gs.PickWeightsFromEnds = false;
                                     break;
+
                                 case "min":
+
+                                    HeaderSetInt( p2, out gs.RepMin );
                                     break;
+
                                 case "max":
+
+                                    HeaderSetInt( p2, out gs.RepMax );
                                     break;
+
                                 case "mean":
+
+                                    HeaderSetInt( p2, out gs.RepMean );
                                     break;
+
                                 case "dev":
+
+                                    HeaderSetDouble( p2, out gs.RepStdDev );
                                     break;
+
                                 case "num":
+
+                                    HeaderSetInt( p2, out gs.RepMax );
                                     break;
+
+                                case "chance":
+
+                                    HeaderSetDouble( p2, out gs.GlitchChance );
+                                    break;
+
+                                case "perma":
+
+                                    HeaderSwitch( p2, out gs.PermaGlitch );
+                                    break;
+
+                                case "clean":
+
+                                    HeaderSwitch( p2, out gs.CleanFirst );
+                                    break;
+
                                 default:
                                     //TODO report an error here
                                     Console.WriteLine( $"Main Header Parser Error: settings pair not recognised '{p1}' = '{p2}'." );
@@ -458,16 +475,29 @@ namespace NGen {
                         }
                     }
                 }
-
-
-                //TODO - fix this
-                if( h.Contains("norep") ) {
-                    gs.AllowDupes = true;
-                }
-
             }
 
             return gs;
+        }
+
+        private static void HeaderSwitch( string s, out bool b ) {
+            if( s.ToLower().Contains( "on" ) ) {
+                b = true;
+            } else {
+                b = false;
+            }
+        }
+
+        private static void HeaderSetDouble( string s, out double d ) {
+            if( !ParserUtils.DirtyStringToDouble( s, out d ) ) {
+                //TODO - report an error here
+            }
+        }
+
+        private static void HeaderSetInt( string s, out int i ) {
+            if( !ParserUtils.DirtyStringToInt( s, out i ) ) {
+                //TODO - report an error here
+            }
         }
 
         private static Dictionary<string, OutputGen> LineProcessor( GenSettings oldSettings, string[] lines ) {
