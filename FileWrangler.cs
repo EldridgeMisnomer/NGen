@@ -94,15 +94,21 @@ namespace NGen {
                 }
             }
 
-            //Create the nGen and return it
+            //Create the nGen
             NGen nGen = new NGen( gens );
 
-            //if there's a remap dictionary, add it to the gen
-            if( DataGetter.remapDict != null ) {
-                nGen.remapDict = DataGetter.remapDict;
-                DataGetter.remapDict = null;
+            //add the proxies to the nGen
+            if( proxyGens.Count > 0 ) {
+                nGen.proxies = proxyGens;
             }
 
+            //if there's a remap dictionary, add it to the gen
+            if( MainHeaderWrangler.remapDict != null ) {
+                nGen.remapDict = MainHeaderWrangler.remapDict;
+                MainHeaderWrangler.remapDict = null;
+            }
+
+            //return the nGen
             return nGen;
 
         }

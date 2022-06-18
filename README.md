@@ -324,6 +324,7 @@ Proxies have a number of Settings, most of which are shared with Lists
 Proixes have a single setting that is unique to them, called Once.
 
 * [Once](#once-setting)
+* [Temp](#temp-setting)
 * [Repeat](#repeat-settings)
 * [Output Chance](#output-chance)
 
@@ -654,11 +655,13 @@ gen2 = %50$gen
 
 ```
 
-In the above, both the list in 'gen' and the proxy referring to 'gen' in 'gen2 have an output chance of 50 percent - this means that only 50% of the times 'gen2' is run will the proxy access 'gen' for Output, and only 50% of those times will 'gen' actually provide any Output, in other words, Ouptut will only be provided 25% of the time.
+In the above, both the list in 'gen' and the Proxy referring to 'gen' in 'gen2 have an output chance of 50 percent - this means that only 50% of the times 'gen2' is run will the Proxy access 'gen' for Output, and only 50% of those times will 'gen' actually provide any Output, in other words, Ouptut will only be provided 25% of the time.
 
 ### Once Setting
 
-The Once Setting is a Simple Setting which applies only to Proxies and can allow it to always output the same text.
+The Once Setting is a Simple setting which applies only to Proxies and can allow it to always output the same text.
+
+The [Temp Setting](#temp-setting) also affects how Once functions.
 
 The normal use for a Proxy is to place the Output from one Generator inside another, thus allowing more complex constructions. Generally the same effect can be achieved using Nested Lists, but Proxies tend to be easier to read and can also be reused in more than one other Generator.
 
@@ -677,6 +680,38 @@ Here NGen is being used to tell a simple story with a procedurally generated ele
 Once can be switched on by typing the symbol `*`, or off by typing `*!`.
 
 Once can be set to On or Off, default is Off.
+
+### Temp Setting
+
+The Temp Setting also only applies to Proxies, and it affects how Once works.
+
+Normally when a Proxy is set to Once, it will store the first Output it receives and return that forever, therefore, in the example above, if the 's1' Generator is run 10 times it will always Output the same text:
+
+	"Yesterday I lost my wallet, I was so sad, I loved my wallet so much, 
+	I didn't know what I'd do without my wallet."
+	"Yesterday I lost my wallet, I was so sad, I loved my wallet so much, 
+	I didn't know what I'd do without my wallet."
+	"Yesterday I lost my wallet, I was so sad, I loved my wallet so much, 
+	I didn't know what I'd do without my wallet."
+	"Yesterday I lost my wallet, I was so sad, I loved my wallet so much, 
+	I didn't know what I'd do without my wallet."
+	etc...
+
+Not only is the same `lostitem` retained for each Proxy in the 's1' Generator, but it continues to be retained every subsequent time the Generator is run.
+
+This may or may not be the desired result. If you want a different `lostitem` to be chosen each time the Generator is run you can set the `temp` Setting to `on`. by writing `temp = on` in the header. *TODO - this is only available in the main header for now - extend it to shorthand.* Now the `lostitem` Proxy will 'forget' its Output after the Generator has been run, resulting in a different 's1' Output each time, eg:
+
+	"Yesterday I lost my wallet, I was so sad, I loved my wallet so much, 
+	I didn't know what I'd do without my wallet."
+	"Yesterday I lost my left shoe, I was so sad, I loved my left shoe so much, 
+	I didn't know what I'd do without my left shoe."
+	"Yesterday I lost my keys, I was so sad, I loved my keys so much, 
+	I didn't know what I'd do without my keys."
+	"Yesterday I lost my left shoe, I was so sad, I loved my left shoe so much, 
+	I didn't know what I'd do without my left shoe."
+	etc...
+
+`temp` can be `on` or `off`, default is `off`.
 
 ## Headers
 

@@ -41,6 +41,7 @@
 
         //once behaviour (only for proxies)
         public bool Once = false;
+        public bool TempOnce = false;
 
         //main gen (only for top level generators)
         public bool isMain = false;
@@ -91,7 +92,8 @@
             NoSepAfter = gs.NoSepAfter;
 
             //once
-            Once = gs.Once; 
+            Once = gs.Once;
+            TempOnce = gs.TempOnce;
 
             //don't copy isMain
 
@@ -145,7 +147,6 @@
                     double[] defaultPickWeights = new double [0];
                     PickWeights = defaultPickWeights;
                     break;
-
             }
         }
     }

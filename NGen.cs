@@ -15,6 +15,8 @@ namespace NGen {
 
         public Dictionary<char, char> remapDict = null;
 
+        public List<ProxyGen> proxies = null;
+
 
         public NGen( Dictionary<string, OutputGen> namedGens ) {
             gens = namedGens;
@@ -42,7 +44,9 @@ namespace NGen {
 
             if( gens.ContainsKey( name ) ) {
 
-                return gens[name].GetTxt( tags );
+                string output = gens[name].GetTxt( tags );
+                ResetProxies();
+                return output;
 
             } else {
                 Console.WriteLine( $"NGen Error: This NGen did not have a Gen named {name} in it" );
@@ -55,7 +59,9 @@ namespace NGen {
 
             if( gens.ContainsKey( name ) ) {
 
-                return gens[name].GetTxt();
+                string output = gens[name].GetTxt();
+                ResetProxies();
+                return output;
 
             } else {
                 Console.WriteLine( $"NGen Error: This NGen did not have a Gen named {name} in it" );
@@ -70,11 +76,23 @@ namespace NGen {
 
             for( int i = 0; i < number; i++ ) {
                 output[i] = GenTxt( name );
+                ResetProxies();
             }
 
             return output;
 
         }
+
+        private void ResetProxies() {
+            if( proxies != null && proxies.Count > 0 ) {
+                foreach( ProxyGen pg in proxies ) {
+                    if( pg.gs.TempOnce ) {
+                        pg.onceText = null;
+                    }
+                }
+            }
+        }
+
 
         public string[][] GenAll( int number = 10, bool onlyMain = false ) {
 
@@ -92,10 +110,12 @@ namespace NGen {
                     if( onlyMain ) {
 
                         output[i][j] = gens[mainGens[j]].GetTxt();
+                        ResetProxies();
 
                     } else {
 
                         output[i][j] = gens[keys[j]].GetTxt();
+                        ResetProxies();
 
                     }
                 }

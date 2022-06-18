@@ -6,9 +6,11 @@ namespace NGen {
         /*
          *  This is a Gen which stands as a proxy for another named Gen
          * 
-         *  It has one setting it uses, so far:
+         *  It can repeat and have an output chance - just like a list
+         *  It has one unique setting:
          *      Once - where it only retrieves text from a Gen the first time
          *          and after that it alawys returns the same text
+         *      TODO - look into how to make this a per-run setting.
          */
 
         public OutputGen gen;
@@ -18,11 +20,7 @@ namespace NGen {
 
         public ProxyGen( string name, GenSettings genSettings ) {
             genName = name;
-
             gs = genSettings;
-
-            //DEBUG
-            //Console.WriteLine( $"Create ProxyGen, outputChance = {gs.OutputChance}" );
         }
 
         public ProxyGen() { }
