@@ -67,7 +67,11 @@ namespace NGen {
              *      Repeat, Output Chance, AllowRepeats, Pick, Separator, Once
              */
 
-            List<char> charList = new List<char> { '&', '%', '~', '?', '_', '*' };
+            //DEBUG
+            Console.WriteLine( $"Header Shorthand Sifter, s is: '{s}'." );
+
+
+            List<char> charList = new List<char> { '&', '%', '~', '?', '_', '*', '/' };
 
             char lastChar = 'x';
             string lastString = "";
@@ -92,11 +96,14 @@ namespace NGen {
 
                         lastString += s[i];
 
-                        if( i == s.Length - 1 ) {
-                            HeaderShorthandParser( lastChar, lastString, ref gs );
-                        }
 
                     }
+                }
+
+                if( i == s.Length - 1 ) {
+
+                    HeaderShorthandParser( lastChar, lastString, ref gs );
+
                 }
             }
         }
@@ -131,9 +138,16 @@ namespace NGen {
                     break;
 
                 case '*':
+                    //DEBUG
+                    Console.WriteLine( "Starting OnceParser" );
                     HeaderOnceParser( s, ref gs );
                     break;
 
+                case '/':
+                    //DEBUG
+                    Console.WriteLine( $"starting TempParser, s is: '{s}', c is: '{c}'." );
+                    HeaderTempParser( s, ref gs );
+                    break;
             }
         }
 
@@ -455,6 +469,19 @@ namespace NGen {
             } else {
 
                 gs.Once = true;
+
+            }
+        }
+
+        private static void HeaderTempParser( string s, ref GenSettings gs ) {
+
+            if( s.Length > 0 && s.Contains( '!' ) ) {
+
+                gs.TempOnce = false;
+
+            } else {
+
+                gs.TempOnce = true;
 
             }
         }

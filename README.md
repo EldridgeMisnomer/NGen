@@ -679,6 +679,8 @@ Here NGen is being used to tell a simple story with a procedurally generated ele
 
 Once can be switched on by typing the symbol `*`, or off by typing `*!`.
 
+The Once Setting can be changed in the Main Header by writing `once = on` or `once = off`.
+
 Once can be set to On or Off, default is Off.
 
 ### Temp Setting
@@ -699,7 +701,7 @@ Normally when a Proxy is set to Once, it will store the first Output it receives
 
 Not only is the same `lostitem` retained for each Proxy in the 's1' Generator, but it continues to be retained every subsequent time the Generator is run.
 
-This may or may not be the desired result. If you want a different `lostitem` to be chosen each time the Generator is run you can set the `temp` Setting to `on`. by writing `temp = on` in the header. *TODO - this is only available in the main header for now - extend it to shorthand.* Now the `lostitem` Proxy will 'forget' its Output after the Generator has been run, resulting in a different 's1' Output each time, eg:
+This may or may not be the desired result. If you want a different `lostitem` to be chosen each time the Generator is run you can set the `temp` Setting to `on`. Now the `lostitem` Proxy will 'forget' its Output after the Generator has been run, resulting in a different 's1' Output each time, eg:
 
 	"Yesterday I lost my wallet, I was so sad, I loved my wallet so much, 
 	I didn't know what I'd do without my wallet."
@@ -710,6 +712,10 @@ This may or may not be the desired result. If you want a different `lostitem` to
 	"Yesterday I lost my left shoe, I was so sad, I loved my left shoe so much, 
 	I didn't know what I'd do without my left shoe."
 	etc...
+
+The temp setting can be changed to `on` by writing the `/` symbol, or off by writing `/!`.
+
+The Temp Setting can be changed in the Main Header by writing `temp = on` or `temp = off`
 
 `temp` can be `on` or `off`, default is `off`.
 
@@ -1180,8 +1186,9 @@ Here's a table showing all the codes used in shorthand Settings:
 | %			| Output Chance		|					|
 | _			| Separator			|					|
 | *			| Once				|					|
+| /			| Temp				|					|
 | ~			| Allow Duplicates  |					|
-| !			| Switch Off		| *!, ~!			|
+| !			| Switch Off		| *!, ~!, /!		|
 
 ## Error Messages
 
