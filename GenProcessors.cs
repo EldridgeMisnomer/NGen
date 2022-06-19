@@ -347,7 +347,15 @@ namespace NGen {
 
                     if( sentenceStrings.Count == 1 ) {
 
-                        SenGen sg = SenGenProcessor( sentenceStrings[0], headerSettings, tags );
+                        GenSettings gs = new GenSettings( headerSettings );
+
+                        if( headerStrings[0].Trim().Length > 0 ) {
+
+                            HeaderWrangler.HeaderShorthandSifter( headerStrings[0], ref gs );
+
+                        }
+
+                        SenGen sg = SenGenProcessor( sentenceStrings[0], gs, tags );
                         return sg;
 
                     } else {
@@ -357,8 +365,14 @@ namespace NGen {
 
                             if( sentenceStrings[i].Trim().Length > 0 ) {
 
-                                //For now we're just ignoring headers... TODO later
-                                gens.Add( SenGenProcessor( sentenceStrings[i], headerSettings, tags ) );
+                                GenSettings gs = new GenSettings( headerSettings );
+
+                                if( headerStrings[i].Trim().Length > 0 ) {
+
+                                    HeaderWrangler.HeaderShorthandSifter( headerStrings[i], ref gs );
+
+                                }
+                                gens.Add( SenGenProcessor( sentenceStrings[i], gs, tags ) );
                             }
                         }
 
