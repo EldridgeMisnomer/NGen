@@ -218,7 +218,7 @@ namespace NGen {
             for( int i = 0; i < names.Count; i++ ) {
 
                 //Create the SenGen
-                SenGen g = GenProcessors.SenGenProcessor( declarations[i], settings[i], tags[i] );
+                SenGen g = GenProcessors.SenGenPreProcessor( declarations[i], settings[i], tags[i] );
 
                 //If that worked, put it somewhere
                 if( g != null ) {

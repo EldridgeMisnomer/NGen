@@ -16,7 +16,7 @@ namespace NGen {
             bool runGlitchTest = false;
 
 
-            string[] gensToRun = { "sen" };
+            string[] gensToRun = { "splitgen" };
             string[] tagsToUse = { };
 
             int numTestToRunPerName = 30;

@@ -37,7 +37,8 @@ namespace NGen {
                     { CharType.proxy, '$' },
                     { CharType.header, '^' },
                     { CharType.noSepBefore, '<' },
-                    { CharType.noSepAfter, '>' }
+                    { CharType.noSepAfter, '>' },
+                    { CharType.newSentence, '|' }
                 };
 
         public static char[] GetAllSpecialChars() {
@@ -74,23 +75,36 @@ namespace NGen {
             }
         }
 
+        public static bool CharIsUnescapedChar( char c, char pc, char match ) {
+
+            if( c != match ) {
+                return false;
+            } else {
+                return pc != '\\';
+            }
+        }
+
         public static bool StringContinsList( string s ) {
-            return NonEscapedCharCheck( s, CharMap( CharType.openList ) );
+            return StringContainsUnescapedChar( s, CharMap( CharType.openList ) );
         }
 
         public  static bool StringContainsProxy( string s ) {
-            return NonEscapedCharCheck( s,  CharMap( CharType.proxy ) );
+            return StringContainsUnescapedChar( s,  CharMap( CharType.proxy ) );
         }
 
         public static bool StringContainsDeclaration( string s ) {
-            return NonEscapedCharCheck( s, CharMap( CharType.declare ) );
+            return StringContainsUnescapedChar( s, CharMap( CharType.declare ) );
         }
 
         internal static bool StringContainsHeader( string s ) {
-            return NonEscapedCharCheck( s, CharMap( CharType.header ) );
+            return StringContainsUnescapedChar( s, CharMap( CharType.header ) );
         }
 
-        private static bool NonEscapedCharCheck( string s, char c ) {
+        public static bool StringContainsNewSentence( string s )  {
+            return StringContainsUnescapedChar( s, CharMap( CharType.newSentence ) );
+        }
+
+        public static bool StringContainsUnescapedChar( string s, char c ) {
             /*
              *  Will check whether or not a string contains a given character
              *  Returns true if the character is present, unless it has been escaped
@@ -372,7 +386,7 @@ namespace NGen {
         
         }
 
-        private static string ExtractBracketsHeaderString( ref string preBrackets ) {
+        public static string ExtractBracketsHeaderString( ref string preBrackets ) {
             string bracketsHeaderString = "";
 
             //Check prebrackets for a header

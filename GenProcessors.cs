@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using PU = NGen.ParserUtils;
 
@@ -27,34 +28,39 @@ namespace NGen {
              *  into one Wrd
              */
 
-            if( PU.StringContainsProxy( s ) ) {
-                //split the string based on spaces
-                char[] separators = { ' ' };
-                string[] words = s.Split( separators, StringSplitOptions.RemoveEmptyEntries );
-
-                List<Gen> gens = new List<Gen>();
-
-                foreach( string w in words ) {
-
-                    if( PU.StringContainsProxy( w ) ) {
-
-                        ProxyGen pg = ProxyProcessor( w, headerSettings );
-
-                        gens.Add( pg );
-
-                    } else {
-                        Wrd wrd = WrdSeparatorProcessor( w, headerSettings );
-                        gens.Add( wrd );
-                    }
-                }
-
-                SenGen sg = new SenGen( gens.ToArray(), headerSettings );
+            if( PU.StringContainsNewSentence( s ) ) {
+                SenGen sg = SenGenPreProcessor( s, headerSettings, null );
                 return sg;
-
             } else {
-                return WrdSeparatorProcessor( s, headerSettings );
-            }
 
+                if( PU.StringContainsProxy( s ) ) {
+                    //split the string based on spaces
+                    char[] separators = { ' ' };
+                    string[] words = s.Split( separators, StringSplitOptions.RemoveEmptyEntries );
+
+                    List<Gen> gens = new List<Gen>();
+
+                    foreach( string w in words ) {
+
+                        if( PU.StringContainsProxy( w ) ) {
+
+                            ProxyGen pg = ProxyProcessor( w, headerSettings );
+
+                            gens.Add( pg );
+
+                        } else {
+                            Wrd wrd = WrdSeparatorProcessor( w, headerSettings );
+                            gens.Add( wrd );
+                        }
+                    }
+
+                    SenGen sg = new SenGen( gens.ToArray(), headerSettings );
+                    return sg;
+
+                } else {
+                    return WrdSeparatorProcessor( s, headerSettings );
+                }
+            }
         }
 
         public static Wrd WrdSeparatorProcessor( string w, GenSettings genSettings ) {
@@ -150,7 +156,7 @@ namespace NGen {
                 foreach( string s in sArr ) {
                     if( PU.StringContinsList( s ) ) {
 
-                        Gen g = SenGenProcessor( s, headerSettings );
+                        Gen g = SenGenPreProcessor( s, headerSettings );
                         gens.Add( g );
 
                     } else {
@@ -175,8 +181,6 @@ namespace NGen {
         public static SenGen SenGenProcessor( string s, GenSettings headerSettings, string[] tags = null ) {
             /*
              * This will take a string and turn it into a SenGen,
-             * although, if it is a simple sentence it may return
-             * either a ListGen or a Wrd instead
              */
 
             //first check to see if all lists are closed
@@ -242,7 +246,7 @@ namespace NGen {
 
                     if( PU.StringContinsList( postBrackets ) ) {
 
-                        Gen pbg = SenGenProcessor( postBrackets, headerSettings );
+                        Gen pbg = SenGenPreProcessor( postBrackets, headerSettings );
                         gens.Add( pbg );
 
                     } else {
@@ -256,34 +260,132 @@ namespace NGen {
 
             } else {
 
-                //If there are no WrdLists, then dump the whole string into a Wrd
-                //DEBUG
-                //Console.WriteLine( $"string had no lists: \"{s}\"" );
                 Gen g = WrdProcessor( s.Trim(), headerSettings );
                 gens.Add( g );
 
             }
 
             SenGen sg = new SenGen( gens.ToArray(), headerSettings );
-
+            
+            //add any tags we've inherited
             if( tags != null && tags.Length > 0 ) {
-
                 sg.ownTags = tags;
-
-                //DEBUG
-                string ts = "";
-                foreach( string t in tags ) {
-                    ts += t + ", ";
-                }
-                //Console.WriteLine( $"new SenGen, tags are: '({ts})' " );
             }
-
-
-            //DEBUG
-            //Console.WriteLine( $"new SenGen. gs.NoSepB: {sg.GetNoSepBefore()}, gs.NoSepA: {sg.GetNoSepAfter()} " );
-
             return sg;
+        }
+
+        public static SenGen SenGenPreProcessor( string s, GenSettings headerSettings, string[] tags = null ) {
+            /*
+             *  This feels pretty inelegant, but I need a way to split the Sentence into Sentences, so here goes
+             */
+
+            //We only need to do the work if there are any new Sentence characters
+            //Technically we only need to do the work if they're on the bottom level
+            //But I'm not sure how to test for that without doing the work
+            if(  PU.StringContainsNewSentence( s ) ) {
+
+                int openCount = 0;
+                int closeCount = 0;
+
+                List<string> headerStrings = new List<string>();
+                List<string> sentenceStrings = new List<string>();
+                string tempContents = "";
+
+                //add one empty header - I'm not sure about this
+                headerStrings.Add( "" ) ;
+
+                char lastC = ' ';
+
+                foreach( char c in s ) {
+
+                    //increment the counters
+                    if( c == PU.CharMap( CharType.closeList ) ) {
+                        closeCount++;
+                    } else if( c == PU.CharMap( CharType.openList ) ) {
+                        openCount++;
+                    }
+
+                    //check we're on bottom level
+                    if( openCount - closeCount == 0 ) {
+
+                        //if we spot a new sentence
+                        //TODO - check in other places where we do a similar check - I think we're not checking for escapes.
+                        if( PU.CharIsUnescapedChar( c, lastC, PU.CharMap( CharType.newSentence ) ) ) {
+
+                            //get the header (and trim it out of the tempContents string)
+                            string headerString = PU.ExtractBracketsHeaderString( ref tempContents );
+
+                            //add header and previous sentence to lists for later processing
+                            headerStrings.Add( headerString );
+                            sentenceStrings.Add( tempContents );
+
+                            tempContents = "";
+
+                        } else {
+                            //if we're at the bottom level,
+                            //add all characters that are not sentence starts
+                            tempContents += c;
+                        }
+                    } else {
+                        //if we're above the bottom level,
+                        //add all characters
+                        tempContents += c;
+                    }
+                    lastC = c;
+                }
+
+                //add the final sentence
+                sentenceStrings.Add( tempContents );
+
+                if( headerStrings.Count != sentenceStrings.Count ) {
+
+                    //TODO error here?
+                    Console.WriteLine( $"Pre SenGen Parser Error: There were {headerStrings.Count} headerStrings and {sentenceStrings.Count} sentenceStrings, there should be an equal number of each." );
+                    return null;
+
+                } else {
+
+                    if( sentenceStrings.Count == 1 ) {
+
+                        SenGen sg = SenGenProcessor( sentenceStrings[0], headerSettings, tags );
+                        return sg;
+
+                    } else {
+                        List<SenGen> gens = new List<SenGen>();
+
+                        for( int i = 0; i < headerStrings.Count; i++ ) {
+
+                            if( sentenceStrings[i].Trim().Length > 0 ) {
+
+                                //For now we're just ignoring headers... TODO later
+                                gens.Add( SenGenProcessor( sentenceStrings[i], headerSettings, tags ) );
+                            }
+                        }
+
+                        if( gens.Count > 0 ) {
+
+                            //DEBUG
+                            Console.WriteLine( $"Creating sentence with {gens.Count} sentences in it." );
+
+                            SenGen sg = new SenGen( gens.ToArray(), headerSettings );
+                            return sg;
+
+                        } else {
+                            //TODO error here
+                            Console.WriteLine( $"Pre SenGen Parser Error: no Sentences detected." );
+                            return null;
+                        }
+                    }
+
+                }
+
+
+
+            } else {
+                return SenGenProcessor( s, headerSettings, tags );
+            }
 
         }
     }
+
 }
