@@ -237,13 +237,16 @@ This will still output a single name each time, from one or other of the nested 
 
 ### Sentences
 
-Most of the time you don't have to think about Sentences, there are no special symbols used for writing them, and they will be created automatically when needed. They also don't have many Behaviours which can be changed.
-
-Sentences consist of multiple elements which will always be output by the Generator they are in, for example:
+Sentences consist of one or more elements which will always be output by the Generator they are in, for example:
 
 `name = Mr [Thronton, Cleeson, Speg]`
 
 The text "Mr" above will always be output by the Generator, no matter what. Both the text "Mr" and the List ("Thronton, Cleeson, Speg") are contained within a Sentence which will output both of them in order.
+
+Most of the time you don't have to think about Sentences, they will be created automatically when needed;
+they do, however, have one important Settings, which is the Separator. Separators are place by the Sentence in between the different elements they contain.
+
+*TODO - continue*
 
 In the example below there are two Lists, both of which will be output, in order, because they are together in a Sentence:
 

@@ -15,10 +15,10 @@ namespace NGen {
         //          Numbers, Letters, Uppercase Letters, initials with .,
         //          numbers with ,000 numbers with .00, example first and last names???
         //TODO - ??? some form of controlling case
-        //TODO - add the possibility to manually define the start of Sentences using |
         //TODO - add ability to set Glitch characters
-        //TODO - find a way to allow Once to be only per Run
         //TODO - figure out if both repeatWeights and pickWeights should use doubles???
+        //TODO - maybe make Sentences optionally treat all space separated text as sepearate Wrds
+        //TODO - allow switching the Separator off with _!
 
 
         public static Dictionary<string, OutputGen> SplitHeadersAndGenerators( string[] lines ) {

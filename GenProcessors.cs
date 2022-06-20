@@ -393,8 +393,6 @@ namespace NGen {
 
                 }
 
-
-
             } else {
                 return SenGenProcessor( s, headerSettings, tags );
             }

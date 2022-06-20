@@ -316,6 +316,8 @@ namespace NGen {
 
                 } else {
 
+                    //TODO - put no separator in here
+
                     //otherwise, just use the string
                     gs.Separator = s.Trim();
                     gs.UseProxySeparator = false;
